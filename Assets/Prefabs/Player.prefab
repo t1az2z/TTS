@@ -35,10 +35,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4440806107661410}
   - component: {fileID: 212114019770029090}
-  - component: {fileID: 95544102781530878}
   - component: {fileID: 50900318479407614}
-  - component: {fileID: 61218025604204630}
   - component: {fileID: 114784646886234406}
+  - component: {fileID: 61898570710886372}
+  - component: {fileID: 95509131742376968}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -53,7 +53,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1797747569428010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.02, y: -7.96, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4741461232830748}
@@ -84,16 +84,16 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 3
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!61 &61218025604204630
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!61 &61898570710886372
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,20 +105,20 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.47327137}
+  m_Offset: {x: 0, y: 0.26081198}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.5625, y: 0.53125}
-    newSize: {x: 0.5625, y: 0.53125}
+    oldSize: {x: 0.5294118, y: 0.5}
+    newSize: {x: 0.5294118, y: 0.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9337862, y: 0.94654274}
+  m_Size: {x: 0.50027025, y: 0.47450864}
   m_EdgeRadius: 0
---- !u!95 &95544102781530878
+--- !u!95 &95509131742376968
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -147,15 +147,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d2f72b3429c3c442aea49757b31ab8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 5.25
-  allowedJumps: 2
+  jumpForce: 6
+  isGrounded: 0
+  allowedJumps: 3
   jumpsCount: 0
-  fallMultiplier: 2.5
+  fallMultiplier: 3
   lowJumpMultiplier: 2
   groundCheck: {fileID: 4741461232830748}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 4294967295
+  spinTime: 2
+  spinAllow: 1
+  spinRequest: 0
 --- !u!212 &212114019770029090
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -196,7 +200,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.5625, y: 0.53125}
+  m_Size: {x: 0.5294118, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

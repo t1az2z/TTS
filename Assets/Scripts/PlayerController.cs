@@ -25,10 +25,14 @@ public class PlayerController : MonoBehaviour {
 
     public bool spinAllow = true;
     public bool spinRequest = false;
+    bool isSpinning = false;
+
+    private Animator animator;
 
     void Awake ()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 	}
 	
 	void Update ()
@@ -37,9 +41,12 @@ public class PlayerController : MonoBehaviour {
         {
             jumpRequest = true;
         }
-        
-        
-	}
+
+        animator.SetFloat("Speed", rb.velocity.y);
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("JumpRequest", jumpRequest);
+        animator.SetBool("isSpinning", isSpinning);
+    }
 
 
     public void OnPressSpin()
@@ -67,18 +74,20 @@ public class PlayerController : MonoBehaviour {
         if (spinRequest && spinAllow)
         {
             rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-
+            isSpinning = true;
         }
         else if (!spinRequest)
         {
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
             spinAllow = false;
+            isSpinning = false;
         }
     }
 
     public void JumpRequest()
     {
         jumpRequest = true;
+        
     }
 
     private void GravityScaleChange()
@@ -110,6 +119,7 @@ public class PlayerController : MonoBehaviour {
 
     private void MultipleJumpProcessing()
     {
+
         if (jumpRequest && (jumpsCount < allowedJumps))
         {
             jumpsCount++;
