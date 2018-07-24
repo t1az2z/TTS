@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4741461232830748}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ground Check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,10 +36,10 @@ GameObject:
   - component: {fileID: 4440806107661410}
   - component: {fileID: 212114019770029090}
   - component: {fileID: 50900318479407614}
-  - component: {fileID: 114784646886234406}
   - component: {fileID: 61898570710886372}
   - component: {fileID: 95509131742376968}
-  m_Layer: 0
+  - component: {fileID: 114784646886234406}
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1797747569428010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02, y: -7.96, z: 0}
+  m_LocalPosition: {x: -3.24, y: -6.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4741461232830748}
@@ -91,7 +91,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &61898570710886372
 BoxCollider2D:
@@ -105,18 +105,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.26081198}
+  m_Offset: {x: 0, y: 0.2701394}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.5294118, y: 0.5}
-    newSize: {x: 0.5294118, y: 0.5}
+    oldSize: {x: 0.5625, y: 0.53125}
+    newSize: {x: 0.5625, y: 0.53125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.50027025, y: 0.47450864}
+  m_Size: {x: 0.50027025, y: 0.45585382}
   m_EdgeRadius: 0
 --- !u!95 &95509131742376968
 Animator:
@@ -149,14 +149,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpForce: 6
   isGrounded: 0
-  allowedJumps: 3
+  allowedJumps: 99999999
   jumpsCount: 0
   fallMultiplier: 3
   lowJumpMultiplier: 2
   groundCheck: {fileID: 4741461232830748}
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 311
   spinTime: 2
   spinAllow: 1
   spinRequest: 0
@@ -192,15 +192,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -291150333
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300004, guid: 3a6d5beabc8ef594582aa1345c073ede, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.5294118, y: 0.5}
+  m_Size: {x: 0.5625, y: 0.53125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

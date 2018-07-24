@@ -6,6 +6,7 @@ public class PlatformMovement : MonoBehaviour {
 
     [SerializeField] GameObject platform;
     Vector3 point1;
+    public bool isMoving = false;
     [SerializeField] Transform point2;
     [SerializeField] float movementSpeed;
     bool movingToPoint2 = true;
@@ -16,6 +17,12 @@ public class PlatformMovement : MonoBehaviour {
     }
 
     private void FixedUpdate()
+    {
+        if (isMoving)
+            Moving();
+    }
+
+    private void Moving()
     {
         float step = movementSpeed * Time.fixedDeltaTime;
         if (movingToPoint2)
@@ -31,7 +38,7 @@ public class PlatformMovement : MonoBehaviour {
         }
         else
         {
-            if(platform.transform.position != point1)
+            if (platform.transform.position != point1)
             {
                 platform.transform.position = Vector3.MoveTowards(platform.transform.position, point1, step);
             }

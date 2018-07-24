@@ -42,12 +42,16 @@ public class PlayerController : MonoBehaviour {
             jumpRequest = true;
         }
 
+        PlayAnimations();
+    }
+
+    private void PlayAnimations()
+    {
         animator.SetFloat("Speed", rb.velocity.y);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("JumpRequest", jumpRequest);
         animator.SetBool("isSpinning", isSpinning);
     }
-
 
     public void OnPressSpin()
     {
@@ -105,10 +109,8 @@ public class PlayerController : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isGrounded)
-        {
+        //todo пофиксить и добавить isGrounded, найти баг
             transform.SetParent(collision.transform);
-        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
