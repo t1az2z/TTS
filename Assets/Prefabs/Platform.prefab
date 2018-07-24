@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4312201731964182}
-  - component: {fileID: 114349872886613712}
   - component: {fileID: 114850338991606358}
   - component: {fileID: 58913148357572850}
   m_Layer: 0
@@ -28,7 +27,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1121782483373448
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +86,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1775756909169632}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02, y: 17.73, z: 0}
+  m_LocalPosition: {x: -10.11, y: 2.56, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 4452720415012534}
@@ -113,7 +112,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1574100831774566}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -9.42, y: -12.31, z: 0}
+  m_LocalPosition: {x: -16.12, y: 10.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4636564518906082}
@@ -129,7 +128,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1121782483373448}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.36, z: 0}
+  m_LocalPosition: {x: 0.16, y: 2.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4452720415012534}
@@ -206,17 +205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d112a50cac0efc4abbe5b3b408271a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114349872886613712
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1013082639414576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d112a50cac0efc4abbe5b3b408271a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114850338991606358
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -241,7 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   platform: {fileID: 1121782483373448}
-  isMoving: 0
+  isMoving: 1
   point2: {fileID: 4106850981227418}
   movementSpeed: 3
 --- !u!212 &212029427058352704

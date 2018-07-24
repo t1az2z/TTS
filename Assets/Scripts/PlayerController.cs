@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviour {
     [Header("Spin parameters:")]
     [SerializeField] float spinTime = 2f;
 
-    public bool spinAllow = true;
     public bool spinRequest = false;
     bool isSpinning = false;
 
@@ -41,7 +40,14 @@ public class PlayerController : MonoBehaviour {
         {
             jumpRequest = true;
         }
-
+        if (Input.GetButton("Spin"))
+        {
+            spinRequest = true;
+        }
+        else if (Input.GetButtonUp("Spin"))
+        {
+            spinRequest = false;
+        }
         PlayAnimations();
     }
 
@@ -56,18 +62,17 @@ public class PlayerController : MonoBehaviour {
     public void OnPressSpin()
     {
         spinRequest = true;
-        Spin();
     }
     public void OnReleaseSpin()
     {
         spinRequest = false;
-        Spin();
     }
 
 
     private void FixedUpdate()
     {
         GroundCheck();
+        Spin();
         MultipleJumpProcessing();
         GravityScaleChange();
 
@@ -75,7 +80,7 @@ public class PlayerController : MonoBehaviour {
 
     public void Spin()
     {
-        if (spinRequest && spinAllow)
+        if (spinRequest)
         {
             rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
             isSpinning = true;
@@ -83,7 +88,6 @@ public class PlayerController : MonoBehaviour {
         else if (!spinRequest)
         {
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-            spinAllow = false;
             isSpinning = false;
         }
     }
@@ -122,12 +126,10 @@ public class PlayerController : MonoBehaviour {
     private void MultipleJumpProcessing()
     {
 
-        if (jumpRequest && (jumpsCount < allowedJumps))
+        if (jumpRequest)
         {
-            jumpsCount++;
             Jump();
             jumpRequest = false;
-
         }
         else
         {
@@ -147,8 +149,6 @@ public class PlayerController : MonoBehaviour {
             if (colliders[i].gameObject != gameObject)
             {
                 isGrounded = true;
-                jumpsCount = 1;
-                spinAllow = true;
             }
         }
     }

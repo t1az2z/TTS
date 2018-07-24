@@ -7,11 +7,13 @@ public class LevelChanger : MonoBehaviour {
 
     int currentLevelIndex;
     [SerializeField] Image splash;
+    [Tooltip("Buttons to disable during level transition")]
     [SerializeField] GameObject[] buttons;
     bool floatToNextLevel = false;
     [SerializeField] float floatToNextLevelSpeed = .05f;
+    [SerializeField] float colorFadingSpeed = .7f;
     GameObject player;
-    public Color tempColor;
+    Color tempColor;
 
     private void Start()
     {
@@ -35,7 +37,7 @@ public class LevelChanger : MonoBehaviour {
     {
         if (floatToNextLevel)
         {
-            tempColor.a += 1f*Time.deltaTime;
+            tempColor.a += colorFadingSpeed * Time.deltaTime;
             splash.color = tempColor;
         }
     }
@@ -47,10 +49,13 @@ public class LevelChanger : MonoBehaviour {
             player.GetComponent<Rigidbody2D>().gravityScale = 0;
             player.transform.position = Vector3.MoveTowards(player.transform.position, transform.position, 2f * Time.fixedDeltaTime);
         }
-        else if (floatToNextLevel && player.transform.position == transform.position)
-        {
-            
-        }
+
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
