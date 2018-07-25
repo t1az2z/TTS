@@ -1,7 +1,7 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class death : MonoBehaviour {
+public class Death : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -14,6 +14,6 @@ public class death : MonoBehaviour {
 	}
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

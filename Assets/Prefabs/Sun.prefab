@@ -84,13 +84,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e7934824531dc442b375baa02086d57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splash: {fileID: 0}
+  splash: {fileID: 114597202753376900, guid: 001056ce9104b704fbc7051b23eeec98, type: 2}
   buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1835700493406180, guid: 001056ce9104b704fbc7051b23eeec98, type: 2}
+  - {fileID: 1726192337708204, guid: 001056ce9104b704fbc7051b23eeec98, type: 2}
+  - {fileID: 1697777044932778, guid: 001056ce9104b704fbc7051b23eeec98, type: 2}
   floatToNextLevelSpeed: 0.05
-  tempColor: {r: 0, g: 0, b: 0, a: 0}
+  colorFadingSpeed: 0.7
 --- !u!212 &212211769702431528
 SpriteRenderer:
   m_ObjectHideFlags: 1
