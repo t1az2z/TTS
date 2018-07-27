@@ -51,7 +51,7 @@ public class PlatformMovement : MonoBehaviour {
 
     void OnDrawGizmos()
     {
-        //gameObject.transform.position = point1.transform.position;
+
         if (point1 != null && point2 != null)
         {
             Gizmos.color = Color.white;

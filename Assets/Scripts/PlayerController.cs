@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
     Rigidbody2D rb;
     [Header("Jump parameters:")]
@@ -17,29 +18,31 @@ public class PlayerController : MonoBehaviour {
 
     [Header("Ground parameters")]
     [SerializeField] Transform groundCheck;
-    const float groundedRadius = .1f;
+    const float groundedRadius = .3f;
     [SerializeField] LayerMask whatIsGround;
 
     [Header("Spin parameters:")]
     [SerializeField] float spinTime = 2f;
 
+    public bool spinAllow = true;
     public bool spinRequest = false;
     bool isSpinning = false;
 
     private Animator animator;
 
-    void Awake ()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-	}
-	
-	void Update ()
+    }
+
+    void Update()
     {
         if (Input.GetButtonDown("Jump"))
         {
             jumpRequest = true;
         }
+
         if (Input.GetButton("Spin"))
         {
             spinRequest = true;
@@ -71,8 +74,8 @@ public class PlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        GroundCheck();
         Spin();
+        GroundCheck();
         MultipleJumpProcessing();
         GravityScaleChange();
 
@@ -95,7 +98,7 @@ public class PlayerController : MonoBehaviour {
     public void JumpRequest()
     {
         jumpRequest = true;
-        
+
     }
 
     private void GravityScaleChange()
@@ -114,7 +117,7 @@ public class PlayerController : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //todo пофиксить и добавить isGrounded, найти баг
-            transform.SetParent(collision.transform);
+        transform.SetParent(collision.transform);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -126,10 +129,12 @@ public class PlayerController : MonoBehaviour {
     private void MultipleJumpProcessing()
     {
 
-        if (jumpRequest)
+        if (jumpRequest && (jumpsCount < allowedJumps))
         {
+            jumpsCount++;
             Jump();
             jumpRequest = false;
+
         }
         else
         {
@@ -149,6 +154,8 @@ public class PlayerController : MonoBehaviour {
             if (colliders[i].gameObject != gameObject)
             {
                 isGrounded = true;
+                jumpsCount = 1;
+                spinAllow = true;
             }
         }
     }
@@ -156,6 +163,10 @@ public class PlayerController : MonoBehaviour {
     {
         Vector2 velocity = rb.velocity;
         velocity.y = jumpForce;
+        if(transform.parent && transform.parent.GetComponent<Rigidbody2D>())
+        {
+            velocity.x = transform.parent.GetComponent<Rigidbody2D>().velocity.y;
+        }
         rb.velocity = velocity;
     }
 }
