@@ -1,9 +1,17 @@
 ﻿using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour
 {
 
     Rigidbody2D rb;
+
+    [Header("Run parameters")]
+    [SerializeField] float runSpeed;
+    bool isFacingLeft;
+    bool isRunning = false;
+    float xMovement;
+    
     [Header("Jump parameters:")]
     [SerializeField] float jumpForce = 5.25f;
     public bool isGrounded;
@@ -38,28 +46,59 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (CrossPlatformInputManager.GetButtonDown("Jump"))
         {
             jumpRequest = true;
         }
 
-        if (Input.GetButton("Spin"))
+        if (CrossPlatformInputManager.GetButton("Spin"))
         {
             spinRequest = true;
         }
-        else if (Input.GetButtonUp("Spin"))
+        else if (CrossPlatformInputManager.GetButtonUp("Spin"))
         {
             spinRequest = false;
         }
-        PlayAnimations();
+        RunInputProcessing();
+        SetAnimationsParameters();
     }
 
-    private void PlayAnimations()
+    void RunInputProcessing()
     {
-        animator.SetFloat("Speed", rb.velocity.y);
+        xMovement = CrossPlatformInputManager.GetAxis("Horizontal");
+        if (xMovement < 0)
+        {
+            isFacingLeft = true;
+            isRunning = true;
+        }
+
+        else if (xMovement > 0)
+        {
+            isFacingLeft = false;
+            isRunning = true;
+        }
+        else
+            isRunning = false;
+            
+    }
+
+    void Run()
+    {
+        Vector2 velocity = rb.velocity;
+        velocity.x = xMovement * runSpeed * Time.deltaTime;
+        print(velocity.x);
+        rb.velocity = velocity;
+    }
+
+    private void SetAnimationsParameters()
+    {
+        animator.SetFloat("ySpeed", rb.velocity.y);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("JumpRequest", jumpRequest);
         animator.SetBool("isSpinning", isSpinning);
+        animator.SetBool("isFacingLeft", isFacingLeft);
+        animator.SetFloat("xSpeed", xMovement);
+        animator.SetBool("isRunning", isRunning);
     }
 
     public void OnPressSpin()
@@ -74,6 +113,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Run();
         Spin();
         GroundCheck();
         MultipleJumpProcessing();
