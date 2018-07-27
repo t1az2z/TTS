@@ -1,8 +1,17 @@
 ﻿using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
     Rigidbody2D rb;
+
+    [Header("Run parameters")]
+    [SerializeField] float runSpeed;
+    bool isFacingLeft;
+    bool isRunning = false;
+    float xMovement;
+    
     [Header("Jump parameters:")]
     [SerializeField] float jumpForce = 5.25f;
     public bool isGrounded;
@@ -17,46 +26,79 @@ public class PlayerController : MonoBehaviour {
 
     [Header("Ground parameters")]
     [SerializeField] Transform groundCheck;
-    const float groundedRadius = .1f;
+    const float groundedRadius = .3f;
     [SerializeField] LayerMask whatIsGround;
 
     [Header("Spin parameters:")]
     [SerializeField] float spinTime = 2f;
 
+    public bool spinAllow = true;
     public bool spinRequest = false;
     bool isSpinning = false;
 
     private Animator animator;
 
-    void Awake ()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-	}
-	
-	void Update ()
+    }
+
+    void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (CrossPlatformInputManager.GetButtonDown("Jump"))
         {
             jumpRequest = true;
         }
-        if (Input.GetButton("Spin"))
+
+        if (CrossPlatformInputManager.GetButton("Spin"))
         {
             spinRequest = true;
         }
-        else if (Input.GetButtonUp("Spin"))
+        else if (CrossPlatformInputManager.GetButtonUp("Spin"))
         {
             spinRequest = false;
         }
-        PlayAnimations();
+        RunInputProcessing();
+        SetAnimationsParameters();
     }
 
-    private void PlayAnimations()
+    void RunInputProcessing()
     {
-        animator.SetFloat("Speed", rb.velocity.y);
+        xMovement = CrossPlatformInputManager.GetAxis("Horizontal");
+        if (xMovement < 0)
+        {
+            isFacingLeft = true;
+            isRunning = true;
+        }
+
+        else if (xMovement > 0)
+        {
+            isFacingLeft = false;
+            isRunning = true;
+        }
+        else
+            isRunning = false;
+            
+    }
+
+    void Run()
+    {
+        Vector2 velocity = rb.velocity;
+        velocity.x = xMovement * runSpeed * Time.deltaTime;
+        print(velocity.x);
+        rb.velocity = velocity;
+    }
+
+    private void SetAnimationsParameters()
+    {
+        animator.SetFloat("ySpeed", rb.velocity.y);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("JumpRequest", jumpRequest);
         animator.SetBool("isSpinning", isSpinning);
+        animator.SetBool("isFacingLeft", isFacingLeft);
+        animator.SetFloat("xSpeed", xMovement);
+        animator.SetBool("isRunning", isRunning);
     }
 
     public void OnPressSpin()
@@ -71,8 +113,9 @@ public class PlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        GroundCheck();
+        Run();
         Spin();
+        GroundCheck();
         MultipleJumpProcessing();
         GravityScaleChange();
 
@@ -95,7 +138,7 @@ public class PlayerController : MonoBehaviour {
     public void JumpRequest()
     {
         jumpRequest = true;
-        
+
     }
 
     private void GravityScaleChange()
@@ -114,7 +157,7 @@ public class PlayerController : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //todo пофиксить и добавить isGrounded, найти баг
-            transform.SetParent(collision.transform);
+        transform.SetParent(collision.transform);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -126,10 +169,12 @@ public class PlayerController : MonoBehaviour {
     private void MultipleJumpProcessing()
     {
 
-        if (jumpRequest)
+        if (jumpRequest && (jumpsCount < allowedJumps))
         {
+            jumpsCount++;
             Jump();
             jumpRequest = false;
+
         }
         else
         {
@@ -149,6 +194,8 @@ public class PlayerController : MonoBehaviour {
             if (colliders[i].gameObject != gameObject)
             {
                 isGrounded = true;
+                jumpsCount = 1;
+                spinAllow = true;
             }
         }
     }
@@ -156,6 +203,10 @@ public class PlayerController : MonoBehaviour {
     {
         Vector2 velocity = rb.velocity;
         velocity.y = jumpForce;
+        if(transform.parent && transform.parent.GetComponent<Rigidbody2D>())
+        {
+            velocity.x = transform.parent.GetComponent<Rigidbody2D>().velocity.y;
+        }
         rb.velocity = velocity;
     }
 }

@@ -14,6 +14,6 @@ public class death : MonoBehaviour {
 	}
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

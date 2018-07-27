@@ -19,7 +19,7 @@ MonoBehaviour:
     - {fileID: 21300026, guid: 39ed08a39b75fcc48ae939daedb3a0a6, type: 3}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
-    m_RuleTransform: 0
+    m_RuleTransform: 3
     m_Output: 0
     m_ColliderType: 1
     m_RandomTransform: 0
@@ -28,7 +28,7 @@ MonoBehaviour:
     - {fileID: 21300024, guid: 39ed08a39b75fcc48ae939daedb3a0a6, type: 3}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
-    m_RuleTransform: 2
+    m_RuleTransform: 1
     m_Output: 0
     m_ColliderType: 1
     m_RandomTransform: 0
