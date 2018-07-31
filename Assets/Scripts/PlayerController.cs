@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,33 +12,35 @@ public class PlayerController : MonoBehaviour
     bool isFacingLeft;
     bool isRunning = false;
     float xMovement;
-    
+    [Space(8)]
+
     [Header("Jump parameters:")]
     [SerializeField] float jumpMaxForce = 5.25f;
     [SerializeField] float jumpMinForce = 3f;
     public bool isGrounded;
     bool jumpRequest = false;
-    bool jumpCancel = false;
+    public bool jumpCancel = false;
     [SerializeField] int allowedJumps = 2;
     public int jumpsCount = 1;
     /*float jumpHoldingTime = 0f;
     float jumpMaxHoldingTime = .5f;*/
+    [Space(8)]
 
     [Header("Jump gravity variables:")]
     [SerializeField] float fallMultiplier = 2.7f;
     [SerializeField] float lowJumpMultiplier = 2f;
+    [Space(8)]
 
     [Header("Ground parameters")]
     [SerializeField] Transform groundCheck;
     const float groundedRadius = .2f;
     [SerializeField] LayerMask whatIsGround;
+    [Space(8)]
 
     [Header("Spin parameters:")]
     [SerializeField] float spinTime = 2f;
-
-
-    public bool spinAllow = true;
-    public bool spinRequest = false;
+    bool spinAllow = true;
+    bool spinRequest = false;
     bool isSpinning = false;
     float spinExpireTime;
 
@@ -51,7 +54,19 @@ public class PlayerController : MonoBehaviour
         PcControlls();
 
         RunInputProcessing();
-        SetAnimationsParameters();
+
+        VariablesResetOnGround();
+        //SetAnimationsParameters();
+    }
+
+    private void VariablesResetOnGround()
+    {
+        if (isGrounded)
+        {
+            jumpsCount = 1;
+            spinAllow = true;
+            jumpCancel = false;
+        }
     }
 
     private void PcControlls()
@@ -168,7 +183,8 @@ public class PlayerController : MonoBehaviour
     public void OnReleaseJump()
     {
         jumpRequest = false;
-        jumpCancel = true;
+        if (!isGrounded)
+            jumpCancel = true;
     }
 
     private void JumpLogicProcessing()
@@ -178,24 +194,35 @@ public class PlayerController : MonoBehaviour
 
     private void MultipleJumpProcessing()
     {
+        Vector2 velocity = rb.velocity;
+
         if (jumpRequest && (jumpsCount <= allowedJumps))
         {
             jumpsCount++;
-            Jump();
+            Jump(velocity);
             jumpRequest = false;
-
         }
         else
         {
             jumpRequest = false;
         }
+
+        if (jumpCancel && rb.velocity.y >=0) //todo сделать красиво (хотя и так работает)
+        {
+            velocity.y = 0;
+            rb.velocity = velocity;
+            jumpCancel = false;
+            print(velocity.y);
+
+        }
     }
 
-    private void Jump()
+    private void Jump( Vector2 vel)
     {
-        Vector2 velocity = rb.velocity;
-        velocity.y = jumpMaxForce;
-        rb.velocity = velocity;
+        vel.y = jumpMaxForce;
+        rb.velocity = vel;
+
+
     }
     private void GravityScaleChange()
     {
@@ -220,9 +247,6 @@ public class PlayerController : MonoBehaviour
             if (colliders[i].gameObject != gameObject)
             {
                 isGrounded = true;
-                jumpsCount = 1;
-                spinAllow = true;
-
             }
         }
     }
