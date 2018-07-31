@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour
 {
 
     Rigidbody2D rb;
+    Animator animator;
 
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
@@ -13,12 +13,15 @@ public class PlayerController : MonoBehaviour
     float xMovement;
     
     [Header("Jump parameters:")]
-    [SerializeField] float jumpForce = 5.25f;
+    [SerializeField] float jumpMaxForce = 5.25f;
+    [SerializeField] float jumpMinForce = 3f;
     public bool isGrounded;
     bool jumpRequest = false;
-    bool holdJumpButton = false;
+    bool jumpCancel = false;
     [SerializeField] int allowedJumps = 2;
-    public int jumpsCount;
+    public int jumpsCount = 1;
+    /*float jumpHoldingTime = 0f;
+    float jumpMaxHoldingTime = .5f;*/
 
     [Header("Jump gravity variables:")]
     [SerializeField] float fallMultiplier = 2.7f;
@@ -26,46 +29,80 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ground parameters")]
     [SerializeField] Transform groundCheck;
-    const float groundedRadius = .3f;
+    const float groundedRadius = .2f;
     [SerializeField] LayerMask whatIsGround;
 
     [Header("Spin parameters:")]
     [SerializeField] float spinTime = 2f;
 
+
     public bool spinAllow = true;
     public bool spinRequest = false;
     bool isSpinning = false;
-
-    private Animator animator;
+    float spinExpireTime;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
-
     void Update()
     {
-        if (CrossPlatformInputManager.GetButtonDown("Jump"))
-        {
-            jumpRequest = true;
-        }
+        PcControlls();
 
-        if (CrossPlatformInputManager.GetButton("Spin"))
-        {
-            spinRequest = true;
-        }
-        else if (CrossPlatformInputManager.GetButtonUp("Spin"))
-        {
-            spinRequest = false;
-        }
         RunInputProcessing();
         SetAnimationsParameters();
     }
 
+    private void PcControlls()
+    {
+        if (SimpleInput.GetButtonDown("Jump"))
+        {
+            OnPressJump();
+        }
+        else if (SimpleInput.GetButtonUp("Jump"))
+        {
+            OnReleaseJump();
+        }
+
+        if (SimpleInput.GetButtonDown("Spin"))
+        {
+            spinRequest = true;
+            spinExpireTime = Time.time + spinTime;
+        }
+        else if (SimpleInput.GetButtonUp("Spin"))
+        {
+            spinRequest = false;
+            spinExpireTime = 0f;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        Run();
+        Spin();
+        GroundCheck();
+        JumpLogicProcessing();
+        GravityScaleChange();
+
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        transform.SetParent(collision.transform);
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        transform.SetParent(null);
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        transform.SetParent(collision.transform);
+    }
+
+
     void RunInputProcessing()
     {
-        xMovement = CrossPlatformInputManager.GetAxis("Horizontal");
+        xMovement = SimpleInput.GetAxis("Horizontal");
         if (xMovement < 0)
         {
             isFacingLeft = true;
@@ -85,8 +122,7 @@ public class PlayerController : MonoBehaviour
     void Run()
     {
         Vector2 velocity = rb.velocity;
-        velocity.x = xMovement * runSpeed * Time.deltaTime;
-        print(velocity.x);
+        velocity.x = xMovement * runSpeed *100  * Time.deltaTime;
         rb.velocity = velocity;
     }
 
@@ -94,7 +130,6 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetFloat("ySpeed", rb.velocity.y);
         animator.SetBool("isGrounded", isGrounded);
-        animator.SetBool("JumpRequest", jumpRequest);
         animator.SetBool("isSpinning", isSpinning);
         animator.SetBool("isFacingLeft", isFacingLeft);
         animator.SetFloat("xSpeed", xMovement);
@@ -104,72 +139,46 @@ public class PlayerController : MonoBehaviour
     public void OnPressSpin()
     {
         spinRequest = true;
+        spinExpireTime = Time.time + spinTime;
     }
     public void OnReleaseSpin()
     {
         spinRequest = false;
+        spinExpireTime = 0f;
     }
-
-
-    private void FixedUpdate()
-    {
-        Run();
-        Spin();
-        GroundCheck();
-        MultipleJumpProcessing();
-        GravityScaleChange();
-
-    }
-
     public void Spin()
     {
-        if (spinRequest)
+        if (spinRequest && spinExpireTime >= Time.time)
         {
             rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
             isSpinning = true;
         }
-        else if (!spinRequest)
+        else if (!spinRequest || spinExpireTime < Time.time)
         {
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
             isSpinning = false;
         }
     }
 
-    public void JumpRequest()
+    public void OnPressJump()
     {
         jumpRequest = true;
-
     }
 
-    private void GravityScaleChange()
+    public void OnReleaseJump()
     {
-        if (rb.velocity.y < 0)
-        {
-            rb.gravityScale = fallMultiplier;
-        }
-
-        else
-        {
-            rb.gravityScale = 1;
-        }
+        jumpRequest = false;
+        jumpCancel = true;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void JumpLogicProcessing()
     {
-        //todo пофиксить и добавить isGrounded, найти баг
-        transform.SetParent(collision.transform);
+        MultipleJumpProcessing();
     }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        transform.SetParent(null);
-    }
-
 
     private void MultipleJumpProcessing()
     {
-
-        if (jumpRequest && (jumpsCount < allowedJumps))
+        if (jumpRequest && (jumpsCount <= allowedJumps))
         {
             jumpsCount++;
             Jump();
@@ -182,6 +191,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Jump()
+    {
+        Vector2 velocity = rb.velocity;
+        velocity.y = jumpMaxForce;
+        rb.velocity = velocity;
+    }
+    private void GravityScaleChange()
+    {
+        if (rb.velocity.y < 0)
+        {
+            rb.gravityScale = fallMultiplier;
+        }
+        else
+        {
+            rb.gravityScale = 1;
+        }
+    }
     private void GroundCheck()
     {
         bool wasGrounded = isGrounded;
@@ -196,17 +222,16 @@ public class PlayerController : MonoBehaviour
                 isGrounded = true;
                 jumpsCount = 1;
                 spinAllow = true;
+
             }
         }
     }
-    private void Jump()
+
+
+
+    private void OnDrawGizmosSelected()
     {
-        Vector2 velocity = rb.velocity;
-        velocity.y = jumpForce;
-        if(transform.parent && transform.parent.GetComponent<Rigidbody2D>())
-        {
-            velocity.x = transform.parent.GetComponent<Rigidbody2D>().velocity.y;
-        }
-        rb.velocity = velocity;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, groundedRadius);
     }
 }
