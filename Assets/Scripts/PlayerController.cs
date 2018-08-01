@@ -82,13 +82,11 @@ public class PlayerController : MonoBehaviour
 
         if (SimpleInput.GetButtonDown("Spin"))
         {
-            spinRequest = true;
-            spinExpireTime = Time.time + spinTime;
+            OnPressSpin();
         }
         else if (SimpleInput.GetButtonUp("Spin"))
         {
-            spinRequest = false;
-            spinExpireTime = 0f;
+            OnReleaseSpin();
         }
     }
 
@@ -198,6 +196,7 @@ public class PlayerController : MonoBehaviour
 
         if (jumpRequest && (jumpsCount <= allowedJumps))
         {
+            jumpCancel = false;
             jumpsCount++;
             Jump(velocity);
             jumpRequest = false;
@@ -212,8 +211,6 @@ public class PlayerController : MonoBehaviour
             velocity.y = 0;
             rb.velocity = velocity;
             jumpCancel = false;
-            print(velocity.y);
-
         }
     }
 
