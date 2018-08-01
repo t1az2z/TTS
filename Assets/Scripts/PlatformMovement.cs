@@ -52,7 +52,7 @@ public class PlatformMovement : MonoBehaviour {
     void OnDrawGizmos()
     {
 
-        if (point1 != null && point2 != null)
+        if (point2 != null)
         {
             Gizmos.color = Color.white;
             Gizmos.DrawLine(platform.transform.position, point2.position);

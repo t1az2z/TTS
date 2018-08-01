@@ -22,8 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool jumpCancel = false;
     [SerializeField] int allowedJumps = 2;
     public int jumpsCount = 1;
-    /*float jumpHoldingTime = 0f;
-    float jumpMaxHoldingTime = .5f;*/
+    private const float velocityTopSlice = 3f;
     [Space(8)]
 
     [Header("Jump gravity variables:")]
@@ -44,6 +43,8 @@ public class PlayerController : MonoBehaviour
     bool isSpinning = false;
     float spinExpireTime;
 
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -57,6 +58,8 @@ public class PlayerController : MonoBehaviour
 
         VariablesResetOnGround();
         //SetAnimationsParameters();
+
+
     }
 
     private void VariablesResetOnGround()
@@ -206,20 +209,25 @@ public class PlayerController : MonoBehaviour
             jumpRequest = false;
         }
 
-        if (jumpCancel && rb.velocity.y >=0) //todo сделать красиво (хотя и так работает)
+        if (jumpCancel && rb.velocity.y >= velocityTopSlice) //todo сделать красиво (хотя и так работает)
         {
-            velocity.y = 0;
+            velocity.y = velocityTopSlice;
             rb.velocity = velocity;
             jumpCancel = false;
         }
+        /*if (rb.velocity.y == 3)
+        {
+            velocity.y = -3;
+            rb.velocity = velocity;
+            print(rb.velocity.y);
+        }*/
+
     }
 
     private void Jump( Vector2 vel)
     {
         vel.y = jumpMaxForce;
         rb.velocity = vel;
-
-
     }
     private void GravityScaleChange()
     {
@@ -247,7 +255,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
 
 
     private void OnDrawGizmosSelected()

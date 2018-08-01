@@ -53,7 +53,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1797747569428010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.24, y: -6.7, z: 0}
+  m_LocalPosition: {x: -12.05, y: -0.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4741461232830748}
@@ -84,7 +84,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
+  m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -125,7 +125,7 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1797747569428010}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 752f0c7cc3bd0cb4aa8f3fe12a30794e, type: 2}
   m_CullingMode: 0
@@ -147,19 +147,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d2f72b3429c3c442aea49757b31ab8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 6
+  runSpeed: 3
+  jumpMaxForce: 9
+  jumpMinForce: 3
   isGrounded: 0
-  allowedJumps: 99999999
-  jumpsCount: 0
-  fallMultiplier: 3
+  jumpCancel: 0
+  allowedJumps: 1
+  jumpsCount: 1
+  fallMultiplier: 2
   lowJumpMultiplier: 2
   groundCheck: {fileID: 4741461232830748}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 311
-  spinTime: 2
-  spinAllow: 1
-  spinRequest: 0
+  spinTime: 0.7
 --- !u!212 &212114019770029090
 SpriteRenderer:
   m_ObjectHideFlags: 1
