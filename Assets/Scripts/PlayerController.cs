@@ -27,13 +27,13 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump gravity variables:")]
     [SerializeField] float fallMultiplier = 2.7f;
-    [SerializeField] float lowJumpMultiplier = 2f;
     [Space(8)]
 
     [Header("Ground parameters")]
-    [SerializeField] Transform groundCheck;
-    const float groundedRadius = .2f;
+    [SerializeField] Transform[] groundCheck;
+    public float groundedRadius = 0.375f;
     [SerializeField] LayerMask whatIsGround;
+
     [Space(8)]
 
     [Header("Spin parameters:")]
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    void Awake()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -66,11 +66,17 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         {
-            jumpsCount = 1;
             spinAllow = true;
+        }
+
+        bool OldIsGrounded = isGrounded;
+        isGrounded = GroundCheck();
+        if (OldIsGrounded != isGrounded && isGrounded)
+        {
+            jumpsCount = 0;
             jumpCancel = false;
         }
-    }
+        }
 
     private void PcControlls()
     {
@@ -171,6 +177,9 @@ public class PlayerController : MonoBehaviour
             {
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 isSpinning = true;
+                Vector2 velocity = rb.velocity;
+                velocity.x *= 2;
+                rb.velocity = velocity;
             }
             else if (!spinRequest || spinExpireTime < Time.time)
             {
@@ -201,7 +210,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 velocity = rb.velocity;
 
-        if (jumpRequest && (jumpsCount <= allowedJumps))
+        if (jumpRequest && (jumpsCount < allowedJumps))
         {
             jumpCancel = false;
             jumpsCount++;
@@ -238,26 +247,33 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = 1;
         }
     }
-    private void GroundCheck()
+    private bool GroundCheck()
     {
-        bool wasGrounded = isGrounded;
-        isGrounded = false;
-
-
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundedRadius, whatIsGround);
-        for (int i = 0; i < colliders.Length; i++)
+        bool isGrnd = false;
+        foreach (var groundch in groundCheck)
         {
-            if (colliders[i].gameObject != gameObject)
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(groundch.position, groundedRadius, whatIsGround);
+            for (int i = 0; i < colliders.Length; i++)
             {
-                isGrounded = true;
+                if (colliders[i].gameObject != gameObject)
+                {
+                    isGrnd = true;
+                }
             }
         }
+        return isGrnd;
     }
 
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, groundedRadius);
+        foreach (var groundch in groundCheck)
+        {
+            if (groundch != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(groundch.position, groundedRadius);
+            }
+        }
     }
 }
