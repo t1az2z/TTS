@@ -37,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1151910040236318}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.204755, y: 15.44, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -12.02, y: 36.37, z: 0}
+  m_LocalScale: {x: 0.05868761, y: 0.05868761, z: 0.05868761}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -55,9 +55,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.9402809}
+  m_Offset: {x: 0.5169258, y: 0.6104984}
   serializedVersion: 2
-  m_Radius: 8.940281
+  m_Radius: 6.8725758
 --- !u!58 &58254069973353934
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -70,9 +70,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.02}
+  m_Offset: {x: 0.9718225, y: -0.01999998}
   serializedVersion: 2
-  m_Radius: 3.35877
+  m_Radius: 2.3869474
 --- !u!114 &114654688919753146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -89,8 +89,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   floatToNextLevelSpeed: 0.05
-  tempColor: {r: 0, g: 0, b: 0, a: 0}
+  colorFadingSpeed: 0.7
 --- !u!212 &212211769702431528
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -123,8 +124,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -291150333
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 09d935edcab0a294b9cdf12fadfbb57d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
