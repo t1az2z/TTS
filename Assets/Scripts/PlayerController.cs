@@ -38,10 +38,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Spin parameters:")]
     [SerializeField] float spinTime = 2f;
-    bool spinAllow = true;
-    bool spinRequest = false;
-    bool isSpinning = false;
-    float spinExpireTime;
+    public bool spinAllow = true;
+    public bool spinRequest = false;
+    public bool isSpinning = false;
+    public float spinExpireTime;
 
 
 
@@ -161,18 +161,22 @@ public class PlayerController : MonoBehaviour
     {
         spinRequest = false;
         spinExpireTime = 0f;
+        spinAllow = false;
     }
     public void Spin()
     {
-        if (spinRequest && spinExpireTime >= Time.time)
+        if (!isGrounded)
         {
-            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-            isSpinning = true;
-        }
-        else if (!spinRequest || spinExpireTime < Time.time)
-        {
-            rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-            isSpinning = false;
+            if (spinRequest && spinExpireTime >= Time.time && spinAllow)
+            {
+                rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                isSpinning = true;
+            }
+            else if (!spinRequest || spinExpireTime < Time.time)
+            {
+                rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+                isSpinning = false;
+            }
         }
     }
 
@@ -215,12 +219,6 @@ public class PlayerController : MonoBehaviour
             rb.velocity = velocity;
             jumpCancel = false;
         }
-        /*if (rb.velocity.y == 3)
-        {
-            velocity.y = -3;
-            rb.velocity = velocity;
-            print(rb.velocity.y);
-        }*/
 
     }
 
