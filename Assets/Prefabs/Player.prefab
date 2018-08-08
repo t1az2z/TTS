@@ -299,24 +299,28 @@ MonoBehaviour:
   jumpCancel: 0
   allowedJumps: 2
   jumpsCount: 0
-  fallMultiplier: 1.6
-  groundCheck:
+  fallMultiplier: 2.7
+  groundChecks:
   - {fileID: 4597409095925820}
   - {fileID: 4741461232830748}
+  groundedRadius: 0.03125
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 311
-  wallCheck:
+    m_Bits: 256
+  dashTime: 0.12
+  dashAlow: 1
+  dashRequest: 0
+  isDashing: 0
+  dashExpireTime: 0
+  wallChecks:
   - {fileID: 4351315859148492}
   - {fileID: 4620952331816130}
-  WhatIsWalls:
+  wallCheckRadius: 0.03125
+  whatIsWalls:
     serializedVersion: 2
-    m_Bits: 0
-  spinTime: 0.2
-  spinAllow: 1
-  spinRequest: 0
-  isSpinning: 0
-  spinExpireTime: 0
+    m_Bits: 256
+  wallStickTime: 0.1
+  wallSlidingSpeed: 1
 --- !u!212 &212114019770029090
 SpriteRenderer:
   m_ObjectHideFlags: 1
