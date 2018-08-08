@@ -8,10 +8,12 @@ public class PlayerController : MonoBehaviour
     Animator animator;
 
     [Header("Run parameters")]
-    [SerializeField] float runSpeed;
+    [SerializeField] float runAcceleration;
     bool isFacingLeft;
     bool isRunning = false;
-    float xMovement;
+    float xInput;
+    public float maxSpeed = 10f;
+    
     [Space(8)]
 
     [Header("Jump parameters:")]
@@ -26,16 +28,25 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Header("Jump gravity variables:")]
-    [SerializeField] float fallMultiplier = 2.7f;
+    [SerializeField] float fallGravity = 2.7f;
     [Space(8)]
 
     [Header("Ground parameters")]
     [SerializeField] Transform[] groundCheck;
-    public float groundedRadius = 0.375f;
+    const float groundedRadius = 0.03125f;
     [SerializeField] LayerMask whatIsGround;
-
     [Space(8)]
 
+    [Header("Walljump parameters")]
+    [SerializeField] Transform[] wallCheck;
+    const float wallRadius = 0.03125f;
+    [SerializeField] LayerMask WhatIsWalls;
+    bool wallHit = false;
+    bool wallStack = false;
+    [SerializeField] float wallStackTime = .2f;
+    [SerializeField] float wallJumpXVelocity = 3f;
+
+    [Space(8)]
     [Header("Spin parameters:")]
     [SerializeField] float spinTime = 2f;
     public bool spinAllow = true;
@@ -57,7 +68,7 @@ public class PlayerController : MonoBehaviour
         RunInputProcessing();
 
         VariablesResetOnGround();
-        //SetAnimationsParameters();
+        SetAnimationsParameters();
 
 
     }
@@ -76,7 +87,24 @@ public class PlayerController : MonoBehaviour
             jumpsCount = 0;
             jumpCancel = false;
         }
+    }
+
+    private void ResetJumpsCountOnWallEnter()
+    {
+
+        bool oldWallHit = wallHit;
+        wallHit = WallCheck();
+        if (oldWallHit != wallHit && wallHit)
+        {
+            jumpsCount = 0;
+            jumpCancel = false;
+            wallStack = true;
+            rb.velocity = Vector2.zero;
+            rb.gravityScale = 0f;
+
         }
+
+    }
 
     private void PcControlls()
     {
@@ -101,62 +129,97 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Run();
+        HorizontalMovementProcessing();
         Spin();
-        GroundCheck();
+
         JumpLogicProcessing();
         GravityScaleChange();
 
+        if (wallHit && !isGrounded && rb.velocity.y <0)
+            wallStack = true;
+        else
+            wallStack = false;
+
     }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        transform.SetParent(collision.transform);
-    }
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        transform.SetParent(null);
-    }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        transform.SetParent(collision.transform);
-    }
+
+
 
 
     void RunInputProcessing()
     {
-        xMovement = SimpleInput.GetAxis("Horizontal");
-        if (xMovement < 0)
-        {
-            isFacingLeft = true;
-            isRunning = true;
-        }
+        xInput = SimpleInput.GetAxis("Horizontal");
+        isRunning = Mathf.Abs(xInput) > Mathf.Epsilon;
+    }
 
-        else if (xMovement > 0)
+    void HorizontalMovementProcessing()
+    {
+        if (!wallStack)
         {
-            isFacingLeft = false;
-            isRunning = true;
+            GroundedOrAirborneMovement();
         }
         else
-            isRunning = false;
+        {
+            rb.velocity = Vector2.zero;
+            rb.gravityScale = 0;
+            float currentWallStackTime = wallStackTime;
+            if (Mathf.Sign(xInput) != Mathf.Sign(transform.localScale.x) && Mathf.Abs(xInput) > 0)
+            {
+                print("trying to unstack");
+
+                currentWallStackTime -= Time.fixedDeltaTime;
+                print(currentWallStackTime);
+                if (currentWallStackTime <= 0)
+                {
+                    rb.AddForce(new Vector2(Mathf.Sign(-transform.localScale.x)*runAcceleration, 0f), ForceMode2D.Force);
+                    print("unstacking");
+                    rb.gravityScale = fallGravity;
+                }
+            }
+
+            //place animation trigger
+            //wall stick time
             
+            //if pressing oposite from wall => wallsticktime -= time.deltatime
+            //if not
+            //slowly decrease y speed(or increase gravity?) to fall speed
+            //if jump pressed
+            //velocity = jumpforce, wallJumpXSpeed
+
+        }
     }
 
-    void Run()
+    private void GroundedOrAirborneMovement()
     {
-        Vector2 velocity = rb.velocity;
-        velocity.x = xMovement * runSpeed *100  * Time.deltaTime;
-        rb.velocity = velocity;
+        if (xInput < -.5)
+        {
+            if (rb.velocity.x > -maxSpeed)
+            {
+                rb.AddForce(new Vector2(-runAcceleration, 0f), ForceMode2D.Force);
+            }
+            else
+            {
+                rb.velocity = new Vector2(-maxSpeed * 100 * Time.fixedDeltaTime, rb.velocity.y);
+            }
+        }
+        else if (xInput > .5)
+        {
+            if (rb.velocity.x < maxSpeed)
+            {
+                rb.AddForce(new Vector2(runAcceleration, 0f), ForceMode2D.Force);
+            }
+            else
+            {
+                rb.velocity = new Vector2(maxSpeed * 100 * Time.fixedDeltaTime, rb.velocity.y);
+            }
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
     }
 
-    private void SetAnimationsParameters()
-    {
-        animator.SetFloat("ySpeed", rb.velocity.y);
-        animator.SetBool("isGrounded", isGrounded);
-        animator.SetBool("isSpinning", isSpinning);
-        animator.SetBool("isFacingLeft", isFacingLeft);
-        animator.SetFloat("xSpeed", xMovement);
-        animator.SetBool("isRunning", isRunning);
-    }
+
+
 
     public void OnPressSpin()
     {
@@ -178,7 +241,7 @@ public class PlayerController : MonoBehaviour
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 isSpinning = true;
                 Vector2 velocity = rb.velocity;
-                velocity.x *= 2;
+                velocity.x = 4*transform.localScale.x * maxSpeed;
                 rb.velocity = velocity;
             }
             else if (!spinRequest || spinExpireTime < Time.time)
@@ -203,18 +266,20 @@ public class PlayerController : MonoBehaviour
 
     private void JumpLogicProcessing()
     {
-        MultipleJumpProcessing();
-    }
-
-    private void MultipleJumpProcessing()
-    {
         Vector2 velocity = rb.velocity;
+        ResetJumpsCountOnWallEnter();
 
         if (jumpRequest && (jumpsCount < allowedJumps))
         {
             jumpCancel = false;
             jumpsCount++;
+            if (wallStack)
+            {
+                WallJump(velocity);
+            }
+            else
             Jump(velocity);
+
             jumpRequest = false;
         }
         else
@@ -236,16 +301,26 @@ public class PlayerController : MonoBehaviour
         vel.y = jumpMaxForce;
         rb.velocity = vel;
     }
+
+    private void WallJump(Vector2 vel)
+    {
+        //if (Mathf.Sign(xInput) == Mathf.Sign(transform.localScale.x))
+        rb.AddForce(new Vector2(-transform.localScale.x * wallJumpXVelocity, jumpMaxForce), ForceMode2D.Impulse);
+        //rb.velocity = new Vector2(wallJumpXVelocity * Mathf.Sign(-transform.localScale.x), jumpMaxForce);
+    }
+
     private void GravityScaleChange()
     {
         if (rb.velocity.y < 0)
         {
-            rb.gravityScale = fallMultiplier;
+
+            rb.gravityScale = fallGravity;
         }
         else
         {
             rb.gravityScale = 1;
         }
+        
     }
     private bool GroundCheck()
     {
@@ -264,7 +339,40 @@ public class PlayerController : MonoBehaviour
         return isGrnd;
     }
 
+    private bool WallCheck()
+    {
+        bool wHit = false;
+        foreach (var wallCh in wallCheck)
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCh.position, groundedRadius, whatIsGround);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].gameObject != gameObject && !isGrounded)
+                {
+                    wHit = true;
+                }
+            }
+        }
+        return wHit;
+    }
 
+    private void SetAnimationsParameters()
+    {
+        /*animator.SetFloat("ySpeed", rb.velocity.y);
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isSpinning", isSpinning);
+        animator.SetBool("isFacingLeft", isFacingLeft);
+        animator.SetFloat("xSpeed", xMovement);
+        animator.SetBool("isRunning", isRunning);*/
+
+
+
+        //todo refactoring
+        //fliping object. it is also used for wallJumps. so need to be redone 
+        isRunning = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
+        if (isRunning)
+            transform.localScale = new Vector2(Mathf.Sign(rb.velocity.x), 1f);
+    }
     private void OnDrawGizmosSelected()
     {
         foreach (var groundch in groundCheck)
@@ -273,6 +381,15 @@ public class PlayerController : MonoBehaviour
             {
                 Gizmos.color = Color.red;
                 Gizmos.DrawWireSphere(groundch.position, groundedRadius);
+            }
+        }
+
+        foreach (var wallch in wallCheck)
+        {
+            if (wallch != null)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(wallch.position, groundedRadius);
             }
         }
     }
