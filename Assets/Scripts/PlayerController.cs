@@ -45,13 +45,14 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Header("Wall jump parameters")]
-    [SerializeField] Transform[] wallChecks;
+    [SerializeField] Transform[] wallChecksLeft;
+    [SerializeField] Transform[] wallChecksRight;
     public float wallCheckRadius = .03125f;
     [SerializeField] LayerMask whatIsWalls;
-    [SerializeField] float wallStickTime = .1f;
-    private float timeToWallUnstick;
-
+    public bool wallJumped;
+    public bool wallJumping;
     bool wallSliding = false;
+    public float wallJumpXVelocity = 5f;
     int wallDirX;
     [SerializeField] float wallSlidingSpeed = 3f;
 
@@ -66,13 +67,9 @@ public class PlayerController : MonoBehaviour
     {
         PcControlls();
 
-        RunInputProcessing();
-
         VariablesResetOnGround();
         //SetAnimationsParameters();
-        isRunning = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
-        if (isRunning)
-            transform.localScale = new Vector2(Mathf.Sign(rb.velocity.x), 1f);
+
 
     }
 
@@ -81,6 +78,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             dashAlow = true;
+            wallJumping = false;
         }
 
         bool OldIsGrounded = isGrounded;
@@ -131,11 +129,10 @@ public class PlayerController : MonoBehaviour
     {
         wallDirX = WallHit();
         wallSliding = false;
-
-
-        if ((wallDirX == 1 || wallDirX == -1) && rb.velocity.y < 0  && Mathf.Sign(xInput) ==wallDirX)
+        if ((wallDirX == -1 || wallDirX == 1) && rb.velocity.y < 0  && Mathf.Sign(xInput) ==wallDirX)
         {
             wallSliding = true;
+
 
             if (rb.velocity.y < -wallSlidingSpeed)
             {
@@ -144,12 +141,12 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = velocity;
             }
 
-            if (timeToWallUnstick > 0f)
+           /* if (timeToWallUnstick > 0f)
             {
                 var velocity = rb.velocity;
                 velocity.x = 0f;
                 rb.velocity = velocity;
-                if ((int)Mathf.Sign(xInput) != wallDirX)
+                if ((int)Mathf.Sign(xInput) == -wallDirX)
                 {
                     timeToWallUnstick -= Time.fixedDeltaTime;
                 }
@@ -157,48 +154,26 @@ public class PlayerController : MonoBehaviour
                 {
                     timeToWallUnstick = wallStickTime;
                 }
-
             }
             else
             {
+                wallSliding = false;
+                rb.AddForce(Vector2.right * (-wallDirX));
                 timeToWallUnstick = wallStickTime;
-            }
+            }*/
         }
-        else
-        {
-            wallSliding = false;
-        }
-        print(wallSliding);
-    }
-
-    void RunInputProcessing()
-    {
-        xInput = SimpleInput.GetAxis("Horizontal");
-        if (xInput < 0)
-        {
-            isFacingLeft = true;
-            isRunning = true;
-        }
-
-        else if (xInput > 0)
-        {
-            isFacingLeft = false;
-            isRunning = true;
-        }
-        else
-            isRunning = false;
-            
     }
 
     void Run()
     {
-        if (!wallSliding)
+        xInput = SimpleInput.GetAxis("Horizontal");
+
+        if (!wallJumping)
         {
             Vector2 velocity = rb.velocity;
             velocity.x = xInput * runSpeed * 100 * Time.deltaTime;
             rb.velocity = velocity;
         }
-
     }
 
     private void SetAnimationsParameters()
@@ -245,6 +220,10 @@ public class PlayerController : MonoBehaviour
     public void OnPressJump()
     {
         jumpRequest = true;
+        if (wallSliding && jumpRequest && !isGrounded)
+        {
+            wallJumped = true;
+        }
     }
 
     public void OnReleaseJump()
@@ -262,7 +241,16 @@ public class PlayerController : MonoBehaviour
         {
             jumpCancel = false;
             jumpsCount++;
-            Jump(velocity);
+            if (wallJumped)
+            {
+                rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX), jumpMaxForce);
+                wallJumping = true;
+                wallJumped = false;
+            }
+            else
+            {
+                Jump(velocity);
+            }
             jumpRequest = false;
         }
         else
@@ -276,6 +264,8 @@ public class PlayerController : MonoBehaviour
             rb.velocity = velocity;
             jumpCancel = false;
         }
+        if (rb.velocity.y < 0)
+            wallJumping = false;
 
     }
 
@@ -314,24 +304,29 @@ public class PlayerController : MonoBehaviour
 
     private int WallHit()
     {
-        bool wHit = false;
-        foreach (var wallCheck in wallChecks)
+        foreach (var wallCheck in wallChecksLeft)
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, groundedRadius, whatIsWalls);
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].gameObject != gameObject)
                 {
-                    wHit = true;
+                    return -1;
                 }
             }
         }
-        if (wHit)
+        foreach (var wallCheck in wallChecksRight)
         {
-            return (int)Mathf.Sign(transform.localScale.x);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, groundedRadius, whatIsWalls);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].gameObject != gameObject)
+                {
+                    return 1;
+                }
+            }
         }
-        else
-            return 0;
+        return 0;
     }
 
     private void OnDrawGizmosSelected()
@@ -344,11 +339,18 @@ public class PlayerController : MonoBehaviour
                 Gizmos.DrawWireSphere(groundch.position, groundedRadius);
             }
         }
-        foreach (var wallCH in wallChecks)
+        foreach (var wallCH in wallChecksLeft)
         {
             if (wallCH != null)
             {
                 Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(wallCH.position, groundedRadius);
+            }
+        }foreach (var wallCH in wallChecksRight)
+        {
+            if (wallCH != null)
+            {
+                Gizmos.color = Color.cyan;
                 Gizmos.DrawWireSphere(wallCH.position, groundedRadius);
             }
         }
