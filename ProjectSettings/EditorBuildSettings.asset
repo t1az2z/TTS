@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Level mechanics sketch.unity
+    guid: ed8cf5e7ec19ceb41aea07b96daa96bc
   m_configObjects: {}

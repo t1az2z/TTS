@@ -6,11 +6,12 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
     Animator animator;
+    [SerializeField] GameObject visuals;
 
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
     bool isFacingLeft;
-    bool isRunning = false;
+    bool isRunning;
     float xInput;
     [Space(8)]
 
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        visuals = transform.Find("Visuals").gameObject;
         animator = GetComponent<Animator>();
     }
     void Update()
@@ -68,6 +70,10 @@ public class PlayerController : MonoBehaviour
         PcControlls();
 
         VariablesResetOnGround();
+        
+        isRunning = Mathf.Abs(rb.velocity.x)>Mathf.Epsilon;
+        if (isRunning)
+            visuals.transform.localScale = new Vector2(Mathf.Sign(rb.velocity.x), 1f);
         //SetAnimationsParameters();
 
 
@@ -121,47 +127,48 @@ public class PlayerController : MonoBehaviour
         JumpLogicProcessing();
         HandleWallSliding();
         GravityScaleChange();
-
-
     }
 
     private void HandleWallSliding()
     {
         wallDirX = WallHit();
         wallSliding = false;
-        if ((wallDirX == -1 || wallDirX == 1) && rb.velocity.y < 0  && Mathf.Sign(xInput) ==wallDirX)
+        if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) ==wallDirX && xInput != 0)
         {
             wallSliding = true;
 
-
-            if (rb.velocity.y < -wallSlidingSpeed)
+            if (rb.velocity.y < -wallSlidingSpeed  && rb.velocity.y < 0)
             {
                 var velocity = rb.velocity;
                 velocity.y = -wallSlidingSpeed;
                 rb.velocity = velocity;
             }
 
-           /* if (timeToWallUnstick > 0f)
-            {
-                var velocity = rb.velocity;
-                velocity.x = 0f;
-                rb.velocity = velocity;
-                if ((int)Mathf.Sign(xInput) == -wallDirX)
-                {
-                    timeToWallUnstick -= Time.fixedDeltaTime;
-                }
-                else
-                {
-                    timeToWallUnstick = wallStickTime;
-                }
-            }
-            else
-            {
-                wallSliding = false;
-                rb.AddForce(Vector2.right * (-wallDirX));
-                timeToWallUnstick = wallStickTime;
-            }*/
+            jumpsCount = 0;
+            jumpCancel = false;
+
+            /* if (timeToWallUnstick > 0f)
+             {
+                 var velocity = rb.velocity;
+                 velocity.x = 0f;
+                 rb.velocity = velocity;
+                 if ((int)Mathf.Sign(xInput) == -wallDirX)
+                 {
+                     timeToWallUnstick -= Time.fixedDeltaTime;
+                 }
+                 else
+                 {
+                     timeToWallUnstick = wallStickTime;
+                 }
+             }
+             else
+             {
+                 wallSliding = false;
+                 rb.AddForce(Vector2.right * (-wallDirX));
+                 timeToWallUnstick = wallStickTime;
+             }*/
         }
+  
     }
 
     void Run()
@@ -220,7 +227,7 @@ public class PlayerController : MonoBehaviour
     public void OnPressJump()
     {
         jumpRequest = true;
-        if (wallSliding && jumpRequest && !isGrounded)
+        if (wallSliding && jumpRequest && !isGrounded && Mathf.Sign(xInput) == wallDirX)
         {
             wallJumped = true;
         }
@@ -229,6 +236,7 @@ public class PlayerController : MonoBehaviour
     public void OnReleaseJump()
     {
         jumpRequest = false;
+        //wallJumping = false; m.b. use for "meatboy" style wall jumps 
         if (!isGrounded)
             jumpCancel = true;
     }
