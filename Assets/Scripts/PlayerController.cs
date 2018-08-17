@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
     Animator animator;
-    [SerializeField] GameObject visuals;
+    SpriteRenderer sr;
+    //[SerializeField] GameObject visuals;
 
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
@@ -55,6 +56,7 @@ public class PlayerController : MonoBehaviour
     bool wallSliding = false;
     public float wallJumpXVelocity = 5f;
     int wallDirX;
+    bool isWallHit = false;
     [SerializeField] float wallSlidingSpeed = 3f;
 
 
@@ -62,7 +64,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        visuals = transform.Find("Visuals").gameObject;
+        sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
     }
     void Update()
@@ -70,13 +72,30 @@ public class PlayerController : MonoBehaviour
         PcControlls();
 
         VariablesResetOnGround();
-        
-        isRunning = Mathf.Abs(rb.velocity.x)>Mathf.Epsilon;
+
+        FlipSprite();
+
+        SetAnimationsParameters();
+
+
+    }
+
+    private void FlipSprite()
+    {
+        isRunning = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
         if (isRunning)
-            visuals.transform.localScale = new Vector2(Mathf.Sign(rb.velocity.x), 1f);
-        //SetAnimationsParameters();
-
-
+        {
+            if (rb.velocity.x < Mathf.Epsilon)
+            {
+                sr.flipX = true;
+                isFacingLeft = true;
+            }
+            else if (rb.velocity.x > Mathf.Epsilon)
+            {
+                sr.flipX = false;
+                isFacingLeft = false;
+            }
+        }
     }
 
     private void VariablesResetOnGround()
@@ -95,7 +114,17 @@ public class PlayerController : MonoBehaviour
             jumpCancel = false;
         }
     }
-
+    private void VariablesResetOnWallHit()
+    {
+        bool OldWallHit = isWallHit;
+        isWallHit = wallSliding;//WallHit() != 0? true : false;
+        if (OldWallHit != isWallHit && isWallHit)
+        {
+            jumpsCount = 0;
+            jumpCancel = false;
+        }
+ 
+    }
 
 
     private void PcControlls()
@@ -131,44 +160,21 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallSliding()
     {
+        VariablesResetOnWallHit();
+
         wallDirX = WallHit();
         wallSliding = false;
         if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) ==wallDirX && xInput != 0)
         {
             wallSliding = true;
-
             if (rb.velocity.y < -wallSlidingSpeed  && rb.velocity.y < 0)
             {
                 var velocity = rb.velocity;
                 velocity.y = -wallSlidingSpeed;
                 rb.velocity = velocity;
             }
-
-            jumpsCount = 0;
-            jumpCancel = false;
-
-            /* if (timeToWallUnstick > 0f)
-             {
-                 var velocity = rb.velocity;
-                 velocity.x = 0f;
-                 rb.velocity = velocity;
-                 if ((int)Mathf.Sign(xInput) == -wallDirX)
-                 {
-                     timeToWallUnstick -= Time.fixedDeltaTime;
-                 }
-                 else
-                 {
-                     timeToWallUnstick = wallStickTime;
-                 }
-             }
-             else
-             {
-                 wallSliding = false;
-                 rb.AddForce(Vector2.right * (-wallDirX));
-                 timeToWallUnstick = wallStickTime;
-             }*/
         }
-  
+ 
     }
 
     void Run()
@@ -185,12 +191,37 @@ public class PlayerController : MonoBehaviour
 
     private void SetAnimationsParameters()
     {
-        animator.SetFloat("ySpeed", rb.velocity.y);
+        /*animator.SetFloat("ySpeed", rb.velocity.y);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("isSpinning", isDashing);
         animator.SetBool("isFacingLeft", isFacingLeft);
         animator.SetFloat("xSpeed", xInput);
-        animator.SetBool("isRunning", isRunning);
+        animator.SetBool("isRunning", isRunning);*/
+        if (isDashing)
+            animator.Play("Dash");
+        else if (isGrounded && rb.velocity.x == 0)
+        {
+            animator.Play("Idle");
+        }
+        else if (isGrounded && rb.velocity.x != 0)
+        {
+            animator.Play("Walk");
+        }
+        else if ((!isGrounded && !wallSliding) || wallJumping)
+        {
+            if (rb.velocity.y > 0 && jumpsCount <= 1 )
+                animator.Play("Jump");
+            else if (rb.velocity.y < 0)
+                animator.Play("Fall");
+            else if (jumpsCount >= 2 && !isDashing)
+            {
+                animator.Play("Jump2");
+            }
+
+        }
+        else if (!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
+            animator.Play("Climb");
+        
     }
 
     public void OnPressDash()
@@ -200,28 +231,29 @@ public class PlayerController : MonoBehaviour
     }
     public void OnReleaseDash()
     {
-        dashRequest = false;
-        dashExpireTime = 0f;
+
         dashAlow = false;
     }
     public void Dash()
     {
-        if (!isGrounded)
+
+        if (dashRequest && dashExpireTime >= Time.time && dashAlow)
         {
-            if (dashRequest && dashExpireTime >= Time.time && dashAlow)
-            {
-                rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-                isDashing = true;
-                Vector2 velocity = rb.velocity;
-                velocity.x = Mathf.Sign(xInput)*runSpeed*300*Time.fixedDeltaTime;
-                rb.velocity = velocity;
-            }
-            else if (!dashRequest || dashExpireTime < Time.time)
-            {
-                rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-                isDashing = false;
-            }
+            int dashDirection = isFacingLeft ? -1 : 1;
+            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+            isDashing = true;
+            Vector2 velocity = rb.velocity;
+            velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
+            rb.velocity = velocity;
         }
+        else if (dashExpireTime < Time.time)
+        {
+            rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+            isDashing = false;
+            dashRequest = false;
+            dashExpireTime = 0f;
+        }
+
     }
 
     public void OnPressJump()
@@ -272,7 +304,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = velocity;
             jumpCancel = false;
         }
-        if (rb.velocity.y < 0)
+        if (rb.velocity.y < 1)
             wallJumping = false;
 
     }

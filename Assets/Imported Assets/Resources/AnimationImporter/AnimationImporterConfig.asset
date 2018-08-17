@@ -20,11 +20,11 @@ MonoBehaviour:
   _spriteAlignmentCustomX: 0
   _spriteAlignmentCustomY: 0
   _spritesTargetLocation:
-    _locationType: 1
-    _globalDirectory: Assets
+    _locationType: 2
+    _globalDirectory: Assets/Sprites & Tiles/Sprites
   _animationsTargetLocation:
-    _locationType: 1
-    _globalDirectory: Assets
+    _locationType: 2
+    _globalDirectory: Assets/Animations
   _animationControllersTargetLocation:
-    _locationType: 1
-    _globalDirectory: Assets
+    _locationType: 2
+    _globalDirectory: Assets/Animations/Controllers
