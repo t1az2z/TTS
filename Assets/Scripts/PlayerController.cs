@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -7,7 +8,10 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Animator animator;
     SpriteRenderer sr;
-    //[SerializeField] GameObject visuals;
+
+    [HideInInspector]public Vector3 checkpoint = Vector3.zero;
+    bool isDead = false;
+    public GameObject splashScreen;
 
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
@@ -40,10 +44,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Dash parameters:")]
     [SerializeField] float dashTime = 2f;
-    public bool dashAlow = true;
-    public bool dashRequest = false;
-    public bool isDashing = false;
-    public float dashExpireTime;
+    bool dashAlow = true;
+    bool dashRequest = false;
+    bool isDashing = false;
+    float dashExpireTime;
     [Space(8)]
 
     [Header("Wall jump parameters")]
@@ -69,16 +73,17 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        PcControlls();
+            if(!isDead)
+                PcControlls();
 
-        VariablesResetOnGround();
+            VariablesResetOnGround();
 
-        FlipSprite();
+            FlipSprite();
 
-        SetAnimationsParameters();
-
-
+            SetAnimationsParameters();
     }
+
+
 
     private void FlipSprite()
     {
@@ -117,7 +122,7 @@ public class PlayerController : MonoBehaviour
     private void VariablesResetOnWallHit()
     {
         bool OldWallHit = isWallHit;
-        isWallHit = wallSliding;//WallHit() != 0? true : false;
+        isWallHit = wallSliding;
         if (OldWallHit != isWallHit && isWallHit)
         {
             jumpsCount = 0;
@@ -150,12 +155,19 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Run();
-        Dash();
-        GroundCheck();
-        JumpLogicProcessing();
-        HandleWallSliding();
-        GravityScaleChange();
+        if (!isDead)
+        {
+            Run();
+            Dash();
+            GroundCheck();
+            JumpLogicProcessing();
+            HandleWallSliding();
+            GravityScaleChange();
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }
     }
 
     private void HandleWallSliding()
@@ -164,7 +176,7 @@ public class PlayerController : MonoBehaviour
 
         wallDirX = WallHit();
         wallSliding = false;
-        if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) ==wallDirX && xInput != 0)
+        if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <-.5f)
         {
             wallSliding = true;
             if (rb.velocity.y < -wallSlidingSpeed  && rb.velocity.y < 0)
@@ -197,6 +209,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isFacingLeft", isFacingLeft);
         animator.SetFloat("xSpeed", xInput);
         animator.SetBool("isRunning", isRunning);*/
+
         if (isDashing)
             animator.Play("Dash");
         else if (isGrounded && rb.velocity.x == 0)
@@ -231,8 +244,8 @@ public class PlayerController : MonoBehaviour
     }
     public void OnReleaseDash()
     {
-
         dashAlow = false;
+
     }
     public void Dash()
     {
@@ -245,6 +258,8 @@ public class PlayerController : MonoBehaviour
             Vector2 velocity = rb.velocity;
             velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
             rb.velocity = velocity;
+            //todo stop-frame
+            //todo screen shake
         }
         else if (dashExpireTime < Time.time)
         {
@@ -252,6 +267,7 @@ public class PlayerController : MonoBehaviour
             isDashing = false;
             dashRequest = false;
             dashExpireTime = 0f;
+
         }
 
     }
@@ -394,5 +410,32 @@ public class PlayerController : MonoBehaviour
                 Gizmos.DrawWireSphere(wallCH.position, groundedRadius);
             }
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("CheckPoint"))
+        {
+            checkpoint = collision.transform.position;
+        }
+        else if(collision.CompareTag("Hazards"))
+        {
+            StartCoroutine("Death");
+        }
+    }
+
+    private IEnumerator Death()
+    {
+        isDead = true;
+        splashScreen.SetActive(true);
+        Animator splashAnim = splashScreen.GetComponent<Animator>();
+        splashAnim.Play("SplashShow");
+        yield return new WaitForSeconds(.5f);
+        animator.Play("Idle");
+        transform.position = checkpoint;
+        splashAnim.Play("SplashHide");
+        yield return new WaitForSeconds(.5f);
+        splashScreen.SetActive(false);
+        isDead = false;
     }
 }

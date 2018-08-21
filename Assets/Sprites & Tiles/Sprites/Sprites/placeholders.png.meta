@@ -184,18 +184,22 @@ TextureImporter:
       name: placeholders_3
       rect:
         serializedVersion: 2
-        x: 8
-        y: 58
+        x: 29
+        y: 50
         width: 8
         height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: -0.5, y: -3.5}
+        - {x: -0.5, y: 0.5}
+        - {x: 3.5, y: 0.5}
+        - {x: 3.5, y: -3.5}
       tessellationDetail: 0
       bones: []
-      spriteID: c435378db8c55f44da956a9f9b805813
+      spriteID: ff679e7a31a427047918376e79207839
       vertices: []
       indices: 
       edges: []
@@ -204,88 +208,8 @@ TextureImporter:
       name: placeholders_4
       rect:
         serializedVersion: 2
-        x: 8
-        y: 50
-        width: 8
-        height: 8
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8d87f499176829a4cbae1944d206cd7f
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: placeholders_5
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 50
-        width: 8
-        height: 8
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0b39ca006fa67c44197334f489a64fa7
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: placeholders_6
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 58
-        width: 8
-        height: 8
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 71ff8ff93969f114184a4abfc1ad1dd3
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: placeholders_7
-      rect:
-        serializedVersion: 2
         x: 16
         y: 50
-        width: 8
-        height: 8
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e52aa2cf660475242bb56ce2727b4f08
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: placeholders_8
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 42
         width: 8
         height: 8
       alignment: 0
@@ -295,47 +219,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 36ae297190ab2f442ab9bbe253b52a1b
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: placeholders_9
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 42
-        width: 8
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cdea7cc1b0fec0145b54dfd3e9c57e9e
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: placeholders_10
-      rect:
-        serializedVersion: 2
-        x: 8
-        y: 42
-        width: 8
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 87d72a15470b2c4439171f7c8a672408
+      spriteID: be33a731be2f75e4a8994d579fc29109
       vertices: []
       indices: 
       edges: []
