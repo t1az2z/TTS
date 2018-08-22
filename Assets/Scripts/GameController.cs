@@ -21,19 +21,23 @@ public class GameController : MonoBehaviour {
         {
             Destroy(gameObject);
         }
-
+        previousCamera = currentCamera;
 
     }
 
     public void SwitchCamera(GameObject newCamera)
     {
-        print("switching cam");
+        print(newCamera);
         previousCamera = currentCamera;
         currentCamera = newCamera;
-        if (currentCamera != null  && previousCamera != currentCamera)
+        if (currentCamera != null && previousCamera != null && previousCamera != currentCamera)
         {
             currentCamera.SetActive(true);
             previousCamera.SetActive(false);
+        }
+        else if(previousCamera == currentCamera)
+        {
+            currentCamera.SetActive(true);
         }
     }
     }
