@@ -5,9 +5,16 @@ using UnityEngine;
 public class ActivateVirtualCamera : MonoBehaviour {
 
     public GameObject vcam;
+    public GameController gameController;
+
+    private void Awake()
+    {
+        gameController = FindObjectOfType<GameController>();
+        vcam = transform.GetChild(0).gameObject;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        vcam.SetActive(true);
+        gameController.SwitchCamera(vcam);
     }
 }
