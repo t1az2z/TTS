@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -6,12 +7,17 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
     Animator animator;
+    SpriteRenderer sr;
+
+    [HideInInspector]public Vector3 checkpoint = Vector3.zero;
+    bool isDead = false;
+    public GameObject splashScreen;
 
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
     bool isFacingLeft;
-    bool isRunning = false;
-    float xMovement;
+    bool isRunning;
+    float xInput;
     [Space(8)]
 
     [Header("Jump parameters:")]
@@ -27,50 +33,104 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump gravity variables:")]
     [SerializeField] float fallMultiplier = 2.7f;
-    [SerializeField] float lowJumpMultiplier = 2f;
     [Space(8)]
 
     [Header("Ground parameters")]
-    [SerializeField] Transform groundCheck;
-    const float groundedRadius = .2f;
+    [SerializeField] Transform[] groundChecks;
+    public float groundedRadius = .03125f;
     [SerializeField] LayerMask whatIsGround;
+
     [Space(8)]
 
-    [Header("Spin parameters:")]
-    [SerializeField] float spinTime = 2f;
-    public bool spinAllow = true;
-    public bool spinRequest = false;
-    public bool isSpinning = false;
-    public float spinExpireTime;
+    [Header("Dash parameters:")]
+    [SerializeField] float dashTime = 2f;
+    bool dashAlow = true;
+    bool dashRequest = false;
+    bool isDashing = false;
+    float dashExpireTime;
+    [Space(8)]
+
+    [Header("Wall jump parameters")]
+    [SerializeField] Transform[] wallChecksLeft;
+    [SerializeField] Transform[] wallChecksRight;
+    public float wallCheckRadius = .03125f;
+    [SerializeField] LayerMask whatIsWalls;
+    public bool wallJumped;
+    public bool wallJumping;
+    bool wallSliding = false;
+    public float wallJumpXVelocity = 5f;
+    int wallDirX;
+    bool isWallHit = false;
+    [SerializeField] float wallSlidingSpeed = 3f;
 
 
 
-    void Awake()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
     }
     void Update()
     {
-        PcControlls();
+            if(!isDead)
+                PcControlls();
 
-        RunInputProcessing();
+            VariablesResetOnGround();
 
-        VariablesResetOnGround();
-        //SetAnimationsParameters();
+            FlipSprite();
+
+            SetAnimationsParameters();
+    }
 
 
+
+    private void FlipSprite()
+    {
+        isRunning = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
+        if (isRunning)
+        {
+            if (rb.velocity.x < Mathf.Epsilon)
+            {
+                sr.flipX = true;
+                isFacingLeft = true;
+            }
+            else if (rb.velocity.x > Mathf.Epsilon)
+            {
+                sr.flipX = false;
+                isFacingLeft = false;
+            }
+        }
     }
 
     private void VariablesResetOnGround()
     {
         if (isGrounded)
         {
-            jumpsCount = 1;
-            spinAllow = true;
+            dashAlow = true;
+            wallJumping = false;
+        }
+
+        bool OldIsGrounded = isGrounded;
+        isGrounded = GroundCheck();
+        if (OldIsGrounded != isGrounded && isGrounded)
+        {
+            jumpsCount = 0;
             jumpCancel = false;
         }
     }
+    private void VariablesResetOnWallHit()
+    {
+        bool OldWallHit = isWallHit;
+        isWallHit = wallSliding;
+        if (OldWallHit != isWallHit && isWallHit)
+        {
+            jumpsCount = 0;
+            jumpCancel = false;
+        }
+ 
+    }
+
 
     private void PcControlls()
     {
@@ -83,129 +143,170 @@ public class PlayerController : MonoBehaviour
             OnReleaseJump();
         }
 
-        if (SimpleInput.GetButtonDown("Spin"))
+        if (SimpleInput.GetButtonDown("Dash"))
         {
-            OnPressSpin();
+            OnPressDash();
         }
-        else if (SimpleInput.GetButtonUp("Spin"))
+        else if (SimpleInput.GetButtonUp("Dash"))
         {
-            OnReleaseSpin();
+            OnReleaseDash();
         }
     }
 
     private void FixedUpdate()
     {
-        Run();
-        Spin();
-        GroundCheck();
-        JumpLogicProcessing();
-        GravityScaleChange();
-
-    }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        transform.SetParent(collision.transform);
-    }
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        transform.SetParent(null);
-    }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        transform.SetParent(collision.transform);
-    }
-
-
-    void RunInputProcessing()
-    {
-        xMovement = SimpleInput.GetAxis("Horizontal");
-        if (xMovement < 0)
+        if (!isDead)
         {
-            isFacingLeft = true;
-            isRunning = true;
-        }
-
-        else if (xMovement > 0)
-        {
-            isFacingLeft = false;
-            isRunning = true;
+            Run();
+            Dash();
+            GroundCheck();
+            JumpLogicProcessing();
+            HandleWallSliding();
+            GravityScaleChange();
         }
         else
-            isRunning = false;
-            
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+
+    private void HandleWallSliding()
+    {
+        VariablesResetOnWallHit();
+
+        wallDirX = WallHit();
+        wallSliding = false;
+        if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <-.5f)
+        {
+            wallSliding = true;
+            if (rb.velocity.y < -wallSlidingSpeed  && rb.velocity.y < 0)
+            {
+                var velocity = rb.velocity;
+                velocity.y = -wallSlidingSpeed;
+                rb.velocity = velocity;
+            }
+        }
+ 
     }
 
     void Run()
     {
-        Vector2 velocity = rb.velocity;
-        velocity.x = xMovement * runSpeed *100  * Time.deltaTime;
-        rb.velocity = velocity;
+        xInput = SimpleInput.GetAxis("Horizontal");
+
+        if (!wallJumping)
+        {
+            Vector2 velocity = rb.velocity;
+            velocity.x = xInput * runSpeed * 100 * Time.deltaTime;
+            rb.velocity = velocity;
+        }
     }
 
     private void SetAnimationsParameters()
     {
-        animator.SetFloat("ySpeed", rb.velocity.y);
+        /*animator.SetFloat("ySpeed", rb.velocity.y);
         animator.SetBool("isGrounded", isGrounded);
-        animator.SetBool("isSpinning", isSpinning);
+        animator.SetBool("isSpinning", isDashing);
         animator.SetBool("isFacingLeft", isFacingLeft);
-        animator.SetFloat("xSpeed", xMovement);
-        animator.SetBool("isRunning", isRunning);
+        animator.SetFloat("xSpeed", xInput);
+        animator.SetBool("isRunning", isRunning);*/
+
+        if (isDashing)
+            animator.Play("Dash");
+        else if (isGrounded && rb.velocity.x == 0)
+        {
+            animator.Play("Idle");
+        }
+        else if (isGrounded && rb.velocity.x != 0)
+        {
+            animator.Play("Walk");
+        }
+        else if ((!isGrounded && !wallSliding) || wallJumping)
+        {
+            if (rb.velocity.y > 0 && jumpsCount <= 1 )
+                animator.Play("Jump");
+            else if (rb.velocity.y < 0)
+                animator.Play("Fall");
+            else if (jumpsCount >= 2 && !isDashing)
+            {
+                animator.Play("Jump2");
+            }
+
+        }
+        else if (!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
+            animator.Play("Climb");
+        
     }
 
-    public void OnPressSpin()
+    public void OnPressDash()
     {
-        spinRequest = true;
-        spinExpireTime = Time.time + spinTime;
+        dashRequest = true;
+        dashExpireTime = Time.time + dashTime;
     }
-    public void OnReleaseSpin()
+    public void OnReleaseDash()
     {
-        spinRequest = false;
-        spinExpireTime = 0f;
-        spinAllow = false;
+        dashAlow = false;
+
     }
-    public void Spin()
+    public void Dash()
     {
-        if (!isGrounded)
+
+        if (dashRequest && dashExpireTime >= Time.time && dashAlow)
         {
-            if (spinRequest && spinExpireTime >= Time.time && spinAllow)
-            {
-                rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-                isSpinning = true;
-            }
-            else if (!spinRequest || spinExpireTime < Time.time)
-            {
-                rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-                isSpinning = false;
-            }
+            int dashDirection = isFacingLeft ? -1 : 1;
+            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+            isDashing = true;
+            Vector2 velocity = rb.velocity;
+            velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
+            rb.velocity = velocity;
+            //todo stop-frame
+            //todo screen shake
         }
+        else if (dashExpireTime < Time.time)
+        {
+            rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+            isDashing = false;
+            dashRequest = false;
+            dashExpireTime = 0f;
+
+        }
+
     }
 
     public void OnPressJump()
     {
         jumpRequest = true;
+        if (wallSliding && jumpRequest && !isGrounded && Mathf.Sign(xInput) == wallDirX)
+        {
+            wallJumped = true;
+        }
     }
 
     public void OnReleaseJump()
     {
         jumpRequest = false;
+        //wallJumping = false; m.b. use for "meatboy" style wall jumps 
         if (!isGrounded)
             jumpCancel = true;
     }
 
     private void JumpLogicProcessing()
     {
-        MultipleJumpProcessing();
-    }
-
-    private void MultipleJumpProcessing()
-    {
         Vector2 velocity = rb.velocity;
 
-        if (jumpRequest && (jumpsCount <= allowedJumps))
+        if (jumpRequest && (jumpsCount < allowedJumps))
         {
             jumpCancel = false;
             jumpsCount++;
-            Jump(velocity);
+            if (wallJumped)
+            {
+                rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX), jumpMaxForce);
+                wallJumping = true;
+                wallJumped = false;
+            }
+            else
+            {
+                Jump(velocity);
+            }
             jumpRequest = false;
         }
         else
@@ -219,6 +320,8 @@ public class PlayerController : MonoBehaviour
             rb.velocity = velocity;
             jumpCancel = false;
         }
+        if (rb.velocity.y < 1)
+            wallJumping = false;
 
     }
 
@@ -238,26 +341,101 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = 1;
         }
     }
-    private void GroundCheck()
+    private bool GroundCheck()
     {
-        bool wasGrounded = isGrounded;
-        isGrounded = false;
-
-
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundedRadius, whatIsGround);
-        for (int i = 0; i < colliders.Length; i++)
+        bool isGrnd = false;
+        foreach (var groundch in groundChecks)
         {
-            if (colliders[i].gameObject != gameObject)
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(groundch.position, groundedRadius, whatIsGround);
+            for (int i = 0; i < colliders.Length; i++)
             {
-                isGrounded = true;
+                if (colliders[i].gameObject != gameObject)
+                {
+                    isGrnd = true;
+                }
+            }
+        }
+        return isGrnd;
+    }
+
+    private int WallHit()
+    {
+        foreach (var wallCheck in wallChecksLeft)
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, groundedRadius, whatIsWalls);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].gameObject != gameObject)
+                {
+                    return -1;
+                }
+            }
+        }
+        foreach (var wallCheck in wallChecksRight)
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, groundedRadius, whatIsWalls);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].gameObject != gameObject)
+                {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        foreach (var groundch in groundChecks)
+        {
+            if (groundch != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(groundch.position, groundedRadius);
+            }
+        }
+        foreach (var wallCH in wallChecksLeft)
+        {
+            if (wallCH != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(wallCH.position, groundedRadius);
+            }
+        }foreach (var wallCH in wallChecksRight)
+        {
+            if (wallCH != null)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireSphere(wallCH.position, groundedRadius);
             }
         }
     }
 
-
-    private void OnDrawGizmosSelected()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, groundedRadius);
+        if(collision.CompareTag("CheckPoint"))
+        {
+            checkpoint = collision.transform.position;
+        }
+        else if(collision.CompareTag("Hazards"))
+        {
+            StartCoroutine("Death");
+        }
+    }
+
+    private IEnumerator Death()
+    {
+        isDead = true;
+        splashScreen.SetActive(true);
+        Animator splashAnim = splashScreen.GetComponent<Animator>();
+        splashAnim.Play("SplashShow");
+        yield return new WaitForSeconds(.5f);
+        animator.Play("Idle");
+        transform.position = checkpoint;
+        splashAnim.Play("SplashHide");
+        yield return new WaitForSeconds(.5f);
+        splashScreen.SetActive(false);
+        isDead = false;
     }
 }

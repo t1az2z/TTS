@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Spikes
+  - CheckPoint
+  - Hazards
   layers:
   - Default
   - TransparentFX
@@ -15,7 +18,7 @@ TagManager:
   - 
   - Ground
   - Player
-  - Background
+  - Camera Collider
   - 
   - 
   - 
@@ -46,9 +49,6 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 4003816963
-    locked: 0
-  - name: Foreground fixes
-    uniqueID: 1836090851
     locked: 0
   - name: UI
     uniqueID: 3514160493
