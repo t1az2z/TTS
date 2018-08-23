@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HideOnTriggerEnter : MonoBehaviour {
+public class HideWallsOnTriggerEnter : MonoBehaviour {
 
     Animator animator;
     bool isHiden = true;

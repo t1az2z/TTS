@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    public GameController gc;
     Rigidbody2D rb;
     Animator animator;
-    SpriteRenderer sr;
+    SpriteRenderer spriteRenderer;
 
-    [HideInInspector]public Vector3 checkpoint = Vector3.zero;
     bool isDead = false;
-    public GameObject splashScreen;
+    public bool controllsEnabled = true;
 
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
@@ -63,17 +62,21 @@ public class PlayerController : MonoBehaviour
     bool isWallHit = false;
     [SerializeField] float wallSlidingSpeed = 3f;
 
+    private void Awake()
+    {
+        gc = FindObjectOfType<GameController>();
+    }
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
     }
     void Update()
     {
-            if(!isDead)
+            if(controllsEnabled)
                 PcControlls();
 
             VariablesResetOnGround();
@@ -92,12 +95,12 @@ public class PlayerController : MonoBehaviour
         {
             if (rb.velocity.x < Mathf.Epsilon)
             {
-                sr.flipX = true;
+                spriteRenderer.flipX = true;
                 isFacingLeft = true;
             }
             else if (rb.velocity.x > Mathf.Epsilon)
             {
-                sr.flipX = false;
+                spriteRenderer.flipX = false;
                 isFacingLeft = false;
             }
         }
@@ -155,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isDead)
+        if (controllsEnabled)
         {
             Run();
             Dash();
@@ -203,37 +206,38 @@ public class PlayerController : MonoBehaviour
 
     private void SetAnimationsParameters()
     {
-        /*animator.SetFloat("ySpeed", rb.velocity.y);
-        animator.SetBool("isGrounded", isGrounded);
-        animator.SetBool("isSpinning", isDashing);
-        animator.SetBool("isFacingLeft", isFacingLeft);
-        animator.SetFloat("xSpeed", xInput);
-        animator.SetBool("isRunning", isRunning);*/
-
-        if (isDashing)
-            animator.Play("Dash");
-        else if (isGrounded && rb.velocity.x == 0)
+        if (!isDead)
         {
-            animator.Play("Idle");
-        }
-        else if (isGrounded && rb.velocity.x != 0)
-        {
-            animator.Play("Walk");
-        }
-        else if ((!isGrounded && !wallSliding) || wallJumping)
-        {
-            if (rb.velocity.y > 0 && jumpsCount <= 1 )
-                animator.Play("Jump");
-            else if (rb.velocity.y < 0)
-                animator.Play("Fall");
-            else if (jumpsCount >= 2 && !isDashing)
+            if (isDashing)
+                animator.Play("Dash");
+            else if (isGrounded && rb.velocity.x == 0)
             {
-                animator.Play("Jump2");
+                animator.Play("Idle");
             }
+            else if (isGrounded && rb.velocity.x != 0)
+            {
+                animator.Play("Walk");
+            }
+            else if ((!isGrounded && !wallSliding) || wallJumping)
+            {
+                if (rb.velocity.y > 0 && jumpsCount <= 1)
+                    animator.Play("Jump");
+                else if (rb.velocity.y < 0)
+                    animator.Play("Fall");
+                else if (jumpsCount >= 2 && !isDashing)
+                {
+                    animator.Play("Jump2");
+                }
 
+            }
+            else if (!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
+                animator.Play("Climb");
         }
-        else if (!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
-            animator.Play("Climb");
+        else if (isDead)
+        {
+            //animator.Play("Death");
+            isDead = false;
+        }
         
     }
 
@@ -416,26 +420,12 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.CompareTag("CheckPoint"))
         {
-            checkpoint = collision.transform.position;
+            gc.SetChekpoint(collision.transform.position);
         }
         else if(collision.CompareTag("Hazards"))
         {
-            StartCoroutine("Death");
+            StartCoroutine(gc.DeathCoroutine());
+            isDead = true;
         }
-    }
-
-    private IEnumerator Death()
-    {
-        isDead = true;
-        splashScreen.SetActive(true);
-        Animator splashAnim = splashScreen.GetComponent<Animator>();
-        splashAnim.Play("SplashShow");
-        yield return new WaitForSeconds(.5f);
-        animator.Play("Idle");
-        transform.position = checkpoint;
-        splashAnim.Play("SplashHide");
-        yield return new WaitForSeconds(.5f);
-        splashScreen.SetActive(false);
-        isDead = false;
     }
 }
