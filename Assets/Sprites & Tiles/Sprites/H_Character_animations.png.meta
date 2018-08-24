@@ -24,6 +24,44 @@ TextureImporter:
     21300038: H_Character_animations_Jump2_3
     21300040: H_Character_animations_Jump2_4
     21300042: H_Character_animations_Jump2_5
+    21300044: H_Character_animations 0
+    21300046: H_Character_animations 1
+    21300048: H_Character_animations 2
+    21300050: H_Character_animations 3
+    21300052: H_Character_animations 4
+    21300054: H_Character_animations 5
+    21300056: H_Character_animations 6
+    21300058: H_Character_animations 7
+    21300060: H_Character_animations 8
+    21300062: H_Character_animations 9
+    21300064: H_Character_animations 10
+    21300066: H_Character_animations 11
+    21300068: H_Character_animations 12
+    21300070: H_Character_animations 13
+    21300072: H_Character_animations 14
+    21300074: H_Character_animations 15
+    21300076: H_Character_animations 16
+    21300078: H_Character_animations 17
+    21300080: H_Character_animations 18
+    21300082: H_Character_animations 19
+    21300084: H_Character_animations 20
+    21300086: H_Character_animations 21
+    21300088: H_Character_animations 22
+    21300090: H_Character_animations 23
+    21300092: H_Character_animations 24
+    21300094: H_Character_animations 25
+    21300096: H_Character_animations 26
+    21300098: H_Character_animations 27
+    21300100: H_Character_animations 28
+    21300102: H_Character_animations 29
+    21300104: H_Character_animations 30
+    21300106: H_Character_animations 31
+    21300108: H_Character_animations 32
+    21300110: H_Character_animations 33
+    21300112: H_Character_animations 34
+    21300114: H_Character_animations 35
+    21300116: H_Character_animations 36
+    21300118: H_Character_animations 37
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -82,7 +120,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 128
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -95,13 +133,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: H_Character_animations_Idle_0
+      name: H_Character_animations 0
       rect:
         serializedVersion: 2
         x: 0
-        y: 48
-        width: 16
-        height: 16
+        y: 224
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -109,19 +147,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a12507aaf4c66cd4c93326537aa57840
+      spriteID: 58bafc2a54edd6540bfc0b3cb826af97
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Idle_1
+      name: H_Character_animations 1
       rect:
         serializedVersion: 2
-        x: 16
-        y: 48
-        width: 16
-        height: 16
+        x: 36
+        y: 224
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,19 +167,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c955ac1d8501d1742833a7f57d193528
+      spriteID: f898b61efc9f66f4e9e3f4ce627b1721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Idle_2
+      name: H_Character_animations 2
       rect:
         serializedVersion: 2
-        x: 32
-        y: 48
-        width: 16
-        height: 16
+        x: 72
+        y: 224
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -149,19 +187,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1bb3bbb380764364e9747440b1a8dd7e
+      spriteID: b223d24707a61c140b28024a25da355b
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Idle_3
+      name: H_Character_animations 3
       rect:
         serializedVersion: 2
-        x: 48
-        y: 48
-        width: 16
-        height: 16
+        x: 108
+        y: 224
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,19 +207,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 782ed13347c69fd4aa11b054b4c6057b
+      spriteID: 776fdad8100b42d4ea10c320b815ed3f
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Walk_0
+      name: H_Character_animations 4
       rect:
         serializedVersion: 2
-        x: 64
-        y: 48
-        width: 16
-        height: 16
+        x: 144
+        y: 224
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,19 +227,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5cad7bbaf8da62f478257725c2f7373b
+      spriteID: f32610c3f5b34454d87519b4bbeb7d22
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Walk_1
+      name: H_Character_animations 5
       rect:
         serializedVersion: 2
-        x: 80
-        y: 48
-        width: 16
-        height: 16
+        x: 180
+        y: 224
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -209,19 +247,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0816bc778ab81f142bbcc61b04e6f454
+      spriteID: 6e8bb8b90dfcd4e469968f5aa3d4a637
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Walk_2
+      name: H_Character_animations 6
       rect:
         serializedVersion: 2
-        x: 96
-        y: 48
-        width: 16
-        height: 16
+        x: 216
+        y: 224
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -229,39 +267,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 73675fec6d3a6074a81616586c2a044b
+      spriteID: e0a509250e5e1f84783ed9d2f97e1fb5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Walk_3
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 48
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 143c53d56c9e524479e6ca3031070dba
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: H_Character_animations_Jump_0
+      name: H_Character_animations 7
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
-        width: 16
-        height: 16
+        y: 192
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -269,19 +287,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 040ac6f310c0bf949a057cb995475a9c
+      spriteID: d745b8c8af3a94945a01352fc4378305
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Fall_0
+      name: H_Character_animations 8
       rect:
         serializedVersion: 2
-        x: 16
-        y: 32
-        width: 16
-        height: 16
+        x: 36
+        y: 192
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -289,19 +307,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d582e71bbc29c4840a3fb3e8c50705d6
+      spriteID: 2383f1cb77dc6c849a4c9c3ced8fd488
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Fall_1
+      name: H_Character_animations 9
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
-        width: 16
-        height: 16
+        x: 72
+        y: 192
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -309,19 +327,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5af4b6800895cee4bb1b3fb78d4d8ab4
+      spriteID: 7839e6845d328334aa8c800bb2d2ac5c
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Fall_2
+      name: H_Character_animations 10
       rect:
         serializedVersion: 2
-        x: 48
-        y: 32
-        width: 16
-        height: 16
+        x: 108
+        y: 192
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -329,19 +347,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d16c1d974201dd84d8fbff932780a1ef
+      spriteID: 299b7ed127112334ebc1f666dbf9d0dd
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Jump2_0
+      name: H_Character_animations 11
       rect:
         serializedVersion: 2
-        x: 64
-        y: 32
-        width: 16
-        height: 16
+        x: 144
+        y: 192
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -349,19 +367,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 04e7149c885ef60458dc95ed419805ee
+      spriteID: a258aebbfe88ca749af44b1fe81e5cfa
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Jump2_1
+      name: H_Character_animations 12
       rect:
         serializedVersion: 2
-        x: 80
-        y: 32
-        width: 16
-        height: 16
+        x: 180
+        y: 192
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -369,19 +387,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4b0bb2b3848eb0441b27d779003a8a68
+      spriteID: 24511828a07733d4d829029a4b1d47d8
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Jump2_2
+      name: H_Character_animations 13
       rect:
         serializedVersion: 2
-        x: 96
-        y: 32
-        width: 16
-        height: 16
+        x: 216
+        y: 192
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -389,39 +407,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 86ba3fb02c29e6d499b6e920c1660b66
+      spriteID: c9886a1f1b4817547b557d5148935b13
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Jump2_3
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 32
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 411930c01c5f3b34281173add58e3450
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: H_Character_animations_Jump2_4
+      name: H_Character_animations 14
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
-        width: 16
-        height: 16
+        y: 160
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -429,19 +427,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b0ba65feefbe73f4cbe661f6e9c86c49
+      spriteID: b7dfadf377f047048b1c3eec65022892
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Jump2_5
+      name: H_Character_animations 15
       rect:
         serializedVersion: 2
-        x: 16
-        y: 16
-        width: 16
-        height: 16
+        x: 36
+        y: 160
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -449,19 +447,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 60cdeabceb3eab04cb2ec68db0048d7a
+      spriteID: 5ffcad4c921a9eb4aa56f103a32d3ba5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Climb_0
+      name: H_Character_animations 16
       rect:
         serializedVersion: 2
-        x: 32
-        y: 16
-        width: 16
-        height: 16
+        x: 72
+        y: 160
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -469,19 +467,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 43d1ff6e0fe5cce4c8b72e8db0eef386
+      spriteID: f65ffef3a8dc0b9469156dd98657e411
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Dash_0
+      name: H_Character_animations 17
       rect:
         serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
+        x: 108
+        y: 160
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -489,19 +487,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1910d302dcdd8474d975c8199e55c3e3
+      spriteID: 4d6eb270125314444b890385ecadc1f5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Dash_1
+      name: H_Character_animations 18
       rect:
         serializedVersion: 2
-        x: 64
-        y: 16
-        width: 16
-        height: 16
+        x: 144
+        y: 160
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -509,19 +507,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1b82a25ba76fe0c4a96b7202a3a4c825
+      spriteID: 28f1e9862436e2140b4c6d9276960e55
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_Character_animations_Dash_2
+      name: H_Character_animations 19
       rect:
         serializedVersion: 2
-        x: 80
-        y: 16
-        width: 16
-        height: 16
+        x: 180
+        y: 160
+        width: 36
+        height: 32
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -529,7 +527,367 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3bb38e70b8be1da47b8f2558cbcf3726
+      spriteID: cf56c86de764a1446ab706c4e1861154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 20
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 160
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58fd8bb354820ec4083ee5c42012ec65
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3a4219994aac2442ae7b7c231a27b5a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 22
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 128
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ce8a12a847e83840aa6a61a3ce39786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 23
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 128
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1738948433380de4db041876a1b03ddc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 24
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 128
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e34d56efa068f8e40b4a5123cb1224c9
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 25
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 128
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29c86bdaaa4e26b40aab10abafb59378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 26
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 128
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31af4e5c3a2e92f46878e706f0ef93f1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 27
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 128
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8c7fe5370237814aaa81058c8445a67
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c4965f7152e4a84a918faa97471419b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 29
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 96
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a9738d71e48d3a40b205f2002a0fa1a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 30
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 96
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcc61d2c176e77a47942993d3e60bdf2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 31
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 96
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6f9bc7e63bd6f045817e0568b052072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 32
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 96
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: deb86a961cf8332439bd6f5c1826ca95
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 33
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 96
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8b0dfc3116bb79439cf45dce7412cfb
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 34
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 96
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2299be7d2970e3648aac1bd7a8fb739c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7870ed7fabb28446a6d817711a007aa
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 36
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 64
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6ad8509e458c8344a293c946271b0d4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Character_animations 37
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 64
+        width: 36
+        height: 32
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79fcebdf087bb5a4cad49e93656e4fc8
       vertices: []
       indices: 
       edges: []

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LevelChanger : MonoBehaviour {
 
-    int currentLevelIndex;
+    /*int currentLevelIndex;
     [SerializeField] Image splash;
     [Tooltip("Buttons to disable during level transition")]
     [SerializeField] GameObject[] buttons;
@@ -52,11 +52,11 @@ public class LevelChanger : MonoBehaviour {
 
     }
 
-    public void Restart()
+    */public void OnTriggerEnter2D()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
-    }
+    }/*
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -76,5 +76,5 @@ public class LevelChanger : MonoBehaviour {
             SceneManager.LoadScene(0);
         }
 
-    }
+    }*/
 }

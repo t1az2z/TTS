@@ -12,12 +12,18 @@ public class GameController : MonoBehaviour {
     private GameObject previousCamera;
     //player references
     PlayerController player;
-    
+    Animator player_animator;
+    AnimatorClipInfo[] p_CurrentClipInfo;
+    float deathReviveAnimationLength;
+
+    GameObject splashScreen;
+    Animator splash_animator;
+    AnimatorClipInfo[] s_CurrentClipInfo;
+    float splashAnimationLength;
+
     Vector3 activeCheckpoint;
 
     //UI references
-    GameObject splashScreen;
-    public float deathCoroutineDelay = 1f;
 
     void Awake()
     {
@@ -31,25 +37,49 @@ public class GameController : MonoBehaviour {
             Destroy(gameObject);
         }
 
-        previousCamera = currentCamera;
+        
 
-        player = FindObjectOfType<PlayerController>();
+    }
+
+    private void Start()
+    {
+        SetPlayerReference();
+        SetSplashScreenReference();
+
+        previousCamera = currentCamera;
+    }
+
+    private void SetSplashScreenReference()
+    {
         splashScreen = GameObject.Find("Splash");
+        splash_animator = splashScreen.GetComponent<Animator>();
         splashScreen.SetActive(false);
     }
 
+    private void SetPlayerReference()
+    {
+        player = FindObjectOfType<PlayerController>();
+        player_animator = player.animator;
+    }
     private void Update()
     {
         if(Debug.isDebugBuild)
             DebugKeys();
+
+        if (splashScreen == null)
+            SetSplashScreenReference();
+        if (player == null)
+            SetPlayerReference();
     }
 
-    private static void DebugKeys()
+    private void DebugKeys()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SetChekpoint(Vector2.zero);
         }
+
     }
 
     public void SwitchCamera(GameObject newCamera)
@@ -70,26 +100,61 @@ public class GameController : MonoBehaviour {
 
     public void SetChekpoint(Vector2 checkpoint)
     {
-        activeCheckpoint = checkpoint;
+        activeCheckpoint = new Vector2(checkpoint.x, checkpoint.y-1f); //sprite bottom offset
     }
 
 
     public IEnumerator DeathCoroutine()
     {
         player.controllsEnabled = false;
+        player_animator.Play("Death");
+        if (deathReviveAnimationLength == 0)
+        {
+            CountDeathReviveAnimationLength();
+        }
+        yield return new WaitForSeconds(deathReviveAnimationLength);
+        player.isDead = true;
         splashScreen.SetActive(true);
-        Animator splashAnimator = splashScreen.GetComponent<Animator>();
-        splashAnimator.Play("SplashShow");
-        yield return new WaitForSeconds(deathCoroutineDelay / 2);
-        if (activeCheckpoint != null)
-            player.gameObject.transform.position = activeCheckpoint;
-        else
-            player.gameObject.transform.position = Vector3.zero;
-        splashAnimator.Play("SplashHide");
-        yield return new WaitForSeconds(deathCoroutineDelay / 2);
+        splash_animator.Play("SplashShow");
+
+        if(splashAnimationLength <= Mathf.Epsilon)
+        {
+            CountSplashAnimationLength();
+        }
+
+        yield return new WaitForSeconds(splashAnimationLength);
+        MovePlayerToCheckpoint();
+        splash_animator.Play("SplashHide");
+        yield return new WaitForSeconds(splashAnimationLength);
         splashScreen.SetActive(false);
+        player.animator.Play("Revive"); //todo get it out of here
+        yield return new WaitForSeconds(deathReviveAnimationLength);
+        
+        player.isDead = false;
         player.controllsEnabled = true;
     }
 
-    //todo add stopframes on transition
+    private void CountDeathReviveAnimationLength()
+    {
+        p_CurrentClipInfo = player_animator.GetCurrentAnimatorClipInfo(0);
+        deathReviveAnimationLength = p_CurrentClipInfo[0].clip.length;
     }
+
+    private void CountSplashAnimationLength()
+    {
+        s_CurrentClipInfo = splash_animator.GetCurrentAnimatorClipInfo(0);
+        splashAnimationLength = s_CurrentClipInfo[0].clip.length;
+    }
+
+    private void MovePlayerToCheckpoint()
+    {
+        if (activeCheckpoint != null)
+        {
+            player.gameObject.transform.position = activeCheckpoint;
+        }
+        else
+            player.gameObject.transform.position = Vector3.zero;
+    }
+
+    //todo add stopframes on transition
+}

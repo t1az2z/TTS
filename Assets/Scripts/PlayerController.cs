@@ -6,10 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     public GameController gc;
     Rigidbody2D rb;
-    Animator animator;
+    public Animator animator;
     SpriteRenderer spriteRenderer;
 
-    bool isDead = false;
+    public bool isDead = false;
     public bool controllsEnabled = true;
 
     [Header("Run parameters")]
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int allowedJumps = 2;
     public int jumpsCount = 1;
     private const float velocityTopSlice = 3f;
+    [SerializeField] float maxFallVelocity = -10f;
     [Space(8)]
 
     [Header("Jump gravity variables:")]
@@ -65,6 +66,8 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         gc = FindObjectOfType<GameController>();
+        animator = GetComponent<Animator>();
+
     }
 
 
@@ -72,7 +75,6 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -167,10 +169,11 @@ public class PlayerController : MonoBehaviour
             HandleWallSliding();
             GravityScaleChange();
         }
-        else
+        if(isDead)
         {
-            rb.velocity = Vector2.zero;
+            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezePositionX| RigidbodyConstraints2D.FreezeRotation;
         }
+
     }
 
     private void HandleWallSliding()
@@ -228,15 +231,9 @@ public class PlayerController : MonoBehaviour
                 {
                     animator.Play("Jump2");
                 }
-
             }
             else if (!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
                 animator.Play("Climb");
-        }
-        else if (isDead)
-        {
-            //animator.Play("Death");
-            isDead = false;
         }
         
     }
@@ -336,13 +333,24 @@ public class PlayerController : MonoBehaviour
     }
     private void GravityScaleChange()
     {
-        if (rb.velocity.y < 0)
+        if (!isDead)
         {
-            rb.gravityScale = fallMultiplier;
+            if (rb.velocity.y < 0)
+            {
+                rb.gravityScale = fallMultiplier;
+                if (rb.velocity.y <= maxFallVelocity)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, maxFallVelocity);
+                }
+            }
+            else
+            {
+                rb.gravityScale = 1;
+            }
         }
         else
         {
-            rb.gravityScale = 1;
+            rb.gravityScale = 0;
         }
     }
     private bool GroundCheck()
