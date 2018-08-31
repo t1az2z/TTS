@@ -1,0 +1,276 @@
+fileFormatVersion: 2
+guid: 61484da9edf15084bb65fb730001b49a
+timeCreated: 1501789196
+licenseType: Store
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: player_0
+    21300002: player_1
+    21300004: player_2
+    21300006: player_3
+    21300008: player_4
+    21300010: player_5
+    21300012: player_6
+    21300014: player_7
+    21300016: player_8
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: player_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_1
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_2
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_3
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_4
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_5
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_6
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_7
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: player_8
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 0
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline:
+    - - {x: -258, y: 67}
+      - {x: -270, y: 58}
+      - {x: -270, y: -37}
+      - {x: -258, y: -70}
+      - {x: -166, y: -70}
+      - {x: -132, y: -26}
+      - {x: -132, y: 49}
+      - {x: -164, y: 67}
+    - - {x: 36, y: 67}
+      - {x: -35, y: 67}
+      - {x: -70, y: 35}
+      - {x: -70, y: -38}
+      - {x: -54, y: -70}
+      - {x: 47, y: -70}
+      - {x: 68, y: -31}
+      - {x: 68, y: 34}
+      - {x: 45, y: 64}
+    - - {x: 159, y: 67}
+      - {x: 130, y: 42}
+      - {x: 130, y: -41}
+      - {x: 168, y: -70}
+      - {x: 229, y: -70}
+      - {x: 270, y: -34}
+      - {x: 270, y: 43}
+      - {x: 231, y: 67}
+    - - {x: 760, y: 67}
+      - {x: 732, y: 43}
+      - {x: 732, y: -64}
+      - {x: 755, y: -70}
+      - {x: 848, y: -70}
+      - {x: 868, y: -36}
+      - {x: 868, y: 47}
+      - {x: 853, y: 67}
+    - - {x: -844, y: 67}
+      - {x: -870, y: 24}
+      - {x: -870, y: -34}
+      - {x: -862, y: -69}
+      - {x: -732, y: -69}
+      - {x: -732, y: 62}
+      - {x: -745, y: 67}
+    - - {x: -573, y: 67}
+      - {x: -641, y: 67}
+      - {x: -670, y: 55}
+      - {x: -670, y: -41}
+      - {x: -664, y: -69}
+      - {x: -552, y: -69}
+      - {x: -532, y: -32}
+      - {x: -532, y: 34}
+      - {x: -551, y: 59}
+    - - {x: -434, y: 67}
+      - {x: -470, y: 47}
+      - {x: -470, y: -29}
+      - {x: -452, y: -69}
+      - {x: -332, y: -69}
+      - {x: -332, y: 60}
+      - {x: -345, y: 67}
+    - - {x: 358, y: 67}
+      - {x: 330, y: 45}
+      - {x: 330, y: -49}
+      - {x: 358, y: -69}
+      - {x: 434, y: -69}
+      - {x: 468, y: -52}
+      - {x: 468, y: 47}
+      - {x: 452, y: 67}
+    - - {x: 638, y: 67}
+      - {x: 577, y: 67}
+      - {x: 539, y: 53}
+      - {x: 532, y: 22}
+      - {x: 532, y: -26}
+      - {x: 554, y: -69}
+      - {x: 643, y: -69}
+      - {x: 670, y: -33}
+      - {x: 670, y: 34}
+      - {x: 651, y: 62}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

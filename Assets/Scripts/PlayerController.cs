@@ -5,9 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public GameController gc;
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     public Animator animator;
     SpriteRenderer spriteRenderer;
+
+
 
     public bool isDead = false;
     public bool controllsEnabled = true;
@@ -21,7 +23,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump parameters:")]
     [SerializeField] float jumpMaxForce = 5.25f;
-    [SerializeField] float jumpMinForce = 3f;
     public bool isGrounded;
     bool jumpRequest = false;
     public bool jumpCancel = false;
@@ -43,11 +44,13 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Header("Dash parameters:")]
+    //public GameObject dashDenyIndicator;
     [SerializeField] float dashTime = 2f;
     bool dashAlow = true;
     bool dashRequest = false;
     bool isDashing = false;
     float dashExpireTime;
+
     [Space(8)]
 
     [Header("Wall jump parameters")]
@@ -114,6 +117,8 @@ public class PlayerController : MonoBehaviour
         {
             dashAlow = true;
             wallJumping = false;
+            //if (dashDenyIndicator.activeSelf)
+            //    dashDenyIndicator.SetActive(false);
         }
 
         bool OldIsGrounded = isGrounded;
@@ -182,7 +187,7 @@ public class PlayerController : MonoBehaviour
 
         wallDirX = WallHit();
         wallSliding = false;
-        if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <-.5f)
+        if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <= 0)
         {
             wallSliding = true;
             if (rb.velocity.y < -wallSlidingSpeed  && rb.velocity.y < 0)
@@ -211,6 +216,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isDead)
         {
+
             if (isDashing)
                 animator.Play("Dash");
             else if (isGrounded && rb.velocity.x == 0)
@@ -225,16 +231,22 @@ public class PlayerController : MonoBehaviour
             {
                 if (rb.velocity.y > 0 && jumpsCount <= 1)
                     animator.Play("Jump");
-                else if (rb.velocity.y < 0)
-                    animator.Play("Fall");
                 else if (jumpsCount >= 2 && !isDashing)
                 {
-                    animator.Play("Jump2");
+                    if (rb.velocity.y < -4)
+                        animator.Play("Fall");
+                    else
+                        animator.Play("Jump2");
                 }
+                else if (rb.velocity.y < -.5f)
+                    animator.Play("Fall");
+
             }
             else if (!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
                 animator.Play("Climb");
+
         }
+
         
     }
 
@@ -259,6 +271,8 @@ public class PlayerController : MonoBehaviour
             Vector2 velocity = rb.velocity;
             velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
             rb.velocity = velocity;
+
+            //dashDenyIndicator.SetActive(true);
             //todo stop-frame
             //todo screen shake
         }

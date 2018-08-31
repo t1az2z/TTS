@@ -10,6 +10,8 @@ public class GameController : MonoBehaviour {
     //cameras
     public GameObject currentCamera;
     private GameObject previousCamera;
+
+
     //player references
     PlayerController player;
     Animator player_animator;
@@ -36,6 +38,7 @@ public class GameController : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+
 
         
 
@@ -70,6 +73,7 @@ public class GameController : MonoBehaviour {
             SetSplashScreenReference();
         if (player == null)
             SetPlayerReference();
+
     }
 
     private void DebugKeys()
@@ -78,6 +82,12 @@ public class GameController : MonoBehaviour {
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             SetChekpoint(Vector2.zero);
+        }
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            
+            StartCoroutine("DeathCoroutine");
+            player.isDead = true;
         }
 
     }
@@ -100,7 +110,10 @@ public class GameController : MonoBehaviour {
 
     public void SetChekpoint(Vector2 checkpoint)
     {
-        activeCheckpoint = new Vector2(checkpoint.x, checkpoint.y-1f); //sprite bottom offset
+        if (checkpoint == Vector2.zero)
+            activeCheckpoint = Vector2.zero;
+        else
+            activeCheckpoint = new Vector2(checkpoint.x, checkpoint.y-1f); //sprite bottom offset
     }
 
 
