@@ -18,14 +18,19 @@ public class GameController : MonoBehaviour {
     AnimatorClipInfo[] p_CurrentClipInfo;
     float deathReviveAnimationLength;
 
+    //UI references
     GameObject splashScreen;
     Animator splash_animator;
     AnimatorClipInfo[] s_CurrentClipInfo;
-    float splashAnimationLength;
+    public float splashAnimationLength;
+    //todo add collectibles to ui
+
+    //collectibles
+    public int applesCollected = 0;
 
     Vector3 activeCheckpoint;
 
-    //UI references
+
 
     void Awake()
     {
@@ -52,14 +57,12 @@ public class GameController : MonoBehaviour {
         previousCamera = currentCamera;
     }
 
+    //todo make splashScreen null check EVERYWHERE
     private void SetSplashScreenReference()
     {
         splashScreen = GameObject.Find("Splash");
-        if (splashScreen != null)
-        {
-            splash_animator = splashScreen.GetComponent<Animator>();
-            splashScreen.SetActive(false);
-        }
+        splash_animator = splashScreen.GetComponent<Animator>();
+        splashScreen.SetActive(false);
     }
 
     private void SetPlayerReference()

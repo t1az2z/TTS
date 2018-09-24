@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
-    bool isFacingLeft;
+    public bool isFacingLeft;
     bool isRunning;
     float xInput;
     [Space(8)]
