@@ -126,6 +126,7 @@ public class PlayerController : MonoBehaviour
         if (OldIsGrounded != isGrounded && isGrounded)
         {
             jumpsCount = 0;
+            dashRequest = false;
             jumpCancel = false;
         }
     }
