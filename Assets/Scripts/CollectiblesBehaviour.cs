@@ -39,7 +39,7 @@ public class CollectiblesBehaviour : MonoBehaviour {
             else if(!player.isDead)
             {
                 FollowTarget(player);
-                StartCoroutine(CollectCollectible());
+                CollectCollectible();
             }
 
         }
@@ -48,9 +48,9 @@ public class CollectiblesBehaviour : MonoBehaviour {
     private IEnumerator ResetParametersOnPlayerDeath()
     {
         animator.Play("Disappear");
-        StopCoroutine(CollectCollectible());
+        //StopCoroutine(CollectCollectible());
         print("cour stopped");
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(1F);
         player = null;
         collected = false;
         transform.position = initialPosition;
@@ -59,18 +59,35 @@ public class CollectiblesBehaviour : MonoBehaviour {
         animator.Play("Idle");
     }
 
-    private IEnumerator CollectCollectible()
+    private void CollectCollectible()
     {
-        if (collected && player.isGrounded)
+        if (player.isGrounded && collected)
+        {
+            timeToCollect -= Time.deltaTime;
+            if (timeToCollect <= Mathf.Epsilon)
+            {
+                animator.Play("Collect");
+                Destroy(gameObject, destroyDelay);
+                gc.applesCollected++;
+                collected = false;
+                print(gc.applesCollected);
+            }
+        }
+        else
+        {
+            timeToCollect = .25f;
+        }
+        /*if (collected && player.isGrounded)
         {
             collected = false;
-            yield return new WaitForSeconds(timeToCollect);
+
             animator.Play("Collect");
             Destroy(gameObject, destroyDelay);
             gc.applesCollected++;
             print(gc.applesCollected);
         }
-        print("Coroutie running");
+        print("Coroutie running");*/
+
 
     }
 
