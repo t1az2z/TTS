@@ -55,8 +55,11 @@ public class GameController : MonoBehaviour {
     private void SetSplashScreenReference()
     {
         splashScreen = GameObject.Find("Splash");
-        splash_animator = splashScreen.GetComponent<Animator>();
-        splashScreen.SetActive(false);
+        if (splashScreen != null)
+        {
+            splash_animator = splashScreen.GetComponent<Animator>();
+            splashScreen.SetActive(false);
+        }
     }
 
     private void SetPlayerReference()
@@ -120,6 +123,7 @@ public class GameController : MonoBehaviour {
     public IEnumerator DeathCoroutine()
     {
         player.controllsEnabled = false;
+
         player_animator.Play("Death");
         if (deathReviveAnimationLength == 0)
         {
@@ -142,7 +146,6 @@ public class GameController : MonoBehaviour {
         splashScreen.SetActive(false);
         player.animator.Play("Revive"); //todo get it out of here
         yield return new WaitForSeconds(deathReviveAnimationLength);
-        
         player.isDead = false;
         player.controllsEnabled = true;
     }

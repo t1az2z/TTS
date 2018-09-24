@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (SimpleInput.GetButtonUp("Dash"))
         {
-            OnReleaseDash();
+            //OnReleaseDash();
         }
     }
 
@@ -252,8 +252,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnPressDash()
     {
-        dashRequest = true;
-        dashExpireTime = Time.time + dashTime;
+        if (!dashRequest)
+        {
+            dashRequest = true;
+            dashExpireTime = dashTime;
+        }
     }
     public void OnReleaseDash()
     {
@@ -262,28 +265,36 @@ public class PlayerController : MonoBehaviour
     }
     public void Dash()
     {
-
-        if (dashRequest && dashExpireTime >= Time.time && dashAlow)
+        if (dashRequest)
         {
-            int dashDirection = isFacingLeft ? -1 : 1;
-            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-            isDashing = true;
-            Vector2 velocity = rb.velocity;
-            velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
-            rb.velocity = velocity;
+            if (dashExpireTime > Mathf.Epsilon && dashAlow)
+            {
+                int dashDirection = isFacingLeft ? -1 : 1;
+                rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                isDashing = true;
+                Vector2 velocity = rb.velocity;
+                velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
+                dashExpireTime -= Time.fixedDeltaTime;
+                rb.velocity = velocity;
 
-            //dashDenyIndicator.SetActive(true);
-            //todo stop-frame
-            //todo screen shake
+                //dashDenyIndicator.SetActive(true);
+                //todo stop-frame
+                //todo screen shake
+            }
+            else if (dashExpireTime <= Mathf.Epsilon)
+            {
+                rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+                isDashing = false;
+                dashRequest = false;
+                dashExpireTime = 0f;
+                dashAlow = false;
+            }
         }
-        else if (dashExpireTime < Time.time)
+        else
         {
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-            isDashing = false;
-            dashRequest = false;
-            dashExpireTime = 0f;
-
         }
+
 
     }
 
@@ -318,6 +329,12 @@ public class PlayerController : MonoBehaviour
                 wallJumping = true;
                 wallJumped = false;
             }
+            /*else if (isDashing)
+            {
+                isDashing = false;
+                rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+                rb.velocity = new Vector2(rb.velocity.x*.6f, jumpMaxForce *.7f); //todo rework
+            }*/
             else
             {
                 Jump(velocity);
@@ -447,6 +464,8 @@ public class PlayerController : MonoBehaviour
         else if(collision.CompareTag("Hazards"))
         {
             StartCoroutine(gc.DeathCoroutine());
+            dashRequest = false;
+            isDashing = false;
             isDead = true;
         }
     }
