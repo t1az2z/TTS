@@ -90,6 +90,13 @@ public class PlayerController : MonoBehaviour
             FlipSprite();
 
             SetAnimationsParameters();
+
+        if (isDead)
+        {
+            dashRequest = false;
+            jumpRequest = false;
+            dashAlow = false;
+        }
     }
 
 
@@ -268,6 +275,8 @@ public class PlayerController : MonoBehaviour
     }
     public void Dash()
     {
+        if (!dashAlow)
+            dashRequest = false;
         if (dashRequest)
         {
             if (dashExpireTime > Mathf.Epsilon && dashAlow)
