@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour {
     //collectibles
     public int applesCollected = 0;
 
-    Vector3 activeCheckpoint;
+    Vector2 activeCheckpoint;
 
 
 
@@ -167,7 +167,7 @@ public class GameController : MonoBehaviour {
 
     private void MovePlayerToCheckpoint()
     {
-        if (activeCheckpoint != null)
+        if (activeCheckpoint != Vector2.zero)
         {
             player.gameObject.transform.position = activeCheckpoint;
         }

@@ -22,10 +22,11 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Header("Jump parameters:")]
-    [SerializeField] float jumpMaxForce = 5.25f;
+    [SerializeField] float jumpMaxForce = 9.3f;
     public bool isGrounded;
     bool jumpRequest = false;
     public bool jumpCancel = false;
+    public bool springJumping = false;
     [SerializeField] int allowedJumps = 2;
     public int jumpsCount = 1;
     private const float velocityTopSlice = 3f;
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Header("Jump gravity variables:")]
-    [SerializeField] float fallMultiplier = 2.7f;
+    [SerializeField] float fallMultiplier = 1.2f;
     [Space(8)]
 
     [Header("Ground parameters")]
@@ -116,7 +117,9 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             dashAlow = true;
+
             wallJumping = false;
+            springJumping = false;
             //if (dashDenyIndicator.activeSelf)
             //    dashDenyIndicator.SetActive(false);
         }
@@ -126,8 +129,8 @@ public class PlayerController : MonoBehaviour
         if (OldIsGrounded != isGrounded && isGrounded)
         {
             jumpsCount = 0;
-            dashRequest = false;
             jumpCancel = false;
+
         }
     }
     private void VariablesResetOnWallHit()
@@ -138,6 +141,7 @@ public class PlayerController : MonoBehaviour
         {
             jumpsCount = 0;
             jumpCancel = false;
+            springJumping = false;
         }
  
     }
@@ -247,8 +251,6 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Climb");
 
         }
-
-        
     }
 
     public void OnPressDash()
@@ -262,7 +264,7 @@ public class PlayerController : MonoBehaviour
     public void OnReleaseDash()
     {
         dashAlow = false;
-
+        
     }
     public void Dash()
     {
@@ -294,6 +296,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+            isDashing = false;
         }
 
 
@@ -347,7 +350,7 @@ public class PlayerController : MonoBehaviour
             jumpRequest = false;
         }
 
-        if (jumpCancel && rb.velocity.y >= velocityTopSlice) //todo сделать красиво (хотя и так работает)
+        if (jumpCancel && rb.velocity.y >= velocityTopSlice && !springJumping) //todo сделать красиво (хотя и так работает)
         {
             velocity.y = velocityTopSlice;
             rb.velocity = velocity;
@@ -399,7 +402,9 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        return isGrnd;
+        if (rb.velocity.y <= Mathf.Epsilon)
+            return isGrnd;
+        else return false;
     }
 
     private int WallHit()
