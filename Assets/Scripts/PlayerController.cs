@@ -65,7 +65,9 @@ public class PlayerController : MonoBehaviour
     public float wallJumpXVelocity = 5f;
     int wallDirX;
     bool isWallHit = false;
-    [SerializeField] float wallSlidingSpeed = 3f;
+    [SerializeField] float initialWallSlidingVelocity = 3f;
+    [SerializeField] float maxlWallSlidingVelocity = 3f;
+    [SerializeField] float wallslidingVelocityStep = .3f;
 
     private void Awake()
     {
@@ -202,11 +204,22 @@ public class PlayerController : MonoBehaviour
         if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <= 0)
         {
             wallSliding = true;
-            if (rb.velocity.y < -wallSlidingSpeed  && rb.velocity.y < 0)
+            if (rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0)
             {
                 var velocity = rb.velocity;
-                velocity.y = -wallSlidingSpeed;
-                rb.velocity = velocity;
+
+                if (rb.velocity.y > - maxlWallSlidingVelocity)
+                {
+                    velocity.y += wallslidingVelocityStep;
+                    rb.velocity = velocity;
+                   
+                }
+                else
+                {
+                    velocity.y = -maxlWallSlidingVelocity;
+                    rb.velocity = velocity;
+                   
+                }
             }
         }
  
@@ -379,7 +392,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isDead)
         {
-            if (rb.velocity.y < 0)
+            if (rb.velocity.y < 0 && !wallSliding)
             {
                 rb.gravityScale = fallMultiplier;
                 if (rb.velocity.y <= maxFallVelocity)

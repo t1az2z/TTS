@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class GameController : MonoBehaviour {
@@ -23,16 +23,23 @@ public class GameController : MonoBehaviour {
     Animator splash_animator;
     AnimatorClipInfo[] s_CurrentClipInfo;
     public float splashAnimationLength;
-    //todo add collectibles to ui
 
     //collectibles
-    public int applesCollected = 0;
+    Text collectibleCounterText;
+    [HideInInspector]public int collectiblesCollected = 0;
+    Text deathCounterText;
+    [HideInInspector]public int deaths = 0;
 
     Vector2 activeCheckpoint;
 
 
 
     void Awake()
+    {
+        SingletonImplementation();
+    }
+
+    private void SingletonImplementation()
     {
         if (Instance == null)
         {
@@ -43,18 +50,31 @@ public class GameController : MonoBehaviour {
         {
             Destroy(gameObject);
         }
-
-
-        
-
     }
 
     private void Start()
     {
         SetPlayerReference();
         SetSplashScreenReference();
-
+        SetDeathCounterReference();
+        SetCollectiblesCounterReference();
         previousCamera = currentCamera;
+    }
+
+    private void SetDeathCounterReference() //todo переделать этот АД!
+    {
+        deathCounterText = GameObject.Find("Deaths").transform.Find("Counter").GetComponent<Text>();
+        deathCounterText.text = "x 0";
+    }
+
+    private void SetCollectiblesCounterReference() //todo переделать этот АД!
+    {
+        collectibleCounterText = GameObject.Find("Collectibles").transform.Find("Counter").GetComponent<Text>();
+        collectibleCounterText.text = "x 0";
+    }
+    public void UpdateCollectiblesCounter()
+    {
+        collectibleCounterText.text = "x " + collectiblesCollected.ToString();
     }
 
     //todo make splashScreen null check EVERYWHERE
@@ -79,7 +99,10 @@ public class GameController : MonoBehaviour {
             SetSplashScreenReference();
         if (player == null)
             SetPlayerReference();
-
+        if (collectibleCounterText == null)
+            SetCollectiblesCounterReference();
+        if (deathCounterText == null)
+            SetDeathCounterReference();
     }
 
     private void DebugKeys()
@@ -126,7 +149,8 @@ public class GameController : MonoBehaviour {
     public IEnumerator DeathCoroutine()
     {
         player.controllsEnabled = false;
-
+        deaths++;
+        deathCounterText.text = "x " + deaths.ToString();
         player_animator.Play("Death");
         if (deathReviveAnimationLength == 0)
         {

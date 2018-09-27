@@ -330,10 +330,10 @@ TextureImporter:
       name: placeholders_10
       rect:
         serializedVersion: 2
-        x: 24
-        y: 26
+        x: 23
+        y: 25
         width: 9
-        height: 8
+        height: 9
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

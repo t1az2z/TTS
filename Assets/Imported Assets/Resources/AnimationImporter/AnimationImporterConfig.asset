@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animationNamesThatDoNotLoop:
   - death
-  _automaticImporting: 0
+  _automaticImporting: 1
   _spritePixelsPerUnit: 16
   _targetObjectType: 0
   _spriteAlignment: 7

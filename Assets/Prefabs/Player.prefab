@@ -415,7 +415,9 @@ MonoBehaviour:
   wallJumped: 0
   wallJumping: 0
   wallJumpXVelocity: 5
-  wallSlidingSpeed: 1
+  initialWallSlidingVelocity: 1.5
+  maxlWallSlidingVelocity: 4
+  wallslidingVelocityStep: 0.38
 --- !u!212 &212345021319634474
 SpriteRenderer:
   m_ObjectHideFlags: 1

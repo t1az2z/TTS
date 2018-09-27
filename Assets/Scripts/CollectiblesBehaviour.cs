@@ -49,7 +49,6 @@ public class CollectiblesBehaviour : MonoBehaviour {
     {
         animator.Play("Disappear");
         //StopCoroutine(CollectCollectible());
-        print("cour stopped");
         yield return new WaitForSeconds(1F);
         player = null;
         collected = false;
@@ -68,9 +67,9 @@ public class CollectiblesBehaviour : MonoBehaviour {
             {
                 animator.Play("Collect");
                 Destroy(gameObject, destroyDelay);
-                gc.applesCollected++;
+                gc.collectiblesCollected++;
+                gc.UpdateCollectiblesCounter();
                 collected = false;
-                print(gc.applesCollected);
             }
         }
         else
