@@ -46,8 +46,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Dash parameters:")]
     //public GameObject dashDenyIndicator;
-    [SerializeField] float dashTime = 2f;
-    bool dashAlow = true;
+    [SerializeField] float dashTime = .14f;
+    public bool dashAlow = true;
     bool dashRequest = false;
     bool isDashing = false;
     float dashExpireTime;
@@ -301,6 +301,7 @@ public class PlayerController : MonoBehaviour
                 velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
                 dashExpireTime -= Time.fixedDeltaTime;
                 rb.velocity = velocity;
+
 
                 //dashDenyIndicator.SetActive(true);
                 //todo stop-frame
