@@ -402,6 +402,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2304
   dashTime: 0.14
+  dashAlow: 1
+  isDashing: 0
   wallChecksLeft:
   - {fileID: 4351315859148492}
   - {fileID: 4620952331816130}
@@ -414,10 +416,11 @@ MonoBehaviour:
     m_Bits: 256
   wallJumped: 0
   wallJumping: 0
-  wallJumpXVelocity: 5
+  wallJumpXVelocity: 4.5
   initialWallSlidingVelocity: 1.5
   maxlWallSlidingVelocity: 4
   wallslidingVelocityStep: 0.38
+  wallJumpForce: 10
 --- !u!212 &212345021319634474
 SpriteRenderer:
   m_ObjectHideFlags: 1

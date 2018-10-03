@@ -9,16 +9,14 @@ public class ReseterBehaviour : MonoBehaviour {
     [SerializeField] bool resetJumpCounter = true;
     SpriteRenderer sr;
     bool isActive = true;
+    float waitTime = .15f;
+
+
 
     [SerializeField] float reactivateTime = 3f;
-	// Use this for initialization
+
 	void Start () {
         sr = GetComponent<SpriteRenderer>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 
@@ -30,8 +28,15 @@ public class ReseterBehaviour : MonoBehaviour {
         {
             if (resetDash)
             {
-                player.dashAlow = true;
-                print(player.dashAlow);
+                if (!player.isDashing)
+                {
+                    player.dashAlow = true;
+                    print(player.dashAlow);
+                }
+                else if (player.isDashing)
+                {
+                    StartCoroutine(ResetDashAfterDelay());
+                }
             }
             if (resetJumpCounter)
             {
@@ -44,6 +49,12 @@ public class ReseterBehaviour : MonoBehaviour {
 
         StartCoroutine(TemporarlyDeactivate());
 
+    }
+
+    private IEnumerator ResetDashAfterDelay()
+    {
+        yield return new WaitForSeconds(waitTime);
+        player.dashAlow = true;
 
     }
 

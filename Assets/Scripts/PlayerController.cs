@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashTime = .14f;
     public bool dashAlow = true;
     bool dashRequest = false;
-    bool isDashing = false;
+    public bool isDashing = false;
     float dashExpireTime;
 
     [Space(8)]
@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float initialWallSlidingVelocity = 3f;
     [SerializeField] float maxlWallSlidingVelocity = 3f;
     [SerializeField] float wallslidingVelocityStep = .3f;
+    [SerializeField] float wallJumpForce = 9.76f;
 
     private void Awake()
     {
@@ -139,7 +140,6 @@ public class PlayerController : MonoBehaviour
         {
             jumpsCount = 0;
             jumpCancel = false;
-
         }
     }
     private void VariablesResetOnWallHit()
@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
     {
         if (controllsEnabled)
         {
-            Run();
+            HorizontalMovement();
             Dash();
             GroundCheck();
             JumpLogicProcessing();
@@ -207,8 +207,9 @@ public class PlayerController : MonoBehaviour
             if (rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0)
             {
                 var velocity = rb.velocity;
-
-                if (rb.velocity.y > - maxlWallSlidingVelocity)
+                velocity.y = -maxlWallSlidingVelocity;
+                rb.velocity = velocity;
+                /*if (rb.velocity.y > - maxlWallSlidingVelocity)
                 {
                     velocity.y += wallslidingVelocityStep;
                     rb.velocity = velocity;
@@ -219,22 +220,36 @@ public class PlayerController : MonoBehaviour
                     velocity.y = -maxlWallSlidingVelocity;
                     rb.velocity = velocity;
                    
-                }
+                }*/
             }
         }
  
     }
 
-    void Run()
+    void HorizontalMovement()
     {
         xInput = SimpleInput.GetAxis("Horizontal");
-
+        Vector2 velocity = rb.velocity;
         if (!wallJumping)
         {
-            Vector2 velocity = rb.velocity;
             velocity.x = xInput * runSpeed * 100 * Time.deltaTime;
             rb.velocity = velocity;
         }
+        else if (wallJumping)
+        {
+            rb.AddForce(new Vector2(xInput * runSpeed * 450 * Time.fixedDeltaTime, 0), ForceMode2D.Force);
+            if (rb.velocity.x > 5f)
+            {
+                velocity.x = 5f;
+                rb.velocity = velocity;
+            }
+            else if (rb.velocity.x <= -5f)
+            {
+                velocity.x = -5f;
+                rb.velocity = velocity;
+            }
+        }
+
     }
 
     private void SetAnimationsParameters()
@@ -283,7 +298,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnReleaseDash()
     {
-        dashAlow = false;
+        //dashAlow = false;
         
     }
     public void Dash()
@@ -298,7 +313,10 @@ public class PlayerController : MonoBehaviour
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 isDashing = true;
                 Vector2 velocity = rb.velocity;
-                velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
+                if (xInput == 0)
+                    velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
+                else
+                    velocity.x = Mathf.Sign(xInput) * runSpeed * 300 * Time.fixedDeltaTime;
                 dashExpireTime -= Time.fixedDeltaTime;
                 rb.velocity = velocity;
 
@@ -337,7 +355,7 @@ public class PlayerController : MonoBehaviour
     public void OnReleaseJump()
     {
         jumpRequest = false;
-        //wallJumping = false; m.b. use for "meatboy" style wall jumps 
+        //wallJumping = false; //m.b. use for "meatboy" style wall jumps 
         if (!isGrounded)
             jumpCancel = true;
     }
@@ -352,16 +370,10 @@ public class PlayerController : MonoBehaviour
             jumpsCount++;
             if (wallJumped)
             {
-                rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX), jumpMaxForce);
+                rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX), wallJumpForce);
                 wallJumping = true;
                 wallJumped = false;
             }
-            /*else if (isDashing)
-            {
-                isDashing = false;
-                rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-                rb.velocity = new Vector2(rb.velocity.x*.6f, jumpMaxForce *.7f); //todo rework
-            }*/
             else
             {
                 Jump(velocity);
@@ -379,7 +391,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = velocity;
             jumpCancel = false;
         }
-        if (rb.velocity.y < 1)
+        if (rb.velocity.y < 0 || Mathf.Sign(xInput) == -wallDirX || xInput == 0)
             wallJumping = false;
 
     }
@@ -414,20 +426,30 @@ public class PlayerController : MonoBehaviour
     private bool GroundCheck()
     {
         bool isGrnd = false;
+
+        Vector2 direction = Vector2.down;
+        foreach (var groundch in groundChecks)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(groundch.position, direction, groundedRadius, whatIsGround);
+            if (hit.collider != null && rb.velocity.y <= 0)
+                isGrnd = true;
+        }
+        return isGrnd;
+        
+        /*bool isGrnd = false;
+
         foreach (var groundch in groundChecks)
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(groundch.position, groundedRadius, whatIsGround);
             for (int i = 0; i < colliders.Length; i++)
             {
-                if (colliders[i].gameObject != gameObject)
+                if (colliders[i].gameObject != gameObject && rb.velocity.y <= 0)
                 {
                     isGrnd = true;
                 }
             }
         }
-        if (rb.velocity.y <= Mathf.Epsilon)
-            return isGrnd;
-        else return false;
+        return isGrnd;*/
     }
 
     private int WallHit()
@@ -464,7 +486,7 @@ public class PlayerController : MonoBehaviour
             if (groundch != null)
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(groundch.position, groundedRadius);
+                Gizmos.DrawRay(groundch.position, new Vector2(0, -groundedRadius));
             }
         }
         foreach (var wallCH in wallChecksLeft)
