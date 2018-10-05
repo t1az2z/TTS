@@ -16,6 +16,7 @@ TextureImporter:
     21300022: placeholders_11
     21300024: placeholders_12
     21300026: placeholders_13
+    21300028: placeholders_14
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -376,7 +377,7 @@ TextureImporter:
         width: 8
         height: 8
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -396,13 +397,33 @@ TextureImporter:
         width: 8
         height: 8
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
       spriteID: fec0042d47f993a4286b4680c6301c2b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: placeholders_14
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 41
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c053781950d44d349873ea4405dae760
       vertices: []
       indices: 
       edges: []
