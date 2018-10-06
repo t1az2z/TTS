@@ -14,13 +14,14 @@ public class BackGround : MonoBehaviour {
     [HideInInspector]
     public List<GameObject> allCreateSprite;
     [HideInInspector]
-    public List<Vector2> bounds;
+    public List<Vector3> bounds;
     [HideInInspector]
-    public List<Vector2> starPositionBackGroundLayer;
+    public List<Vector3> starPositionBackGroundLayer;
     [HideInInspector]
     public bool haveBackGround;
     [HideInInspector]
     int countBounds = 0;
+    public float zPosition;
 
 
 
@@ -61,11 +62,11 @@ public class BackGround : MonoBehaviour {
         if (haveBackGround) {
             for (int i = 0; i < paramBackGround.Count; i++) {
                 // Parallax background displacement
-                parallaxBackgroundLayer[i].transform.position = new Vector2(starPositionBackGroundLayer[i].x + player.transform.position.x * paramBackGround[i].parallaxSpeedX,
-                                                                      starPositionBackGroundLayer[i].y + player.transform.position.y * paramBackGround[i].parallaxSpeedY);
+                parallaxBackgroundLayer[i].transform.position = new Vector3(starPositionBackGroundLayer[i].x + player.transform.position.x * paramBackGround[i].parallaxSpeedX,
+                                                                      starPositionBackGroundLayer[i].y + player.transform.position.y * paramBackGround[i].parallaxSpeedY, zPosition);
                 // Constant background motion
-                moveBackGroundLayer[i].transform.position = new Vector2(moveBackGroundLayer[i].transform.position.x + Time.deltaTime * paramBackGround[i].backGroundSpeedX,
-                                                                        moveBackGroundLayer[i].transform.position.y + Time.deltaTime * paramBackGround[i].backGroundSpeedY);
+                moveBackGroundLayer[i].transform.position = new Vector3(moveBackGroundLayer[i].transform.position.x + Time.deltaTime * paramBackGround[i].backGroundSpeedX,
+                                                                        moveBackGroundLayer[i].transform.position.y + Time.deltaTime * paramBackGround[i].backGroundSpeedY, zPosition);
             }
             for (int j = 0; j < allCreateSprite.Count; j++) {
                 CheckPosition(allCreateSprite[j], j);
@@ -78,20 +79,20 @@ public class BackGround : MonoBehaviour {
         // Left or Right
         if (myObject.transform.position.x < player.transform.position.x - 1.5f * bounds[j].x)
         {
-            myObject.transform.position = new Vector2(myObject.transform.position.x + bounds[j].x * 3, myObject.transform.position.y);
+            myObject.transform.position = new Vector3(myObject.transform.position.x + bounds[j].x * 3, myObject.transform.position.y, zPosition);
         } else if (myObject.transform.position.x > player.transform.position.x + bounds[j].x * 1.5f)
         {
-            myObject.transform.position = new Vector2(myObject.transform.position.x - bounds[j].x * 3, myObject.transform.position.y);
+            myObject.transform.position = new Vector3(myObject.transform.position.x - bounds[j].x * 3, myObject.transform.position.y, zPosition);
         }
         // Down or Up
         if (nineImage) {
             if (myObject.transform.position.y < player.transform.position.y - 1.5f * bounds[j].y)
             {
-                myObject.transform.position = new Vector2(myObject.transform.position.x, myObject.transform.position.y + bounds[j].y * 3);
+                myObject.transform.position = new Vector3(myObject.transform.position.x, myObject.transform.position.y + bounds[j].y * 3, zPosition);
             }
             else if (myObject.transform.position.y > player.transform.position.y + bounds[j].y * 1.5f)
             {
-                myObject.transform.position = new Vector2(myObject.transform.position.x, myObject.transform.position.y - bounds[j].y * 3);
+                myObject.transform.position = new Vector3(myObject.transform.position.x, myObject.transform.position.y - bounds[j].y * 3, zPosition);
             }
         }
     }
@@ -135,12 +136,12 @@ public class BackGround : MonoBehaviour {
         newObjectLayer.AddComponent<SpriteRenderer>().sprite = paramBackGround[i].mySprite;
         newObjectLayer.GetComponent<SpriteRenderer>().sortingLayerName = paramBackGround[i].layerName;
         newObjectLayer.GetComponent<SpriteRenderer>().sortingOrder = paramBackGround[i].orderInLayer;
-        Vector2 boundsVector = new Vector2(newObjectLayer.GetComponent<SpriteRenderer>().sprite.bounds.size.x, newObjectLayer.GetComponent<SpriteRenderer>().sprite.bounds.size.y);
+        Vector3 boundsVector = new Vector3(newObjectLayer.GetComponent<SpriteRenderer>().sprite.bounds.size.x, newObjectLayer.GetComponent<SpriteRenderer>().sprite.bounds.size.y, zPosition);
         bounds.Add(boundsVector);
         int flag = 0;
         if (nineImage) { flag = 1; }
         countBounds++;
-        newObjectLayer.transform.position = new Vector2(-bounds[countBounds-1].x + bounds[countBounds - 1].x * j, -bounds[countBounds - 1].y * flag + bounds[countBounds - 1].y * y);
+        newObjectLayer.transform.position = new Vector3(-bounds[countBounds-1].x + bounds[countBounds - 1].x * j, -bounds[countBounds - 1].y * flag + bounds[countBounds - 1].y * y, zPosition);
         newObjectLayer.name = "BackGroundCount";
         return newObjectLayer;
     }
