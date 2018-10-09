@@ -2,48 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class RaycastLight : MonoBehaviour
 {
+    [Header("Base Settings")]
+    public bool isDynamic = false;
     public float lightRadius;
     [Range(0, 360)]
     public float lightAngle;
-
-    public LayerMask obstaclesMask;
-
-    public float meshResolution;
-    public MeshFilter lightMashFilter;
-    private Mesh lightMesh;
-    public int edgeResolveIterations;
+    [Range(0, .5f)] public float meshResolution;
     public float edgeDistanceThreshold;
+    public int edgeResolveIterations;
+    public LayerMask obstaclesMask;
+    public MeshFilter lightMeshFilter;
+
+    private Mesh lightMesh;
+
+    [Header("Additional settings")]
+    public bool lightOverlap = false;
+    [Range(0, .1f)] public float lightMultiplierRange = .07f;
+    private float lightMultiplier = 1;
 
     private void Start()
     {
         lightMesh = new Mesh();
         lightMesh.name = "Light Mesh";
-        lightMashFilter.mesh = lightMesh;
-    }
-    /*void FindCollidingObstakles(bool isDynamic)
-    {
-        if (isDynamic)
-
+        lightMeshFilter.mesh = lightMesh;
+        if (!isDynamic)
         {
-            Collider2D[] collidingObstacles = Physics2D.OverlapCircleAll(transform.position, lightRadius, obstaclesMask);
-
-            for (int i = 0; i < collidingObstacles.Length; i++)
-            {
-                //Figure out logic for static and dynamic light sources
-            }
+            DrawLightField();
         }
-    }*/
+    }
 
+    private void Update()
+    {
+        if (lightOverlap)
+            lightMultiplier = 1 + lightMultiplierRange;
+        else
+            lightMultiplier = 1 / (1 + lightMultiplierRange);
+
+    }
     private void LateUpdate()
     {
-        DrawLightField();
+        if (isDynamic)
+            DrawLightField();
     }
 
     void DrawLightField()
     {
-        int stepCount = Mathf.RoundToInt(lightAngle * meshResolution);
+        int stepCount = Mathf.RoundToInt(lightAngle*meshResolution);
         float stepAngleSize = lightAngle / stepCount;
         List<Vector3> lightPoints = new List<Vector3>();
         LightCastInfo oldLightCast = new LightCastInfo();
@@ -57,6 +64,7 @@ public class RaycastLight : MonoBehaviour
                 bool edgeDistanceThresholdExceeded = Mathf.Abs(oldLightCast.dist - newLightCast.dist) > edgeDistanceThreshold;
                 if(oldLightCast.hit != newLightCast.hit || oldLightCast.hit && newLightCast.hit && edgeDistanceThresholdExceeded)
                 {
+
                     EdgeInfo edge = FindEdge(oldLightCast, newLightCast);
                     if (edge.pointA != Vector3.zero)
                     {
@@ -80,7 +88,9 @@ public class RaycastLight : MonoBehaviour
         vertecies[0] = Vector3.zero;
         for (int i = 0; i < vertexCount - 1; i++)
         {
-            vertecies[i + 1] = transform.InverseTransformPoint(lightPoints[i]);
+            var vert = transform.InverseTransformPoint(lightPoints[i])*lightMultiplier;
+
+            vertecies[i + 1] = vert;
             if (i < vertexCount - 2)
             {
                 triangles[i * 3] = 0;
@@ -90,7 +100,7 @@ public class RaycastLight : MonoBehaviour
         }
         for (int i = 0; i < uvs.Length; i++)
         {
-            uvs[i] = new Vector2(0.5f + (vertecies[i].x) / (2 * lightRadius), 0.5f + (vertecies[i].y) / (2 * lightRadius));
+            uvs[i] = new Vector2(0.5f + (vertecies[i].x) / (2 * (lightRadius * lightMultiplier)), 0.5f + (vertecies[i].y) / (2 * (lightRadius * lightMultiplier)));
         }
 
         lightMesh.Clear();
@@ -122,9 +132,10 @@ public class RaycastLight : MonoBehaviour
                 maxAngle = angle;
                 maxPoint = newLightCast.point;
             }
-        }
 
+        }
         return new EdgeInfo(minPoint, maxPoint);
+
     }
 
     LightCastInfo LightCast(float globalAngle)
@@ -180,10 +191,10 @@ public class RaycastLight : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireMesh(lightMesh, transform.position);
-    }
+    }*/
 }
 
