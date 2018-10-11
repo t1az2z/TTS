@@ -59,7 +59,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 8057a93aac8ea914c91b811af21217b3, type: 3}
+        m_Texture: {fileID: 2800000, guid: c5de909ba9985ad4cac7ca429bbd543b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -97,9 +97,9 @@ Material:
     m_Floats:
     - PixelSnap: 0
     - _BumpScale: 1
-    - _ColorFactor: 0.28
+    - _ColorFactor: 0.25
     - _ColorMask: 15
-    - _ContrastFactor: 0.89
+    - _ContrastFactor: 1.15
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
@@ -107,13 +107,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _IntensityFactor: 0
+    - _IntensityFactor: 1
     - _InvFade: 3
     - _Metallic: 1
     - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _ParticleFactor: 0.24
+    - _ParticleFactor: 0
     - _RotationSpeed: 2
     - _Shininess: 0.078125
     - _SmoothnessTextureChannel: 0
@@ -128,7 +128,7 @@ Material:
     - _UseUIAlphaClip: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.532, g: 0.93333334, b: 0.9278945, a: 1}
+    - _Color: {r: 0.9194196, g: 0.93333334, b: 0.53333336, a: 1}
     - _EmissionColor: {r: 4.2870936, g: 4.2870936, b: 5.723607, a: 0.07058824}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

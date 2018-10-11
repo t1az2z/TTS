@@ -13,15 +13,17 @@ public class CollectiblesBehaviour : MonoBehaviour {
     [SerializeField] float timeToCollect = .25f;
     private Vector3 velocity = Vector3.zero;
     public Vector3 followingOffset = new Vector3(-1, 1, 0);
-    [SerializeField] float destroyDelay = .5f;
+    [SerializeField] float destroyDelay = .26f;
     private GameController gc;
     bool collected = false;
+    GameObject light;
 
 	void Start ()
     {
         gc = FindObjectOfType<GameController>();
         initialPosition = transform.position;
         animator = GetComponent<Animator>();
+        light = transform.GetChild(0).gameObject;
 	}
 
     private void FixedUpdate()
@@ -66,6 +68,7 @@ public class CollectiblesBehaviour : MonoBehaviour {
             if (timeToCollect <= Mathf.Epsilon)
             {
                 animator.Play("Collect");
+                light.SetActive(false);
                 Destroy(gameObject, destroyDelay);
                 gc.collectiblesCollected++;
                 gc.UpdateCollectiblesCounter();

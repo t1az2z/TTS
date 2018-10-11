@@ -1,12 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [ExecuteInEditMode]
 public class RaycastLight : MonoBehaviour
 {
-    [Header("Base Settings")]
+    public bool gizmoEnable = false;
+    private bool isMoved = false;
+    private Vector2 oldPos = Vector3.zero;
+    [Header("Mesh Parameters")]
     public bool isDynamic = false;
+    private Color prevColor;
     public float lightRadius;
     [Range(0, 360)]
     public float lightAngle;
@@ -15,37 +21,77 @@ public class RaycastLight : MonoBehaviour
     public int edgeResolveIterations;
     public LayerMask obstaclesMask;
     public MeshFilter lightMeshFilter;
-
+    MeshRenderer mr;
     private Mesh lightMesh;
 
-    [Header("Additional settings")]
+    [Header("Additional  Mesh Parameters")]
     public bool lightOverlap = false;
     [Range(0, .1f)] public float lightMultiplierRange = .07f;
     private float lightMultiplier = 1;
+
+    [Header("Light Parameters (shader)")]
+    public Material material;
+    private Material tempMaterial;
+    public Color color = new Color(1, 1, 1, 1);
+    public float contrastFactor = 1.15f;
+    public float colorFactor = .25f;
+    public float rotationSpeed = 2f;
+    public float particleFactor = 0f;
 
     private void Start()
     {
         lightMesh = new Mesh();
         lightMesh.name = "Light Mesh";
         lightMeshFilter.mesh = lightMesh;
-        if (!isDynamic)
-        {
-            DrawLightField();
-        }
+        mr = GetComponent<MeshRenderer>();
+        mr.material = material;
+        tempMaterial = new Material(mr.sharedMaterial);
+
+
+        SetShaderParameters();
+
+        DrawLightField();
+    }
+
+    private void SetShaderParameters()
+    {
+        tempMaterial.color = color;
+        tempMaterial.SetFloat("_ContrastFactor", contrastFactor);
+        tempMaterial.SetFloat("_ColorFactor", colorFactor);
+        tempMaterial.SetFloat("_RotationSpeed", rotationSpeed);
+        tempMaterial.SetFloat("_ParticleFactor", particleFactor);
+        mr.sharedMaterial = tempMaterial;
     }
 
     private void Update()
     {
+        SetShaderParameters();
+        isMoved = CheckForMovement();
         if (lightOverlap)
             lightMultiplier = 1 + lightMultiplierRange;
         else
             lightMultiplier = 1 / (1 + lightMultiplierRange);
+    }
+
+    private bool CheckForMovement()
+    {
+        Vector2 curPos = transform.position;
+        if (curPos == oldPos)
+            return false;
+        else
+        {
+            oldPos = curPos;
+            return true;
+        }
 
     }
+
     private void LateUpdate()
     {
-        if (isDynamic)
+        if (isDynamic && Physics2D.OverlapCircle(transform.position, lightRadius) != null && isMoved)
+        {
             DrawLightField();
+        }
     }
 
     void DrawLightField()
@@ -191,10 +237,13 @@ public class RaycastLight : MonoBehaviour
         }
     }
 
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireMesh(lightMesh, transform.position);
-    }*/
+        if (gizmoEnable)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireMesh(lightMesh, transform.position);
+        }
+    }
 }
 

@@ -1,7 +1,5 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "LightShader2D/AboutpixelsLight"
 {
 	Properties
@@ -21,9 +19,10 @@ Shader "LightShader2D/AboutpixelsLight"
 	{
 		Tags
 	{
-		"Queue" = "Transparent"
+		"Queue" = "Transparent-1"
 		"IgnoreProjector" = "True"
 		"RenderType" = "Transparent"
+		"PreviewType" = "Plane"
 		"ForceNoShadowCasting" = "True"
 	}
 
