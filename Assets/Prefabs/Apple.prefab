@@ -39,7 +39,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4354894021454036}
   - component: {fileID: 212824136520469588}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Light Static
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,11 +209,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -197848197
-  m_SortingLayer: 2
+  m_SortingLayerID: -291150333
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c5de909ba9985ad4cac7ca429bbd543b, type: 3}
-  m_Color: {r: 0.18534178, g: 0.8018868, b: 0.18841796, a: 0.65882355}
+  m_Color: {r: 0.47209862, g: 0.9716981, b: 0.4799355, a: 0.67058825}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

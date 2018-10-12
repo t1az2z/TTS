@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Light
-  m_Shader: {fileID: 4800000, guid: 3d05106bd8c89fa43a60250ffa15e1ae, type: 3}
+  m_Shader: {fileID: 4800000, guid: 23d1f2a06851dc3429a693fd850da7fd, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ALPHABLEND_ON _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -75,11 +75,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Particles:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3edda8ea635ff364d937bdb32af520bc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Particles2:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3edda8ea635ff364d937bdb32af520bc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RightTex:
@@ -96,10 +96,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - PixelSnap: 0
+    - _AlphaCutoff: 0.5
+    - _BlendDst: 1
+    - _BlendSrc: 5
     - _BumpScale: 1
-    - _ColorFactor: 0.25
+    - _ColorFactor: 1.02
     - _ColorMask: 15
-    - _ContrastFactor: 1.15
+    - _ContrastFactor: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
@@ -107,7 +110,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _IntensityFactor: 1
+    - _HorizontalSkew: 0
+    - _HorizontalTranslation: 0
+    - _IntensityFactor: 0.1
     - _InvFade: 3
     - _Metallic: 1
     - _Mode: 2
@@ -126,12 +131,16 @@ Material:
     - _StencilWriteMask: 255
     - _UVSec: 0
     - _UseUIAlphaClip: 0
+    - _VerticalOffset: 0
+    - _VerticalScale: 1
+    - _VerticalTranslation: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.9194196, g: 0.93333334, b: 0.53333336, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 4.2870936, g: 4.2870936, b: 5.723607, a: 0.07058824}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0.2, a: 0.9}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _Specular: {r: 0, g: 0, b: 0, a: 0}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}

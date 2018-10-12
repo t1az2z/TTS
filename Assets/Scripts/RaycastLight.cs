@@ -36,7 +36,6 @@ public class RaycastLight : MonoBehaviour
     public float contrastFactor = 1.15f;
     public float colorFactor = .25f;
     public float rotationSpeed = 2f;
-    public float particleFactor = 0f;
 
     private void Start()
     {
@@ -59,7 +58,6 @@ public class RaycastLight : MonoBehaviour
         tempMaterial.SetFloat("_ContrastFactor", contrastFactor);
         tempMaterial.SetFloat("_ColorFactor", colorFactor);
         tempMaterial.SetFloat("_RotationSpeed", rotationSpeed);
-        tempMaterial.SetFloat("_ParticleFactor", particleFactor);
         mr.sharedMaterial = tempMaterial;
     }
 

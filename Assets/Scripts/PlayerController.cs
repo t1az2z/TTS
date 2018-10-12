@@ -195,6 +195,21 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public IEnumerator FreezePlayer (float time)
+    {
+        /*var vel = rb.velocity;
+        animator.speed = 0;
+        yield return new WaitForSeconds(time/2);
+        controllsEnabled = false;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        yield return new WaitForSeconds(time/2);
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.velocity = vel;
+        animator.speed = 1;
+        controllsEnabled = true;*/
+        yield return new WaitForEndOfFrame();
+    }
+
     private void HandleWallSliding()
     {
         VariablesResetOnWallHit();
@@ -273,7 +288,7 @@ public class PlayerController : MonoBehaviour
                     animator.Play("Jump");
                 else if (jumpsCount >= 2 && !isDashing)
                 {
-                    if (rb.velocity.y < -4)
+                    if (rb.velocity.y < -6)
                         animator.Play("Fall");
                     else
                         animator.Play("Jump2");
@@ -317,6 +332,7 @@ public class PlayerController : MonoBehaviour
                     velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
                 else
                     velocity.x = Mathf.Sign(xInput) * runSpeed * 300 * Time.fixedDeltaTime;
+                //gc.ShakeCamera();
                 dashExpireTime -= Time.fixedDeltaTime;
                 rb.velocity = velocity;
 

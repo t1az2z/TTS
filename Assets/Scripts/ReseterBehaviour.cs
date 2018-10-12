@@ -41,7 +41,6 @@ public class ReseterBehaviour : MonoBehaviour {
             if (resetJumpCounter)
             {
                 player.jumpsCount = 0;
-                print(player.jumpsCount);
             }
 
             isActive = false;

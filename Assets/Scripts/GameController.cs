@@ -32,7 +32,16 @@ public class GameController : MonoBehaviour {
 
     Vector2 activeCheckpoint;
 
+    [Header("Cam shake parameters")]
+    public float frequency = 10f;
+    public float amplitude = .1f;
+    public float duration = .2f;
 
+
+    public void ShakeCamera( )
+    {
+        currentCamera.GetComponent<CinemachineCameraShaker>().ShakeCamera(duration, amplitude, frequency);
+    }
 
     void Awake()
     {
@@ -123,18 +132,23 @@ public class GameController : MonoBehaviour {
 
     public void SwitchCamera(GameObject newCamera)
     {
+        //currentCamera.GetComponent<CinemachineCameraShaker>().StopAllCoroutines();
+        float timeToStop = .5f;
         previousCamera = currentCamera;
         currentCamera = newCamera;
+        
         if (currentCamera != null && previousCamera != null && previousCamera != currentCamera)
         {
             currentCamera.SetActive(true);
             previousCamera.SetActive(false);
+            StartCoroutine(player.FreezePlayer(timeToStop));
 
         }
         else if(previousCamera == currentCamera)
         {
             currentCamera.SetActive(true);
         }
+        
     }
 
     public void SetChekpoint(Vector2 checkpoint)

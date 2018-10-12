@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1193487783443266}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -97,20 +97,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gizmoEnable: 1
   isDynamic: 1
-  lightRadius: 2
+  lightRadius: 4
   lightAngle: 360
-  meshResolution: 0.031
+  meshResolution: 0.2
   edgeDistanceThreshold: 0.1
   edgeResolveIterations: 1
   obstaclesMask:
     serializedVersion: 2
-    m_Bits: 45312
+    m_Bits: 14592
   lightMeshFilter: {fileID: 33813663082663720}
-  lightOverlap: 1
-  lightMultiplierRange: 0.02
+  lightOverlap: 0
+  lightMultiplierRange: 0
   material: {fileID: 2100000, guid: 6cfc80007ac794540b4bcfad1e6a84c9, type: 2}
-  color: {r: 0.5039442, g: 0.9529412, b: 0.39999998, a: 0.73333335}
-  contrastFactor: 0.1
-  colorFactor: 0.1
+  color: {r: 1, g: 1, b: 1, a: 1}
+  contrastFactor: 0.7
+  colorFactor: 0.25
   rotationSpeed: 2
-  particleFactor: 0
