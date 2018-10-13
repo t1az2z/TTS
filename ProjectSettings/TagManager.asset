@@ -21,14 +21,14 @@ TagManager:
   - One Way Platforms
   - Hazzards
   - Spring
-  - Light Sources
+  - Light Sources Dynamic
   - PickUps
+  - Light Sources Static
   - 
   - 
   - 
   - 
-  - 
-  - 
+  - ShadowReciever
   - 
   - 
   - 

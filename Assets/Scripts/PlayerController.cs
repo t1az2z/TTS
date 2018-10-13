@@ -31,16 +31,20 @@ public class PlayerController : MonoBehaviour
     public int jumpsCount = 1;
     private const float velocityTopSlice = 3f;
     [SerializeField] float maxFallVelocity = -10f;
+    [SerializeField] float groundCheckLength = .0625f;
+    
     [Space(8)]
 
     [Header("Jump gravity variables:")]
     [SerializeField] float fallMultiplier = 1.2f;
     [Space(8)]
 
-    [Header("Ground parameters")]
+    [Header("WllCheck parameters")]
     [SerializeField] Transform[] groundChecks;
-    public float groundedRadius = .03125f;
+    public float wallcheckRadius = .03125f;
     [SerializeField] LayerMask whatIsGround;
+
+
 
     [Space(8)]
 
@@ -446,7 +450,7 @@ public class PlayerController : MonoBehaviour
         Vector2 direction = Vector2.down;
         foreach (var groundch in groundChecks)
         {
-            RaycastHit2D hit = Physics2D.Raycast(groundch.position, direction, groundedRadius, whatIsGround);
+            RaycastHit2D hit = Physics2D.Raycast(groundch.position, direction, groundCheckLength, whatIsGround);
             if (hit.collider != null && rb.velocity.y <= 0)
                 isGrnd = true;
         }
@@ -472,7 +476,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach (var wallCheck in wallChecksLeft)
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, groundedRadius, whatIsWalls);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, wallcheckRadius, whatIsWalls);
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].gameObject != gameObject)
@@ -483,7 +487,7 @@ public class PlayerController : MonoBehaviour
         }
         foreach (var wallCheck in wallChecksRight)
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, groundedRadius, whatIsWalls);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, wallcheckRadius, whatIsWalls);
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].gameObject != gameObject)
@@ -502,7 +506,7 @@ public class PlayerController : MonoBehaviour
             if (groundch != null)
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawRay(groundch.position, new Vector2(0, -groundedRadius));
+                Gizmos.DrawRay(groundch.position, new Vector2(0, -groundCheckLength));
             }
         }
         foreach (var wallCH in wallChecksLeft)
@@ -510,14 +514,14 @@ public class PlayerController : MonoBehaviour
             if (wallCH != null)
             {
                 Gizmos.color = Color.blue;
-                Gizmos.DrawWireSphere(wallCH.position, groundedRadius);
+                Gizmos.DrawWireSphere(wallCH.position, wallcheckRadius);
             }
         }foreach (var wallCH in wallChecksRight)
         {
             if (wallCH != null)
             {
                 Gizmos.color = Color.cyan;
-                Gizmos.DrawWireSphere(wallCH.position, groundedRadius);
+                Gizmos.DrawWireSphere(wallCH.position, wallcheckRadius);
             }
         }
     }

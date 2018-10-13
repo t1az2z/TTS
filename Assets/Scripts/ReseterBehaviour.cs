@@ -10,6 +10,8 @@ public class ReseterBehaviour : MonoBehaviour {
     SpriteRenderer sr;
     bool isActive = true;
     float waitTime = .15f;
+    GameObject light;
+
 
 
 
@@ -17,7 +19,8 @@ public class ReseterBehaviour : MonoBehaviour {
 
 	void Start () {
         sr = GetComponent<SpriteRenderer>();
-	}
+        light = transform.GetChild(0).gameObject;
+    }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -61,9 +64,11 @@ public class ReseterBehaviour : MonoBehaviour {
     {
         //deactive animation
         sr.enabled = false;
+        light.SetActive(false);
         yield return new WaitForSeconds(reactivateTime);
         //activate animation
         sr.enabled = true;
+        light.SetActive(true);
         isActive = true;
     }
 }

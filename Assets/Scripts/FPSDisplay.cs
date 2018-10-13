@@ -6,7 +6,7 @@ public class FPSDisplay : MonoBehaviour
     float deltaTime = 0.0f;
     private void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 30;
     }
     void Update()
     {
