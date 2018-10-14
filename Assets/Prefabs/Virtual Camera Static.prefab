@@ -38,7 +38,6 @@ GameObject:
   - component: {fileID: 4856071906401370}
   - component: {fileID: 114338394538696686}
   - component: {fileID: 114687983122281680}
-  - component: {fileID: 114762556697578530}
   m_Layer: 0
   m_Name: Virtual Camera Static
   m_TagString: Untagged
@@ -151,18 +150,3 @@ MonoBehaviour:
   m_BoundingShape2D: {fileID: 0}
   m_ConfineScreenEdges: 1
   m_Damping: 0
---- !u!114 &114762556697578530
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1275332171942948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a96b41311d01f43ada3197bb58d874, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IdleAmplitude: 0
-  IdleFrequency: 0
-  DefaultShakeAmplitude: 0.5
-  DefaultShakeFrequency: 10

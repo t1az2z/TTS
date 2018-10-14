@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Light
-  m_Shader: {fileID: 4800000, guid: 3d05106bd8c89fa43a60250ffa15e1ae, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4a20efa9f44ad4e1b83004dad92c21c0, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ALPHABLEND_ON _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -96,7 +96,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - PixelSnap: 0
-    - _AlphaCutoff: 0.5
+    - _AlphaCutoff: 0
     - _BlendDst: 1
     - _BlendSrc: 5
     - _BumpScale: 1
