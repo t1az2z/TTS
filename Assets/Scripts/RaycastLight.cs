@@ -69,6 +69,10 @@ public class RaycastLight : MonoBehaviour
             lightMultiplier = 1 + lightMultiplierRange;
         else
             lightMultiplier = 1 / (1 + lightMultiplierRange);
+
+
+        mr.sortingLayerName = "Foreground";
+        mr.sortingOrder = 0;
     }
 
     private bool CheckForMovement()
