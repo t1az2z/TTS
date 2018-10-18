@@ -45,7 +45,8 @@ public class RaycastLight : MonoBehaviour
         mr = GetComponent<MeshRenderer>();
         mr.material = material;
         tempMaterial = new Material(mr.sharedMaterial);
-
+        mr.sortingLayerName = "Middleground";
+        mr.sortingOrder = 1;
 
         SetShaderParameters();
 
@@ -70,9 +71,6 @@ public class RaycastLight : MonoBehaviour
         else
             lightMultiplier = 1 / (1 + lightMultiplierRange);
 
-
-        mr.sortingLayerName = "Foreground";
-        mr.sortingOrder = 0;
     }
 
     private bool CheckForMovement()

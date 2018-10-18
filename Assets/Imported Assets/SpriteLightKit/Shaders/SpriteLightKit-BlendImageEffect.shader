@@ -1,6 +1,6 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Hidden/Blend Image Effect"
+Shader "Blend Image Effect"
 {
 	Properties
 	{
@@ -17,6 +17,7 @@ Shader "Hidden/Blend Image Effect"
 
 		Pass
 		{
+			//Blend DstAlpha One
 			// all emissives write 2 to the stencil buffer. We want to render everything except those pixels
 			Stencil
 			{

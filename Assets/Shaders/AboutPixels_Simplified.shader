@@ -15,20 +15,27 @@ Shader "LightShader2D/AboutPixels_Simplified"
 	{
 		Tags
 	{
-		"Queue" = "Overlay"
+		"Queue" = "Transparent+20"
 		"IgnoreProjector" = "True"
 		"RenderType" = "Transparent"
 		"PreviewType" = "Plane"
 		"ForceNoShadowCasting" = "True"
 	}
 
+	
 		Pass
 	{
-		AlphaTest Greater 0.0     // Pixel with an alpha of 0 should be ignored
-		Blend DstColor One
-			// Keep deep black values
 
+		AlphaTest Greater 0.0     // Pixel with an alpha of 0 should be ignored
+		Blend DstColor One		  // Keep deep black values
+		
 		ZWrite Off
+		Stencil
+		{
+			Ref 2
+			Pass zero
+		}
+
 		CGPROGRAM
 
 		#pragma vertex vert

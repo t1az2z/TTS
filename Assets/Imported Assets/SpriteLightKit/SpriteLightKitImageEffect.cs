@@ -12,11 +12,6 @@ namespace Prime31
 		[Range(0.0f, 2.0f)] public float intensity = 1.0f;
 		Material _material;
 
-        private void Awake()
-        {
-            Camera.main.depthTextureMode = DepthTextureMode.Depth; //DEPTH
-
-        }
 
         protected Material material
 		{
