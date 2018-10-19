@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/DefaultSprite-StencilMaskForDark"
+Shader "Custom/DefaultSprite-Dark"
 {
 	Properties
 	{
@@ -29,9 +29,9 @@ Shader "Custom/DefaultSprite-StencilMaskForDark"
 	{
 		Stencil
 		{
-			Ref 2
+			Ref 1
 			Comp Equal
-			Pass Replace
+			Pass Keep
 		}
 
 		CGPROGRAM
@@ -88,6 +88,8 @@ Shader "Custom/DefaultSprite-StencilMaskForDark"
 		fixed4 frag(v2f IN) : SV_Target
 		{
 			fixed4 c = SampleSpriteTexture(IN.texcoord) * IN.color;
+			if (c.a == 0)
+				discard;
 			c.rgb *= c.a;
 			return c;
 		}

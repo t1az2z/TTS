@@ -29,13 +29,13 @@ public class RaycastLight : MonoBehaviour
     [Range(0, .1f)] public float lightMultiplierRange = .07f;
     private float lightMultiplier = 1;
 
-    [Header("Light Parameters (shader)")]
+    /*[Header("Light Parameters (shader)")]
     public Material material;
     private Material tempMaterial;
     public Color color = new Color(1, 1, 1, 1);
     public float contrastFactor = 1.15f;
     public float colorFactor = .25f;
-    public float rotationSpeed = 2f;
+    public float rotationSpeed = 2f;*/
 
     private void Start()
     {
@@ -43,28 +43,28 @@ public class RaycastLight : MonoBehaviour
         lightMesh.name = "Light Mesh";
         lightMeshFilter.mesh = lightMesh;
         mr = GetComponent<MeshRenderer>();
-        mr.material = material;
-        tempMaterial = new Material(mr.sharedMaterial);
+        /*mr.material = material;
+        tempMaterial = new Material(mr.sharedMaterial);*/
         mr.sortingLayerName = "Middleground";
-        mr.sortingOrder = 1;
+        mr.sortingOrder = 0;
 
-        SetShaderParameters();
+        //SetShaderParameters();
 
         DrawLightField();
     }
 
-    private void SetShaderParameters()
+    /*private void SetShaderParameters()
     {
         tempMaterial.color = color;
         tempMaterial.SetFloat("_ContrastFactor", contrastFactor);
         tempMaterial.SetFloat("_ColorFactor", colorFactor);
         tempMaterial.SetFloat("_RotationSpeed", rotationSpeed);
         mr.sharedMaterial = tempMaterial;
-    }
+    }*/
 
     private void Update()
     {
-        SetShaderParameters();
+        //SetShaderParameters();
         isMoved = CheckForMovement();
         if (lightOverlap)
             lightMultiplier = 1 + lightMultiplierRange;
