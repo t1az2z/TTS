@@ -50,6 +50,10 @@ TextureImporter:
     21300090: Level1_45
     21300092: Level1_46
     21300094: Level1_47
+    21300096: Level1_48
+    21300098: Level1_49
+    21300100: Level1_50
+    21300102: Level1_51
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -1189,6 +1193,86 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 39259cbc7423cc744be14a9f422f5017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Level1_48
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 162
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b56098719f65f964683a7bac0b4d3150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Level1_49
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 153
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cec9394f0ff45f49aa8c6442bee4ef8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Level1_50
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 153
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0719da987e455b04aa4a01cc076c7cd3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Level1_51
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 153
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0897e168f0afdb418077a08ba49a49d
       vertices: []
       indices: 
       edges: []

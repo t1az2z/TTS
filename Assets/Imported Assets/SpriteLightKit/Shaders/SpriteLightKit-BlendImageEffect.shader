@@ -24,57 +24,57 @@ Shader "Blend Image Effect"
 			    Ref 2
 			    Comp NotEqual
 			}
-CGPROGRAM
-#pragma fragmentoption ARB_precision_hint_fastest
-#pragma vertex vert
-#pragma fragment frag
+				CGPROGRAM
+				#pragma fragmentoption ARB_precision_hint_fastest
+				#pragma vertex vert
+				#pragma fragment frag
 
-#include "UnityCG.cginc"
-
-
-// uniforms
-sampler2D _MainTex;
-uniform float4 _MainTex_ST;
-sampler2D _LightsTex;
-float _MultiplicativeFactor;
+				#include "UnityCG.cginc"
 
 
-struct vertexInput
-{
-	float4 vertex : POSITION; // position (in object coordinates, i.e. local or model coordinates)
-	float4 texcoord : TEXCOORD0;  // 0th set of texture coordinates (a.k.a. “UV”; between 0 and 1)
-};
+				// uniforms
+				sampler2D _MainTex;
+				uniform float4 _MainTex_ST;
+				sampler2D _LightsTex;
+				float _MultiplicativeFactor;
 
 
-struct fragmentInput
-{
-	float4 pos : SV_POSITION;
-    float4 color : COLOR0;
-    half2 uv : TEXCOORD0;
-};
+				struct vertexInput
+				{
+					float4 vertex : POSITION; // position (in object coordinates, i.e. local or model coordinates)
+					float4 texcoord : TEXCOORD0;  // 0th set of texture coordinates (a.k.a. “UV”; between 0 and 1)
+				};
 
 
-fragmentInput vert( vertexInput i )
-{
-	fragmentInput o;
-	o.pos = UnityObjectToClipPos( i.vertex );
-	o.uv = TRANSFORM_TEX( i.texcoord, _MainTex );
+				struct fragmentInput
+				{
+					float4 pos : SV_POSITION;
+					float4 color : COLOR0;
+					half2 uv : TEXCOORD0;
+				};
+
+
+				fragmentInput vert( vertexInput i )
+				{
+					fragmentInput o;
+					o.pos = UnityObjectToClipPos( i.vertex );
+					o.uv = TRANSFORM_TEX( i.texcoord, _MainTex );
     
-	return o;
-}
+					return o;
+				}
 
 
-half4 frag( fragmentInput i ) : COLOR
-{
-	half4 main = tex2D( _MainTex, i.uv );
-	half4 lights = tex2D( _LightsTex, i.uv );
+				half4 frag( fragmentInput i ) : COLOR
+				{
+					half4 main = tex2D( _MainTex, i.uv );
+					half4 lights = tex2D( _LightsTex, i.uv );
 
-	return _MultiplicativeFactor * main * lights;
-}
+					return _MultiplicativeFactor * main * lights;
+				}
 
-ENDCG
-		} // end Pass
-	} // end SubShader
+				ENDCG
+			} // end Pass
+		} // end SubShader
 	
-	FallBack "Diffuse"
-}
+		FallBack "Diffuse"
+	}

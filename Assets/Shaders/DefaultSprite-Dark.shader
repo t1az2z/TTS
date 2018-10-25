@@ -23,6 +23,7 @@ Shader "Custom/DefaultSprite-Dark"
 		Cull Off
 		Lighting Off
 		ZWrite Off
+		BlendOp RevSub
 		Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass

@@ -27,8 +27,9 @@ Shader "Custom/Default-StencilObject"
 			Cull Off
 			Lighting Off
 			ZWrite Off
+			//ColorMask 0
 
-			Pass
+				Pass
 			{
 				Stencil
 			{
@@ -37,7 +38,9 @@ Shader "Custom/Default-StencilObject"
 				Pass IncrSat
 
 			}
-				Blend DstColor One
+
+				Blend DstAlpha OneMinusSrcAlpha
+				//Blend SrcColor DstAlpha
 
 				CGPROGRAM
 
@@ -91,6 +94,7 @@ Shader "Custom/Default-StencilObject"
 			float4 frag(VertexOutput input) : COLOR
 			{
 				float4 diffuseColor = tex2D(_MainTex, input.uv);
+				if (diffuseColor.a == 0) discard;
 				// Retrieve color from texture and multiply it by tint color and by sprite color
 				// Multiply everything by texture alpha to emulate transparency
 				diffuseColor.rgb = diffuseColor.rgb * _Color.rgb * input.color.rgb;
@@ -111,7 +115,9 @@ Shader "Custom/Default-StencilObject"
 				Ref 2
 				Comp Equal
 			}
-				Blend SrcAlpha One  // Add colours to the previous pixels
+
+				//Blend OneMinusSrcAlpha SrcAlpha
+				//Blend SrcAlpha One  // Add colours to the previous pixels
 
 				CGPROGRAM
 
@@ -137,6 +143,7 @@ Shader "Custom/Default-StencilObject"
 				float4 pos : POSITION;
 				float2 uv : TEXCOORD0;
 				float4 color : COLOR;
+
 			};
 
 			VertexOutput vert(VertexInput input)
