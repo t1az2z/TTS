@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class SpringBehaviour : MonoBehaviour {
 
-    Collider2D col;
     [SerializeField] Vector2 springVector = new Vector2(0, 10f);
     PlayerController player;
-	void Start ()
-    {
-        col = GetComponent<Collider2D>();
-	}
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

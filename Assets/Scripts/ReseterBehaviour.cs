@@ -22,7 +22,19 @@ public class ReseterBehaviour : MonoBehaviour {
         light = transform.GetChild(0).gameObject;
     }
 
-
+    private void Update()
+    {
+        if (player != null)
+        {
+            if (player.isDead)
+            {
+                StopAllCoroutines();
+                sr.enabled = true;
+                light.SetActive(true);
+                isActive = true;
+            }
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         player = collision.GetComponent<PlayerController>();
@@ -70,5 +82,10 @@ public class ReseterBehaviour : MonoBehaviour {
         sr.enabled = true;
         light.SetActive(true);
         isActive = true;
+    }
+    private IEnumerator ReactivateAdPlayersDeath()
+    {
+        yield return new WaitForSeconds(.05f);
+        
     }
 }

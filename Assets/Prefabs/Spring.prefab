@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bb03e7196099a6468d0f557c1bf9b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springVector: {x: 0, y: 15}
+  springVector: {x: 0, y: 15.2}
 --- !u!212 &212029335146397814
 SpriteRenderer:
   m_ObjectHideFlags: 1
