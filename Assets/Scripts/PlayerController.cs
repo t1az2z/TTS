@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     SpriteRenderer spriteRenderer;
 
+    public GameObject wallslideParticles;
+    private ParticleSystem.EmissionModule wsEmission;
 
 
     public bool isDead = false;
@@ -19,6 +22,9 @@ public class PlayerController : MonoBehaviour
     public bool isFacingLeft;
     bool isRunning;
     float xInput;
+    //[SerializeField] ParticleSystem runParticles;
+    //private ParticleSystem.EmissionModule runEmission;
+
     [Space(8)]
 
     [Header("Jump parameters:")]
@@ -32,7 +38,7 @@ public class PlayerController : MonoBehaviour
     private const float velocityTopSlice = 3f;
     [SerializeField] float maxFallVelocity = -10f;
     [SerializeField] float groundCheckLength = .0625f;
-    
+    [SerializeField] ParticleSystem jumpParticles;
     [Space(8)]
 
     [Header("Jump gravity variables:")]
@@ -51,11 +57,12 @@ public class PlayerController : MonoBehaviour
     [Header("Dash parameters:")]
     //public GameObject dashDenyIndicator;
     [SerializeField] float dashTime = .14f;
+    [SerializeField] float dashFreezeTime = .02f;
     public bool dashAlow = true;
     bool dashRequest = false;
     public bool isDashing = false;
     float dashExpireTime;
-
+    CinemachineImpulseSource impulse;
     [Space(8)]
 
     [Header("Wall jump parameters")]
@@ -86,17 +93,20 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        impulse = GetComponent<CinemachineImpulseSource>();
+        wsEmission = wallslideParticles.GetComponent<ParticleSystem>().emission;
+        //runEmission = runParticles.emission;
     }
     void Update()
     {
-            if(controllsEnabled)
-                PcControlls();
+        if (controllsEnabled)
+            PcControlls();
 
-            VariablesResetOnGround();
+        GroundInteractionLogic();
 
-            FlipSprite();
+        FlipSprite();
 
-            SetAnimationsParameters();
+        SetAnimationsParameters();
 
         if (isDead)
         {
@@ -124,9 +134,11 @@ public class PlayerController : MonoBehaviour
                 isFacingLeft = false;
             }
         }
+        /*else
+            runEmission.enabled = false;*/
     }
 
-    private void VariablesResetOnGround()
+    private void GroundInteractionLogic()
     {
         if (isGrounded)
         {
@@ -144,9 +156,10 @@ public class PlayerController : MonoBehaviour
         {
             jumpsCount = 0;
             jumpCancel = false;
+            jumpParticles.Play();
         }
     }
-    private void VariablesResetOnWallHit()
+    private void WallsInteractionLogic()
     {
         bool OldWallHit = isWallHit;
         isWallHit = wallSliding;
@@ -156,7 +169,7 @@ public class PlayerController : MonoBehaviour
             jumpCancel = false;
             springJumping = false;
         }
- 
+
     }
 
 
@@ -192,14 +205,14 @@ public class PlayerController : MonoBehaviour
             HandleWallSliding();
             GravityScaleChange();
         }
-        if(isDead)
+        if (isDead)
         {
-            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezePositionX| RigidbodyConstraints2D.FreezeRotation;
+            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
         }
 
     }
 
-    public IEnumerator FreezePlayer (float time)
+    public IEnumerator FreezePlayer(float time)
     {
         /*var vel = rb.velocity;
         animator.speed = 0;
@@ -216,11 +229,15 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallSliding()
     {
-        VariablesResetOnWallHit();
+        WallsInteractionLogic();
 
         wallDirX = WallHit();
         wallSliding = false;
-        if ((wallDirX == -1 || wallDirX == 1)  && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <= 0)
+        if (wallDirX == -1)
+            wallslideParticles.transform.localPosition = new Vector2(-.14f, wallslideParticles.transform.localPosition.y);
+        else
+            wallslideParticles.transform.localPosition = new Vector2(.14f, wallslideParticles.transform.localPosition.y);
+        if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <= 0)
         {
             wallSliding = true;
             if (rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0)
@@ -228,21 +245,13 @@ public class PlayerController : MonoBehaviour
                 var velocity = rb.velocity;
                 velocity.y = -maxlWallSlidingVelocity;
                 rb.velocity = velocity;
-                /*if (rb.velocity.y > - maxlWallSlidingVelocity)
-                {
-                    velocity.y += wallslidingVelocityStep;
-                    rb.velocity = velocity;
-                   
-                }
-                else
-                {
-                    velocity.y = -maxlWallSlidingVelocity;
-                    rb.velocity = velocity;
-                   
-                }*/
             }
         }
- 
+        wsEmission.enabled = (wallSliding && !isGrounded);
+
+        
+
+
     }
 
     void HorizontalMovement()
@@ -275,7 +284,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!isDead)
         {
-
             if (isDashing)
                 animator.Play("Dash");
             else if (isGrounded && rb.velocity.x == 0)
@@ -285,9 +293,11 @@ public class PlayerController : MonoBehaviour
             else if (isGrounded && rb.velocity.x != 0)
             {
                 animator.Play("Walk");
+                //runEmission.enabled = true;
             }
             else if ((!isGrounded && !wallSliding) || wallJumping)
             {
+                //runEmission.enabled = false;
                 if (rb.velocity.y > 0 && jumpsCount <= 1)
                     animator.Play("Jump");
                 else if (jumpsCount >= 2 && !isDashing)
@@ -302,7 +312,9 @@ public class PlayerController : MonoBehaviour
 
             }
             else if (!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
+            {
                 animator.Play("Climb");
+            }
 
         }
     }
@@ -311,6 +323,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!dashRequest)
         {
+            StartCoroutine(gc.FreezeTime(dashFreezeTime));
             dashRequest = true;
             dashExpireTime = dashTime;
         }
@@ -336,10 +349,10 @@ public class PlayerController : MonoBehaviour
                     velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
                 else
                     velocity.x = Mathf.Sign(xInput) * runSpeed * 300 * Time.fixedDeltaTime;
-                //gc.ShakeCamera();
+
                 dashExpireTime -= Time.fixedDeltaTime;
                 rb.velocity = velocity;
-
+                impulse.GenerateImpulse(new Vector3(0, dashDirection, 0));
 
                 //dashDenyIndicator.SetActive(true);
                 //todo stop-frame
@@ -375,7 +388,6 @@ public class PlayerController : MonoBehaviour
     public void OnReleaseJump()
     {
         jumpRequest = false;
-        //wallJumping = false; //m.b. use for "meatboy" style wall jumps 
         if (!isGrounded)
             jumpCancel = true;
     }
@@ -396,6 +408,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                jumpParticles.Play();
                 Jump(velocity);
             }
             jumpRequest = false;
@@ -455,21 +468,6 @@ public class PlayerController : MonoBehaviour
                 isGrnd = true;
         }
         return isGrnd;
-        
-        /*bool isGrnd = false;
-
-        foreach (var groundch in groundChecks)
-        {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(groundch.position, groundedRadius, whatIsGround);
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].gameObject != gameObject && rb.velocity.y <= 0)
-                {
-                    isGrnd = true;
-                }
-            }
-        }
-        return isGrnd;*/
     }
 
     private int WallHit()
@@ -537,6 +535,8 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(gc.DeathCoroutine());
             dashRequest = false;
             isDashing = false;
+            wallSliding = false;
+            wsEmission.enabled = false;
             isDead = true;
         }
     }

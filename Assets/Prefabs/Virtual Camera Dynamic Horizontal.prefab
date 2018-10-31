@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 4372979248598766}
   - component: {fileID: 114951822026496012}
   - component: {fileID: 114254109268330058}
+  - component: {fileID: 114435417478934630}
   m_Layer: 0
   m_Name: Virtual Camera Dynamic Horizontal
   m_TagString: Untagged
@@ -88,6 +89,20 @@ MonoBehaviour:
   m_BoundingShape2D: {fileID: 0}
   m_ConfineScreenEdges: 1
   m_Damping: 0
+--- !u!114 &114435417478934630
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1659543832761940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 1
 --- !u!114 &114695634790254688
 MonoBehaviour:
   m_ObjectHideFlags: 3

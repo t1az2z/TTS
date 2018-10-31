@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class ReseterBehaviour : MonoBehaviour {
 
@@ -11,7 +11,7 @@ public class ReseterBehaviour : MonoBehaviour {
     bool isActive = true;
     float waitTime = .15f;
     GameObject light;
-
+    CinemachineImpulseSource impulse;
 
 
 
@@ -20,6 +20,7 @@ public class ReseterBehaviour : MonoBehaviour {
 	void Start () {
         sr = GetComponent<SpriteRenderer>();
         light = transform.GetChild(0).gameObject;
+        impulse = GetComponent<CinemachineImpulseSource>();
     }
 
     private void Update()
@@ -57,7 +58,7 @@ public class ReseterBehaviour : MonoBehaviour {
             {
                 player.jumpsCount = 0;
             }
-
+            impulse.GenerateImpulse();
             isActive = false;
         }
 

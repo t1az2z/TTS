@@ -33,15 +33,10 @@ public class GameController : MonoBehaviour {
     Vector2 activeCheckpoint;
 
     [Header("Cam shake parameters")]
-    public float frequency = 10f;
+    public float frequency = .3f;
     public float amplitude = .1f;
     public float duration = .2f;
 
-
-    public void ShakeCamera( )
-    {
-        currentCamera.GetComponent<CinemachineCameraShaker>().ShakeCamera(duration, amplitude, frequency);
-    }
 
     void Awake()
     {
@@ -132,10 +127,12 @@ public class GameController : MonoBehaviour {
 
     public void SwitchCamera(GameObject newCamera)
     {
-        //currentCamera.GetComponent<CinemachineCameraShaker>().StopAllCoroutines();
+
+
         float timeToStop = .5f;
         previousCamera = currentCamera;
         currentCamera = newCamera;
+
         
         if (currentCamera != null && previousCamera != null && previousCamera != currentCamera)
         {
@@ -148,7 +145,7 @@ public class GameController : MonoBehaviour {
         {
             currentCamera.SetActive(true);
         }
-        
+
     }
 
     public void SetChekpoint(Vector2 checkpoint)
@@ -213,5 +210,18 @@ public class GameController : MonoBehaviour {
             player.gameObject.transform.position = Vector3.zero;
     }
 
+    
+    
+
+    public IEnumerator FreezeTime(float stopTime)
+    {
+        Time.timeScale = 0f;
+        float stopEndTime = Time.realtimeSinceStartup + stopTime;
+        while (Time.realtimeSinceStartup < stopEndTime)
+        {
+            yield return 0;
+        }
+        Time.timeScale = 1f;
+    }
     //todo add stopframes on transition
 }

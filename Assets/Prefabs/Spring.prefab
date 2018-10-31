@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 68301484208136578}
   - component: {fileID: 251181211830759240}
   - component: {fileID: 114058098281383608}
+  - component: {fileID: 114468496301071394}
   m_Layer: 8
   m_Name: Spring
   m_TagString: Untagged
@@ -72,6 +73,64 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   springVector: {x: 0, y: 15.2}
+--- !u!114 &114468496301071394
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056405443014296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_RawSignal: {fileID: 11400000, guid: c045f9c0603ee5c4380e9ad1f980ead4, type: 2}
+    m_AmplitudeGain: 0.1
+    m_FrequencyGain: 0.7
+    m_RepeatMode: 0
+    m_Randomize: 0
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -1.0187492
+          outSlope: -1.0187492
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: -1.0187492
+          outSlope: -1.0187492
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0.1
+      m_SustainTime: 0
+      m_DecayTime: 0
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 100
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 1000
 --- !u!212 &212029335146397814
 SpriteRenderer:
   m_ObjectHideFlags: 1
