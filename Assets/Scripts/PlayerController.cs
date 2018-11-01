@@ -63,6 +63,8 @@ public class PlayerController : MonoBehaviour
     public bool isDashing = false;
     float dashExpireTime;
     CinemachineImpulseSource impulse;
+    [SerializeField] ParticleSystem dashParticles;
+    [SerializeField] ParticleSystem dashParticles2;
     [Space(8)]
 
     [Header("Wall jump parameters")]
@@ -156,7 +158,8 @@ public class PlayerController : MonoBehaviour
         {
             jumpsCount = 0;
             jumpCancel = false;
-            jumpParticles.Play();
+            if (!isDead && controllsEnabled)
+                jumpParticles.Play();
         }
     }
     private void WallsInteractionLogic()
@@ -341,6 +344,8 @@ public class PlayerController : MonoBehaviour
         {
             if (dashExpireTime > Mathf.Epsilon && dashAlow)
             {
+                dashParticles.Play();
+                dashParticles2.Play();
                 int dashDirection = isFacingLeft ? -1 : 1;
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 isDashing = true;
