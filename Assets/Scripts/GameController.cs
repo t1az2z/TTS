@@ -163,6 +163,7 @@ public class GameController : MonoBehaviour {
         deaths++;
         deathCounterText.text = "x " + deaths.ToString();
         player_animator.Play("Death");
+        player.deathParticles.Play();
         if (deathReviveAnimationLength == 0)
         {
             CountDeathReviveAnimationLength();

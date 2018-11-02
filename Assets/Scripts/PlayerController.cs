@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isDead = false;
     public bool controllsEnabled = true;
-
+    public ParticleSystem deathParticles;
     [Header("Run parameters")]
     [SerializeField] float runSpeed;
     public bool isFacingLeft;
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     private const float velocityTopSlice = 3f;
     [SerializeField] float maxFallVelocity = -10f;
     [SerializeField] float groundCheckLength = .0625f;
-    [SerializeField] ParticleSystem jumpParticles;
+    public ParticleSystem jumpParticles;
     [Space(8)]
 
     [Header("Jump gravity variables:")]
@@ -61,10 +61,10 @@ public class PlayerController : MonoBehaviour
     public bool dashAlow = true;
     bool dashRequest = false;
     public bool isDashing = false;
-    float dashExpireTime;
+    [HideInInspector] public float dashExpireTime;
     CinemachineImpulseSource impulse;
     [SerializeField] ParticleSystem dashParticles;
-    [SerializeField] ParticleSystem dashParticles2;
+    public ParticleSystem dustParticles;
     [Space(8)]
 
     [Header("Wall jump parameters")]
@@ -147,7 +147,6 @@ public class PlayerController : MonoBehaviour
             dashAlow = true;
 
             wallJumping = false;
-            springJumping = false;
             //if (dashDenyIndicator.activeSelf)
             //    dashDenyIndicator.SetActive(false);
         }
@@ -158,6 +157,8 @@ public class PlayerController : MonoBehaviour
         {
             jumpsCount = 0;
             jumpCancel = false;
+            springJumping = false;
+
             if (!isDead && controllsEnabled)
                 jumpParticles.Play();
         }
@@ -342,10 +343,10 @@ public class PlayerController : MonoBehaviour
             dashRequest = false;
         if (dashRequest)
         {
+            dashParticles.Play();
             if (dashExpireTime > Mathf.Epsilon && dashAlow)
             {
-                dashParticles.Play();
-                dashParticles2.Play();
+                dustParticles.Play();
                 int dashDirection = isFacingLeft ? -1 : 1;
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 isDashing = true;
@@ -370,6 +371,7 @@ public class PlayerController : MonoBehaviour
                 dashRequest = false;
                 dashExpireTime = 0f;
                 dashAlow = false;
+                print(rb.velocity);
             }
         }
         else
@@ -393,7 +395,7 @@ public class PlayerController : MonoBehaviour
     public void OnReleaseJump()
     {
         jumpRequest = false;
-        if (!isGrounded)
+        if (!isGrounded && !springJumping)
             jumpCancel = true;
     }
 
@@ -529,6 +531,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("CheckPoint"))
@@ -536,6 +539,19 @@ public class PlayerController : MonoBehaviour
             gc.SetChekpoint(collision.transform.position);
         }
         else if(collision.CompareTag("Hazards"))
+        {
+            StartCoroutine(gc.DeathCoroutine());
+            dashRequest = false;
+            isDashing = false;
+            wallSliding = false;
+            wsEmission.enabled = false;
+            isDead = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Hazards") && rb.velocity.y <= 0)
         {
             StartCoroutine(gc.DeathCoroutine());
             dashRequest = false;
