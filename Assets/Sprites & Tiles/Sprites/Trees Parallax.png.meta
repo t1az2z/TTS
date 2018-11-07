@@ -113,9 +113,9 @@ TextureImporter:
       name: Trees Parallax_0
       rect:
         serializedVersion: 2
-        x: 1
+        x: 0
         y: 182
-        width: 319
+        width: 320
         height: 180
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

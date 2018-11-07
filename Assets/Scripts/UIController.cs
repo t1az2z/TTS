@@ -87,15 +87,17 @@ public class UIController : MonoBehaviour {
         {
             Debug.Log("Death Counter Reference lost. Fix It");
             deathsCounter = transform.Find("Deaths/Counter").GetComponent<Text>();
-            deathsCounter.text = "x " + gc.deaths.ToString();
         }
+        deathsCounter.text = "x " + gc.deaths.ToString();
 
         if (collectiblesCounter == null)
         {
             Debug.Log("Collectibles Counter Reference lost. Fix It");
             collectiblesCounter = transform.Find("Collectibles/Counter").GetComponent<Text>();
-            collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString();
         }
+        collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString();
+
+
     }
 
     public void DeathsTextUpdate()
