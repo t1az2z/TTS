@@ -70,8 +70,7 @@ public class CollectiblesBehaviour : MonoBehaviour {
                 animator.Play("Collect");
                 light.SetActive(false);
                 Destroy(gameObject, destroyDelay);
-                gc.collectiblesCollected++;
-                gc.UpdateCollectiblesCounter();
+                gc.CollectiblesUpdate();
                 collected = false;
             }
         }

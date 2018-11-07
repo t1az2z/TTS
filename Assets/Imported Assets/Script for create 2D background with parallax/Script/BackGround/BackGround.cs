@@ -58,7 +58,7 @@ public class BackGround : MonoBehaviour {
         }
 
     // We move the background depending on the player's position
-    void LateUpdate() {
+    void Update() {
         if (haveBackGround) {
             for (int i = 0; i < paramBackGround.Count; i++) {
                 // Parallax background displacement

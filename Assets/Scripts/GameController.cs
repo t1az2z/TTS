@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour {
 
     //gc
     public static GameController Instance;
+    public UIController ui;
+
     //cameras
     public GameObject currentCamera;
     private GameObject previousCamera;
@@ -18,17 +20,11 @@ public class GameController : MonoBehaviour {
     AnimatorClipInfo[] p_CurrentClipInfo;
     float deathReviveAnimationLength;
 
-    //UI references
-    GameObject splashScreen;
-    Animator splash_animator;
-    AnimatorClipInfo[] s_CurrentClipInfo;
-    public float splashAnimationLength;
-
-    //collectibles
-    Text collectibleCounterText;
-    [HideInInspector]public int collectiblesCollected = 0;
-    Text deathCounterText;
-    [HideInInspector]public int deaths = 0;
+    //todo перенести логику обработки переменных полностью в GameController
+    [HideInInspector]
+    public int deaths = 0;
+    [HideInInspector]
+    public int collectiblesCollected = 0;
 
     Vector2 activeCheckpoint;
 
@@ -58,36 +54,23 @@ public class GameController : MonoBehaviour {
 
     private void Start()
     {
+        ui = FindObjectOfType<UIController>();
+
         SetPlayerReference();
-        SetSplashScreenReference();
-        SetDeathCounterReference();
-        SetCollectiblesCounterReference();
+
+
         previousCamera = currentCamera;
     }
 
-    private void SetDeathCounterReference() //todo переделать этот АД!
+
+
+    public void CollectiblesUpdate()
     {
-        deathCounterText = GameObject.Find("Deaths").transform.Find("Counter").GetComponent<Text>();
-        deathCounterText.text = "x 0";
+        collectiblesCollected++;
+        ui.CollectiblesTextUpdate();
     }
 
-    private void SetCollectiblesCounterReference() //todo переделать этот АД!
-    {
-        collectibleCounterText = GameObject.Find("Collectibles").transform.Find("Counter").GetComponent<Text>();
-        collectibleCounterText.text = "x 0";
-    }
-    public void UpdateCollectiblesCounter()
-    {
-        collectibleCounterText.text = "x " + collectiblesCollected.ToString();
-    }
 
-    //todo make splashScreen null check EVERYWHERE
-    private void SetSplashScreenReference()
-    {
-        splashScreen = GameObject.Find("Splash");
-        splash_animator = splashScreen.GetComponent<Animator>();
-        splashScreen.SetActive(false);
-    }
 
     private void SetPlayerReference()
     {
@@ -96,17 +79,13 @@ public class GameController : MonoBehaviour {
     }
     private void Update()
     {
+        if (ui == null)
+            ui = FindObjectOfType<UIController>();
         if(Debug.isDebugBuild)
             DebugKeys();
 
-        if (splashScreen == null)
-            SetSplashScreenReference();
         if (player == null)
             SetPlayerReference();
-        if (collectibleCounterText == null)
-            SetCollectiblesCounterReference();
-        if (deathCounterText == null)
-            SetDeathCounterReference();
     }
 
     private void DebugKeys()
@@ -127,7 +106,6 @@ public class GameController : MonoBehaviour {
 
     public void SwitchCamera(GameObject newCamera)
     {
-
 
         float timeToStop = .5f;
         previousCamera = currentCamera;
@@ -153,7 +131,7 @@ public class GameController : MonoBehaviour {
         if (checkpoint == Vector2.zero)
             activeCheckpoint = Vector2.zero;
         else
-            activeCheckpoint = new Vector2(checkpoint.x, checkpoint.y-1f); //sprite bottom offset
+            activeCheckpoint = new Vector2(checkpoint.x, checkpoint.y-1f);
     }
 
 
@@ -161,7 +139,7 @@ public class GameController : MonoBehaviour {
     {
         player.controllsEnabled = false;
         deaths++;
-        deathCounterText.text = "x " + deaths.ToString();
+        ui.DeathsTextUpdate();
         player_animator.Play("Death");
         player.deathParticles.Play();
         if (deathReviveAnimationLength == 0)
@@ -170,19 +148,13 @@ public class GameController : MonoBehaviour {
         }
         yield return new WaitForSeconds(deathReviveAnimationLength);
         player.isDead = true;
-        splashScreen.SetActive(true);
-        splash_animator.Play("SplashShow");
+        ui.SplashShow();
 
-        if(splashAnimationLength <= Mathf.Epsilon)
-        {
-            CountSplashAnimationLength();
-        }
 
-        yield return new WaitForSeconds(splashAnimationLength);
+        yield return new WaitForSeconds(ui.splashAnimationLength);
         MovePlayerToCheckpoint();
-        splash_animator.Play("SplashHide");
-        yield return new WaitForSeconds(splashAnimationLength);
-        splashScreen.SetActive(false);
+        ui.SplashHide();
+        yield return new WaitForSeconds(ui.splashAnimationLength);
         player.animator.Play("Revive"); //todo get it out of here
         yield return new WaitForSeconds(deathReviveAnimationLength);
         player.isDead = false;
@@ -195,11 +167,6 @@ public class GameController : MonoBehaviour {
         deathReviveAnimationLength = p_CurrentClipInfo[0].clip.length;
     }
 
-    private void CountSplashAnimationLength()
-    {
-        s_CurrentClipInfo = splash_animator.GetCurrentAnimatorClipInfo(0);
-        splashAnimationLength = s_CurrentClipInfo[0].clip.length;
-    }
 
     private void MovePlayerToCheckpoint()
     {

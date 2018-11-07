@@ -361,8 +361,7 @@ public class PlayerController : MonoBehaviour
                 impulse.GenerateImpulse(new Vector3(0, dashDirection, 0));
 
                 //dashDenyIndicator.SetActive(true);
-                //todo stop-frame
-                //todo screen shake
+
             }
             else if (dashExpireTime <= Mathf.Epsilon)
             {
@@ -371,7 +370,6 @@ public class PlayerController : MonoBehaviour
                 dashRequest = false;
                 dashExpireTime = 0f;
                 dashAlow = false;
-                print(rb.velocity);
             }
         }
         else

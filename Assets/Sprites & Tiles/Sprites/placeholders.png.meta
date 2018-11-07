@@ -18,6 +18,7 @@ TextureImporter:
     21300026: placeholders_13
     21300028: placeholders_14
     21300030: placeholders_15
+    21300032: placeholders_gradient
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -410,26 +411,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: placeholders_14
-      rect:
-        serializedVersion: 2
-        x: 49
-        y: 41
-        width: 8
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c053781950d44d349873ea4405dae760
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: placeholders_15
       rect:
         serializedVersion: 2
@@ -445,6 +426,46 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: d7cad224c521b794fa059ad52101a30c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: placeholders_gradient
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 17
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ff1c7ee40c94b149a7dd5cd07244dbe
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: placeholders_14
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1f3291f6b564784480bb5885e115ba6
       vertices: []
       indices: 
       edges: []

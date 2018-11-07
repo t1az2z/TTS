@@ -9,7 +9,8 @@ public class ReseterBehaviour : MonoBehaviour {
     [SerializeField] bool resetJumpCounter = true;
     SpriteRenderer sr;
     bool isActive = true;
-    float waitTime = .15f;
+    float waitTime = .5f;
+    float resetTime;
     GameObject light;
     CinemachineImpulseSource impulse;
 
@@ -21,6 +22,7 @@ public class ReseterBehaviour : MonoBehaviour {
         sr = GetComponent<SpriteRenderer>();
         light = transform.GetChild(0).gameObject;
         impulse = GetComponent<CinemachineImpulseSource>();
+        resetTime = waitTime;
     }
 
     private void Update()
@@ -47,11 +49,10 @@ public class ReseterBehaviour : MonoBehaviour {
                 if (!player.isDashing)
                 {
                     player.dashAlow = true;
-                    print(player.dashAlow);
                 }
                 else if (player.isDashing)
                 {
-                    StartCoroutine(ResetDashAfterDelay());
+                    StartCoroutine(ResetDashAfterDelay(waitTime));
                 }
             }
             if (resetJumpCounter)
@@ -66,13 +67,24 @@ public class ReseterBehaviour : MonoBehaviour {
 
     }
 
-    private IEnumerator ResetDashAfterDelay()
+    private IEnumerator ResetDashAfterDelay(float time)
     {
-        yield return new WaitForSeconds(waitTime);
-        player.dashAlow = true;
+        while (time > 0)
+        {
+            if (player.isDashing)
+            {
+                yield return new WaitForSeconds(.01f);
+            }
+            else
+            {
+                player.dashAlow = true;
+                break;
+            }
+            time -= Time.deltaTime;
+        }
 
     }
-
+ 
     private IEnumerator TemporarlyDeactivate()
     {
         //deactive animation
@@ -84,9 +96,11 @@ public class ReseterBehaviour : MonoBehaviour {
         light.SetActive(true);
         isActive = true;
     }
-    private IEnumerator ReactivateAdPlayersDeath()
+    private IEnumerator ReactivateAtPlayersDeath(float timeDelay)
     {
         yield return new WaitForSeconds(.05f);
-        
+        sr.enabled = true;
+        light.SetActive(true);
+        isActive = true;
     }
 }
