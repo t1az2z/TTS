@@ -10,9 +10,10 @@ public class ShowDashButton : MonoBehaviour {
         {
             Debug.Log("Dash button is missing");
             button = FindObjectOfType<UIController>().transform.Find("Dash").gameObject;
-            if (!Debug.isDebugBuild)
-                button.SetActive(false);
         }
+
+        if (!Debug.isDebugBuild)
+            button.SetActive(false);
 
     }
 
