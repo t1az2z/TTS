@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float wallslidingVelocityStep = .3f;
     [SerializeField] float wallJumpForce = 9.76f;
 
+
     private void Awake()
     {
         gc = FindObjectOfType<GameController>();
@@ -98,6 +99,8 @@ public class PlayerController : MonoBehaviour
         impulse = GetComponent<CinemachineImpulseSource>();
         wsEmission = wallslideParticles.GetComponent<ParticleSystem>().emission;
         //runEmission = runParticles.emission;
+
+
     }
     void Update()
     {
@@ -558,5 +561,6 @@ public class PlayerController : MonoBehaviour
             wsEmission.enabled = false;
             isDead = true;
         }
+        
     }
 }

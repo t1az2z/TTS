@@ -16,14 +16,14 @@ public class CollectiblesBehaviour : MonoBehaviour {
     [SerializeField] float destroyDelay = .26f;
     private GameController gc;
     bool collected = false;
-    GameObject light;
+    GameObject lightObject;
 
 	void Start ()
     {
         gc = FindObjectOfType<GameController>();
         initialPosition = transform.position;
         animator = GetComponent<Animator>();
-        light = transform.GetChild(0).gameObject;
+        lightObject = transform.GetChild(0).gameObject;
 	}
 
     private void FixedUpdate()
@@ -68,7 +68,7 @@ public class CollectiblesBehaviour : MonoBehaviour {
             if (timeToCollect <= Mathf.Epsilon)
             {
                 animator.Play("Collect");
-                light.SetActive(false);
+                lightObject.SetActive(false);
                 Destroy(gameObject, destroyDelay);
                 gc.CollectiblesUpdate();
                 collected = false;

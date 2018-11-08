@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Name: Bakground Bricks
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 21300076, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+  m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Neighbors: 0000000001000000000000000200000001000000000000000200000000000000
     m_Sprites:
     - {fileID: 21300074, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
     - {fileID: 21300072, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+    m_GameObject: {fileID: 0}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
     m_RuleTransform: 2
@@ -27,6 +29,7 @@ MonoBehaviour:
   - m_Neighbors: 0000000000000000000000000200000001000000000000000000000000000000
     m_Sprites:
     - {fileID: 21300072, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+    m_GameObject: {fileID: 0}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
     m_RuleTransform: 2
@@ -36,6 +39,7 @@ MonoBehaviour:
   - m_Neighbors: 0000000001000000000000000200000002000000000000000200000000000000
     m_Sprites:
     - {fileID: 21300104, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+    m_GameObject: {fileID: 0}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
     m_RuleTransform: 0
@@ -45,6 +49,7 @@ MonoBehaviour:
   - m_Neighbors: 0000000002000000000000000200000002000000000000000100000000000000
     m_Sprites:
     - {fileID: 21300106, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+    m_GameObject: {fileID: 0}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
     m_RuleTransform: 0
@@ -56,6 +61,7 @@ MonoBehaviour:
     - {fileID: 21300098, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
     - {fileID: 21300096, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
     - {fileID: 21300076, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+    m_GameObject: {fileID: 0}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.812
     m_RuleTransform: 0
@@ -65,6 +71,7 @@ MonoBehaviour:
   - m_Neighbors: 0000000002000000000000000000000000000000000000000100000000000000
     m_Sprites:
     - {fileID: 21300102, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+    m_GameObject: {fileID: 0}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
     m_RuleTransform: 0
@@ -74,6 +81,7 @@ MonoBehaviour:
   - m_Neighbors: 0000000001000000000000000000000000000000000000000200000000000000
     m_Sprites:
     - {fileID: 21300100, guid: 26f489fe93504e845bcd10231dad0295, type: 3}
+    m_GameObject: {fileID: 0}
     m_AnimationSpeed: 1
     m_PerlinScale: 0.5
     m_RuleTransform: 0

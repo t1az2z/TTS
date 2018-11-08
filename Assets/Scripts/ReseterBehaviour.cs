@@ -10,8 +10,7 @@ public class ReseterBehaviour : MonoBehaviour {
     SpriteRenderer sr;
     bool isActive = true;
     float waitTime = .5f;
-    float resetTime;
-    GameObject light;
+    GameObject lightObject;
     CinemachineImpulseSource impulse;
 
 
@@ -20,9 +19,8 @@ public class ReseterBehaviour : MonoBehaviour {
 
 	void Start () {
         sr = GetComponent<SpriteRenderer>();
-        light = transform.GetChild(0).gameObject;
+        lightObject = transform.GetChild(0).gameObject;
         impulse = GetComponent<CinemachineImpulseSource>();
-        resetTime = waitTime;
     }
 
     private void Update()
@@ -33,7 +31,7 @@ public class ReseterBehaviour : MonoBehaviour {
             {
                 StopAllCoroutines();
                 sr.enabled = true;
-                light.SetActive(true);
+                lightObject.SetActive(true);
                 isActive = true;
             }
         }
@@ -89,18 +87,18 @@ public class ReseterBehaviour : MonoBehaviour {
     {
         //deactive animation
         sr.enabled = false;
-        light.SetActive(false);
+        lightObject.SetActive(false);
         yield return new WaitForSeconds(reactivateTime);
         //activate animation
         sr.enabled = true;
-        light.SetActive(true);
+        lightObject.SetActive(true);
         isActive = true;
     }
     private IEnumerator ReactivateAtPlayersDeath(float timeDelay)
     {
         yield return new WaitForSeconds(.05f);
         sr.enabled = true;
-        light.SetActive(true);
+        lightObject.SetActive(true);
         isActive = true;
     }
 }

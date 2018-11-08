@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CheckPoint
   - Hazards
+  - Destructibles
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - Light Sources Dynamic
   - PickUps
   - Light Sources Static
-  - 
+  - Destructibles
   - 
   - 
   - 
