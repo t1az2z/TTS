@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool isFacingLeft;
     bool isRunning;
     float xInput;
+
     //[SerializeField] ParticleSystem runParticles;
     //private ParticleSystem.EmissionModule runEmission;
 
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
     bool dashRequest = false;
     public bool isDashing = false;
     [HideInInspector] public float dashExpireTime;
-    CinemachineImpulseSource impulse;
+    public CinemachineImpulseSource impulse;
     [SerializeField] ParticleSystem dashParticles;
     public ParticleSystem dustParticles;
     [Space(8)]
@@ -265,7 +266,7 @@ public class PlayerController : MonoBehaviour
     {
         xInput = SimpleInput.GetAxis("Horizontal");
         Vector2 velocity = rb.velocity;
-        if (!wallJumping)
+        if (!wallJumping && controllsEnabled)
         {
             velocity.x = xInput * runSpeed * 100 * Time.deltaTime;
             rb.velocity = velocity;

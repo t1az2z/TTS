@@ -7,6 +7,7 @@ public class ReseterBehaviour : MonoBehaviour {
     PlayerController player;
     [SerializeField] bool resetDash = true;
     [SerializeField] bool resetJumpCounter = true;
+    Collider2D collider;
     SpriteRenderer sr;
     bool isActive = true;
     float waitTime = .5f;
@@ -18,6 +19,7 @@ public class ReseterBehaviour : MonoBehaviour {
     [SerializeField] float reactivateTime = 3f;
 
 	void Start () {
+        collider = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
         lightObject = transform.GetChild(0).gameObject;
         impulse = GetComponent<CinemachineImpulseSource>();
@@ -32,6 +34,7 @@ public class ReseterBehaviour : MonoBehaviour {
                 StopAllCoroutines();
                 sr.enabled = true;
                 lightObject.SetActive(true);
+                collider.enabled = true;
                 isActive = true;
             }
         }
@@ -86,11 +89,13 @@ public class ReseterBehaviour : MonoBehaviour {
     private IEnumerator TemporarlyDeactivate()
     {
         //deactive animation
+        collider.enabled = false;
         sr.enabled = false;
         lightObject.SetActive(false);
         yield return new WaitForSeconds(reactivateTime);
         //activate animation
         sr.enabled = true;
+        collider.enabled = true;
         lightObject.SetActive(true);
         isActive = true;
     }
