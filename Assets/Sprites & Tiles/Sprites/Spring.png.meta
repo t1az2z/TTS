@@ -8,6 +8,10 @@ TextureImporter:
     21300006: Spring 3
     21300008: Spring 4
     21300010: Spring 5
+    21300012: Spring 6
+    21300014: Spring 7
+    21300016: Spring 8
+    21300018: Spring 9
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -83,6 +87,166 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
+        y: 48
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4abf5e8e0156b0b43b9c8cf7de0c1780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 1
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 48
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cc44a1ff0374a54aaaca4878c8a740e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 2
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 48
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6a81b24829656b42afe8390fd007df7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 3
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 48
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb8040619b79046459086ea73b2609d5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f460679bf04fd8c4cb4702ae16c8a390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 5
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 32
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd72e0d895359314a82ec25474acf232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 6
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 32
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 376f7d218994d484bb934043963932c5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 7
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 32
+        width: 14
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5032353, y: 0.002830863}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed371dd869a1a5f468878a972c072f07
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spring 8
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 16
         width: 14
         height: 16
@@ -93,13 +257,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 02ec61a97197de34890b5abd4b91e248
+      spriteID: b5043679d69b4004698b9e6b06545acf
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spring 1
+      name: Spring 9
       rect:
         serializedVersion: 2
         x: 14
@@ -113,67 +277,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fc5f1504b3d26594fb2e9c1f3ce46d0a
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Spring 2
-      rect:
-        serializedVersion: 2
-        x: 28
-        y: 16
-        width: 14
-        height: 16
-      alignment: 9
-      pivot: {x: 0.5032353, y: 0.002830863}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 824ffa76ee8cb704e9251d1539218074
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Spring 3
-      rect:
-        serializedVersion: 2
-        x: 42
-        y: 16
-        width: 14
-        height: 16
-      alignment: 9
-      pivot: {x: 0.5032353, y: 0.002830863}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e8c4e656d4ecf7940a13e9809cb7f7c1
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Spring 4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 14
-        height: 16
-      alignment: 9
-      pivot: {x: 0.5032353, y: 0.002830863}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a81574b9174e37f4dae828b663cc8d18
+      spriteID: 4c786207b6aeffb44a03f97e9e8b8f2e
       vertices: []
       indices: 
       edges: []

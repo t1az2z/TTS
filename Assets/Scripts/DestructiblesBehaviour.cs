@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class DestructiblesBehaviour : MonoBehaviour {
 
-    public Grid m_Grid;
+    [HideInInspector] public Grid m_Grid;
     public Tilemap m_Destructible;
     private GridInformation m_GridInfo;
 

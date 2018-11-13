@@ -19,12 +19,6 @@ public class UIController : MonoBehaviour {
     [SerializeField] Text deathsCounter;
     [SerializeField] Text collectiblesCounter;
 
-    void Awake()
-    {
-        SingletonImplementation();
-    }
-
-
 
     void Start () {
         gc = FindObjectOfType<GameController>();
@@ -39,20 +33,6 @@ public class UIController : MonoBehaviour {
         SetTextFieldsReferences();
     }
 
-    #region Singleton
-    private void SingletonImplementation()
-    {
-        if (Instance == null)
-        {
-            DontDestroyOnLoad(gameObject);
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
-    #endregion
     #region Splash Screen
     private void SetSplashScreenReference()
     {
