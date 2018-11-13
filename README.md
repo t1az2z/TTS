@@ -1,4 +1,4 @@
-#TO THE SUN
+TO THE SUN
 
 This repository contains source code for our project - To The Sun.
 You can contact me if you have any questions at [tyukovia@gmail.com](mailto:tyukovia@gmail.com) or tweet me [@t1az2z](https://twitter.com/t1az2z).
