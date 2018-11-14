@@ -24,7 +24,9 @@ Shader "Custom/DefaultSprite-Dark"
 		Lighting Off
 		ZWrite Off
 		BlendOp RevSub
+				
 		Blend SrcAlpha OneMinusSrcAlpha
+
 
 		Pass
 	{

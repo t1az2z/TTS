@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4730230821383050}
   - component: {fileID: 212389521041502094}
   - component: {fileID: 114426675363304964}
-  - component: {fileID: 60347144735803184}
   - component: {fileID: 114266827882517792}
+  - component: {fileID: 61586511187446362}
   m_Layer: 0
   m_Name: Reseter
   m_TagString: Untagged
@@ -73,8 +73,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &60347144735803184
-PolygonCollider2D:
+--- !u!61 &61586511187446362
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -82,7 +82,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -95,12 +95,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0, y: 0.3}
-      - {x: -0.3, y: 0}
-      - {x: 0, y: -0.3}
-      - {x: 0.3, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!114 &114266827882517792
 MonoBehaviour:
   m_ObjectHideFlags: 1
