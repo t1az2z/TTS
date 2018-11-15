@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask whatIsWalls;
     public bool wallJumped;
     public bool wallJumping;
-    bool wallSliding = false;
+    public bool wallSliding = false;
     public float wallJumpXVelocity = 5f;
     int wallDirX;
     bool isWallHit = false;

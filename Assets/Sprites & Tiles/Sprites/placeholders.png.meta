@@ -21,6 +21,8 @@ TextureImporter:
     21300032: placeholders_gradient
     21300034: placeholders_16
     21300036: placeholders_17
+    21300038: placeholders_18
+    21300040: placeholders_19
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -501,13 +503,53 @@ TextureImporter:
         width: 8
         height: 8
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
       spriteID: 6f7f229b86300ba40b4ed47610681b99
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: placeholders_18
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 17
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: baa6ad879b738d249a68b502113472de
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: placeholders_19
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 9
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c319b9732bef0764393801bef8d2b4c2
       vertices: []
       indices: 
       edges: []

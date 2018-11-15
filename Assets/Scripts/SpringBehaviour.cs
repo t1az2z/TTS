@@ -7,7 +7,6 @@ public class SpringBehaviour : MonoBehaviour {
     [SerializeField] Vector2 springVector = new Vector2(0, 10f);
     PlayerController player;
     CinemachineImpulseSource impulse;
-    [SerializeField] float timeToStop = .025f;
     GameController gc;
     Animator anim;
 

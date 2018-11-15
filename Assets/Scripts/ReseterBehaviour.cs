@@ -13,7 +13,7 @@ public class ReseterBehaviour : MonoBehaviour {
     float waitTime = .5f;
     GameObject lightObject;
     CinemachineImpulseSource impulse;
-
+    [SerializeField] ParticleSystem particles;
 
 
     [SerializeField] float reactivateTime = 3f;
@@ -23,6 +23,11 @@ public class ReseterBehaviour : MonoBehaviour {
         sr = GetComponent<SpriteRenderer>();
         lightObject = transform.GetChild(0).gameObject;
         impulse = GetComponent<CinemachineImpulseSource>();
+        if (particles == null)
+        {
+            Debug.Log("Particles reference not set");
+            particles = transform.GetChild(1).GetComponent<ParticleSystem>();
+        }
     }
 
     private void Update()
@@ -45,6 +50,7 @@ public class ReseterBehaviour : MonoBehaviour {
 
         if (isActive)
         {
+            particles.Play();
             if (resetDash)
             {
                 if (!player.isDashing)

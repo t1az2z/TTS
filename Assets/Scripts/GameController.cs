@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour {
 
 
     //player references
-    PlayerController player;
+    [HideInInspector] public PlayerController player;
     Animator player_animator;
     AnimatorClipInfo[] p_CurrentClipInfo;
     float deathReviveAnimationLength;
