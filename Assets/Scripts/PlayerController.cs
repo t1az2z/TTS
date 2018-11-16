@@ -481,6 +481,8 @@ public class PlayerController : MonoBehaviour
 
     private int WallHit()
     {
+        int xdir = 0;
+
         foreach (var wallCheck in wallChecksLeft)
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, wallcheckRadius, whatIsWalls);
@@ -492,6 +494,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
         foreach (var wallCheck in wallChecksRight)
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, wallcheckRadius, whatIsWalls);
@@ -503,6 +506,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
         return 0;
     }
 

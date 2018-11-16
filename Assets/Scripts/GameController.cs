@@ -92,16 +92,21 @@ public class GameController : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            SetChekpoint(Vector2.zero);
+            ReloadLevel();
         }
-        if(Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             
             StartCoroutine("DeathCoroutine");
             player.isDead = true;
         }
 
+    }
+
+    public void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SetChekpoint(Vector2.zero);
     }
 
     public void SwitchCamera(GameObject newCamera)

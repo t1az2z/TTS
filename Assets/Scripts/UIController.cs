@@ -7,7 +7,7 @@ public class UIController : MonoBehaviour {
 
     public static UIController Instance;
     public GameController gc;
-
+    
 
     //SplashScreen
     [SerializeField] GameObject splashScreen;
@@ -21,10 +21,12 @@ public class UIController : MonoBehaviour {
 
 
     void Start () {
+
         gc = FindObjectOfType<GameController>();
         SetSplashScreenReference();
         SetTextFieldsReferences();
         splashAnimationLength = CountSplashAnimationLength();
+
 	}
 	
 	void Update ()
