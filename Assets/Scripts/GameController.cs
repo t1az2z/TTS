@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            ReloadLevel();
+            NewMethod();
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -103,10 +103,12 @@ public class GameController : MonoBehaviour {
 
     }
 
-    public void ReloadLevel()
+    private void NewMethod()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         SetChekpoint(Vector2.zero);
+        deaths = 0;
+        collectiblesCollected = 0;
     }
 
     public void SwitchCamera(GameObject newCamera)
