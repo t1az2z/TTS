@@ -2,9 +2,11 @@
 using System.Collections;
 using UnityEngine;
 using Cinemachine;
+using Homebrew;
 
 public class PlayerController : MonoBehaviour
 {
+    [Foldout("Setup", true)]
     public GameController gc;
     public Rigidbody2D rb;
     public Animator animator;
@@ -13,11 +15,11 @@ public class PlayerController : MonoBehaviour
     public GameObject wallslideParticles;
     private ParticleSystem.EmissionModule wsEmission;
 
-
     public bool isDead = false;
     public bool controllsEnabled = true;
     public ParticleSystem deathParticles;
-    [Header("Run parameters")]
+    [Space(8)]
+    [Foldout("Run parameters", true)]
     [SerializeField] float runSpeed;
     public bool isFacingLeft;
     bool isRunning;
@@ -28,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [Space(8)]
 
-    [Header("Jump parameters:")]
+    [Foldout("Jump parameters", true)]
     [SerializeField] float jumpMaxForce = 9.3f;
     public bool isGrounded;
     bool jumpRequest = false;
@@ -46,16 +48,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float fallMultiplier = 1.2f;
     [Space(8)]
 
-    [Header("WllCheck parameters")]
+    [Foldout("Wall check parameters", true)]
     [SerializeField] Transform[] groundChecks;
-    public float wallcheckRadius = .03125f;
+    public float wallCheckLength = .0625f;
     [SerializeField] LayerMask whatIsGround;
 
 
 
     [Space(8)]
 
-    [Header("Dash parameters:")]
+    [Foldout("Dash parameters", true)]
     //public GameObject dashDenyIndicator;
     [SerializeField] float dashTime = .14f;
     [SerializeField] float dashFreezeTime = .02f;
@@ -68,10 +70,9 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem dustParticles;
     [Space(8)]
 
-    [Header("Wall jump parameters")]
+    [Foldout("Wall jump parameters", true)]
     [SerializeField] Transform[] wallChecksLeft;
     [SerializeField] Transform[] wallChecksRight;
-    public float wallCheckRadius = .03125f;
     [SerializeField] LayerMask whatIsWalls;
     public bool wallJumped;
     public bool wallJumping;
@@ -126,22 +127,21 @@ public class PlayerController : MonoBehaviour
 
     private void FlipSprite()
     {
-        isRunning = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
+        isRunning = Mathf.Abs(rb.velocity.x) > .01f;
         if (isRunning)
         {
-            if (rb.velocity.x < Mathf.Epsilon)
+            if (rb.velocity.x < .01f)
             {
                 spriteRenderer.flipX = true;
                 isFacingLeft = true;
             }
-            else if (rb.velocity.x > Mathf.Epsilon)
+            else if (rb.velocity.x > .01f)
             {
                 spriteRenderer.flipX = false;
                 isFacingLeft = false;
             }
         }
-        /*else
-            runEmission.enabled = false;*/
+
     }
 
     private void GroundInteractionLogic()
@@ -196,10 +196,6 @@ public class PlayerController : MonoBehaviour
         {
             OnPressDash();
         }
-        else if (SimpleInput.GetButtonUp("Dash"))
-        {
-            //OnReleaseDash();
-        }
     }
 
     private void FixedUpdate()
@@ -208,7 +204,6 @@ public class PlayerController : MonoBehaviour
         {
             HorizontalMovement();
             Dash();
-            GroundCheck();
             JumpLogicProcessing();
             HandleWallSliding();
             GravityScaleChange();
@@ -469,73 +464,42 @@ public class PlayerController : MonoBehaviour
     {
         bool isGrnd = false;
 
-        Vector2 direction = Vector2.down;
         foreach (var groundch in groundChecks)
         {
-            RaycastHit2D hit = Physics2D.Raycast(groundch.position, direction, groundCheckLength, whatIsGround);
-            if (hit.collider != null && rb.velocity.y <= 0)
-                isGrnd = true;
+            if (RaycastCheck(groundch.position, Vector2.down, groundCheckLength, whatIsGround)) isGrnd = true;
         }
-        return isGrnd;
+
+        return isGrnd&&rb.velocity.y <= Mathf.Epsilon;
     }
 
     private int WallHit()
     {
-        int xdir = 0;
-
+        int wallHitDir = 0;
+        bool whLeft = false;
+        bool whRight = false;
         foreach (var wallCheck in wallChecksLeft)
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, wallcheckRadius, whatIsWalls);
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].gameObject != gameObject)
-                {
-                    return -1;
-                }
-            }
+            whLeft = RaycastCheck(wallCheck.position, Vector2.left, wallCheckLength, whatIsWalls);
         }
-
         foreach (var wallCheck in wallChecksRight)
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, wallcheckRadius, whatIsWalls);
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].gameObject != gameObject)
-                {
-                    return 1;
-                }
-            }
+            whRight = RaycastCheck(wallCheck.position, Vector2.right, wallCheckLength, whatIsWalls);
         }
-
-        return 0;
+        if (!whLeft && !whRight) wallHitDir = 0;
+        else if (whLeft && !whRight) wallHitDir = -1;
+        else if (!whLeft && whRight) wallHitDir = 1;
+        else wallHitDir = (int)Mathf.Sign(xInput);
+        return wallHitDir;
     }
 
-    private void OnDrawGizmosSelected()
+    private bool RaycastCheck(Vector2 pointOfRaycast, Vector2 direction, float length, LayerMask layer)
     {
-        foreach (var groundch in groundChecks)
-        {
-            if (groundch != null)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(groundch.position, new Vector2(0, -groundCheckLength));
-            }
-        }
-        foreach (var wallCH in wallChecksLeft)
-        {
-            if (wallCH != null)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireSphere(wallCH.position, wallcheckRadius);
-            }
-        }foreach (var wallCH in wallChecksRight)
-        {
-            if (wallCH != null)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawWireSphere(wallCH.position, wallcheckRadius);
-            }
-        }
+        if (Physics2D.Raycast(pointOfRaycast, direction, length, layer).collider != null) return true;
+        else return false;
     }
+
+
+    
 
     
     private void OnTriggerEnter2D(Collider2D collision)
@@ -567,5 +531,33 @@ public class PlayerController : MonoBehaviour
             isDead = true;
         }
         
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        foreach (var groundch in groundChecks)
+        {
+            if (groundch != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawRay(groundch.position, new Vector2(0, -groundCheckLength));
+            }
+        }
+        foreach (var wallCH in wallChecksLeft)
+        {
+            if (wallCH != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawRay(wallCH.position, new Vector2(wallCheckLength, 0) * Vector2.left);
+            }
+        }
+        foreach (var wallCH in wallChecksRight)
+        {
+            if (wallCH != null)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawRay(wallCH.position, new Vector2(wallCheckLength, 0) * Vector2.right);
+            }
+        }
     }
 }
