@@ -530,7 +530,9 @@ public class PlayerController : MonoBehaviour
             wsEmission.enabled = false;
             isDead = true;
         }
-        
+
+
+
     }
 
     private void OnDrawGizmosSelected()

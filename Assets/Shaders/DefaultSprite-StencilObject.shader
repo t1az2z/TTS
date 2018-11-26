@@ -38,7 +38,7 @@ Shader "Custom/DefaultSprite-StencilObject"
 				}
 
 				Blend DstAlpha OneMinusSrcAlpha
-
+				//Blend DstColor One
 				CGPROGRAM
 				#pragma vertex vert
 				#pragma fragment frag
