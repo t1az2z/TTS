@@ -30,15 +30,15 @@ public class CollectiblesBehaviour : MonoBehaviour {
     {
         if (player != null)
         {
-            if (!player.isDead && !player.isGrounded && collected)
+            if (player.currentState != PlayerState.Grounded && player.currentState != PlayerState.Dead)//(!player.isDead && !player.isGrounded && collected)
             {
                 FollowTarget(player);
             }
-            else if (player.isDead)
+            else if (player.currentState == PlayerState.Dead)
             {
                 StartCoroutine(ResetParametersOnPlayerDeath());
             }
-            else if(!player.isDead)
+            else if(player.currentState == PlayerState.Grounded)
             {
                 FollowTarget(player);
                 CollectCollectible();
@@ -62,7 +62,7 @@ public class CollectiblesBehaviour : MonoBehaviour {
 
     private void CollectCollectible()
     {
-        if (player.isGrounded && collected)
+        if (player.currentState == PlayerState.Grounded && collected)
         {
             timeToCollect -= Time.deltaTime;
             if (timeToCollect <= Mathf.Epsilon)

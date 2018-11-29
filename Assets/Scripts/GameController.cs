@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            NewMethod();
+            RestartLevel();
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -103,7 +103,7 @@ public class GameController : MonoBehaviour {
 
     }
 
-    private void NewMethod()
+    private void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         SetChekpoint(Vector2.zero);
@@ -144,7 +144,7 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator DeathCoroutine()
     {
-        player.controllsEnabled = false;
+        player.currentState = PlayerState.Dead;
         deaths++;
         ui.DeathsTextUpdate();
         player_animator.Play("Death");
@@ -154,7 +154,7 @@ public class GameController : MonoBehaviour {
             CountDeathReviveAnimationLength();
         }
         yield return new WaitForSeconds(deathReviveAnimationLength);
-        player.isDead = true;
+        //player.isDead = true;
         ui.SplashShow();
 
 
@@ -164,8 +164,12 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(ui.splashAnimationLength);
         player.animator.Play("Revive"); //todo get it out of here
         yield return new WaitForSeconds(deathReviveAnimationLength);
-        player.isDead = false;
-        player.controllsEnabled = true;
+        //player.isDead = false;
+        //player.controllsEnabled = true;
+        player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        player.jumpRequest = false;
+        player.dashRequest = false;
+        player.currentState = PlayerState.Fall;
     }
 
     private void CountDeathReviveAnimationLength()

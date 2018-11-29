@@ -20,7 +20,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player.isDashing == true)
+        if (player.currentState == PlayerState.Dash)
         {
             int xDirection = player.isFacingLeft ? -1 : 1;
             Vector3 hitPosition = Vector3.zero;
@@ -49,7 +49,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
     private void OnCollisionStay2D(Collision2D collision)
     {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player.isDashing == true)
+        if (player.currentState == PlayerState.Dash)
         {
             int xDirection = player.isFacingLeft ? -1 : 1;
             Vector3 hitPosition = Vector3.zero;

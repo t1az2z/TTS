@@ -25,11 +25,11 @@ public class SpringBehaviour : MonoBehaviour {
 
         if (collision.relativeVelocity.y <= Mathf.Epsilon)
         {
-            player.isDashing = false;
-            player.dashExpireTime = 0;
+            //player.isDashing = false;
+            //player.dashExpireTime = 0;
             player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             anim.Play("Spring");
-            player.springJumping = true;
+            player.currentState = PlayerState.SpringJump;
             player.rb.velocity = springVector;
             player.dustParticles.Play();
             player.jumpsCount = 2;

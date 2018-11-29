@@ -40,12 +40,12 @@ public class DisappearingPlatform : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.GetComponent<PlayerController>().isGrounded || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
+        if (collision.collider.gameObject.GetComponent<PlayerController>().isGrounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
             anim.SetBool("Active", false);
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.GetComponent<PlayerController>().isGrounded || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
+        if (collision.collider.gameObject.GetComponent<PlayerController>().isGrounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
             anim.SetBool("Active", false);
 
     }
