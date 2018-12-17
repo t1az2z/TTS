@@ -4,7 +4,8 @@
 AnimationClip:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: H_Character_animations_Walk
   serializedVersion: 6
   m_Legacy: 0
@@ -20,13 +21,13 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 21300052, guid: c4bb13f91d52bc94da04f75d05d19635, type: 3}
-    - time: 0.15833333
+    - time: 0.14
       value: {fileID: 21300054, guid: c4bb13f91d52bc94da04f75d05d19635, type: 3}
-    - time: 0.29166666
+    - time: 0.28
       value: {fileID: 21300056, guid: c4bb13f91d52bc94da04f75d05d19635, type: 3}
-    - time: 0.45
+    - time: 0.42
       value: {fileID: 21300058, guid: c4bb13f91d52bc94da04f75d05d19635, type: 3}
-    - time: 0.5833333
+    - time: 0.5516667
       value: {fileID: 21300058, guid: c4bb13f91d52bc94da04f75d05d19635, type: 3}
     attribute: m_Sprite
     path: 
@@ -57,7 +58,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.59166664
+    m_StopTime: 0.56
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -76,5 +77,4 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_GenerateMotionCurves: 0
   m_Events: []

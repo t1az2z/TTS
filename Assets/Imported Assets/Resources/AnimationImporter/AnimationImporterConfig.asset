@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Name: AnimationImporterConfig
   m_EditorClassIdentifier: 
   _animationNamesThatDoNotLoop:
-  - death
+  - Jump
+  - Death
+  - Revive
+  - Dash
   _automaticImporting: 1
   _spritePixelsPerUnit: 16
   _targetObjectType: 0
