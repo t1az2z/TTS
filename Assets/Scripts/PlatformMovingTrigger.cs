@@ -8,6 +8,6 @@ public class PlatformMovingTrigger : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        platform.isMoving = true;
+        platform.isMovingByDefault = true;
     }
 }

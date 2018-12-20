@@ -6,7 +6,7 @@ public class PlatformMovement : MonoBehaviour {
 
     [SerializeField] GameObject platform;
     Vector3 point1;
-    public bool isMoving = false;
+    public bool isMovingByDefault = true;
     [SerializeField] Transform point2;
     [SerializeField] float movementSpeed;
     bool movingToPoint2 = true;
@@ -18,8 +18,9 @@ public class PlatformMovement : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (isMoving)
+        if (isMovingByDefault)
             Moving();
+        
     }
 
     private void Moving()

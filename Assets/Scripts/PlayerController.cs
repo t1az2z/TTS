@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public PlayerState currentState;
     private PlayerState prevState;
     [Foldout("Setup", true)]
-    public GameController gc;
+    //public GameController gc;
     public Rigidbody2D rb;
     public Animator animator;
     SpriteRenderer spriteRenderer;
@@ -60,9 +60,9 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Foldout("Dash parameters", true)]
-    //public GameObject dashDenyIndicator;
+    int dashDirection = 0;
     [SerializeField] float dashTime = .14f;
-    [SerializeField] float dashFreezeTime = .02f;
+    [SerializeField] float dashFreezeTime = .17f;
     public bool dashAlow = true;
     public bool dashRequest = false;
     public bool isDashing = false;
@@ -89,9 +89,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float wallJumpForce = 9.76f;
 
 
+    Vector3 scaleChange = new Vector3(1, 1, 1);
+
     private void Awake()
     {
-        gc = FindObjectOfType<GameController>();
+        //gc = FindObjectOfType<GameController>();
         animator = GetComponent<Animator>();
 
     }
@@ -128,9 +130,29 @@ public class PlayerController : MonoBehaviour
             jumpRequest = false;
             dashAlow = false;
         }
-        if (currentState == PlayerState.Fall || currentState == PlayerState.Grounded|| currentState == PlayerState.WallSlide || currentState == PlayerState.SpringJump)
+        if (currentState == PlayerState.Fall || currentState == PlayerState.Grounded || currentState == PlayerState.WallSlide || currentState == PlayerState.SpringJump)
             GravityScaleChange();
 
+
+        /*if (Mathf.Abs(rb.velocity.x) > 5.5)
+        {
+            scaleChange.x = Mathf.Lerp(scaleChange.x, 1.2f, .1f);
+            scaleChange.y = Mathf.Lerp(scaleChange.y, .8f, .1f);
+        }
+        else
+            scaleChange.x = Mathf.Lerp(scaleChange.x, 1, .1f);
+        if (Mathf.Abs(rb.velocity.y) > 5.5f)
+        {
+            scaleChange.x = Mathf.Lerp(scaleChange.x, .8f, .1f);
+            scaleChange.y = Mathf.Lerp(scaleChange.y, 1.2f, .1f);
+        }
+        else
+            scaleChange.y = Mathf.Lerp(scaleChange.y, 1, .1f);
+
+        transform.localScale = scaleChange;
+
+      
+        print(rb.velocity);*/
     }
 
 
@@ -237,7 +259,7 @@ public class PlayerController : MonoBehaviour
                 else if (dashRequest)
                 {
                     currentState = PlayerState.Dash;
-                    Dash();
+                    //Dash(dashDirection);
                 }
                 else if (rb.velocity.y < -Mathf.Epsilon)
                 {
@@ -269,7 +291,7 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case PlayerState.Dash:
-                Dash();
+                dashDirection = Dash(dashDirection);
                 break;
 
             case PlayerState.Fall:
@@ -352,7 +374,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case PlayerState.Dead:
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-                gc.DeathCoroutine();
+                GameController.Instance.DeathCoroutine();
                 break;
 
             case PlayerState.Disabled:
@@ -489,14 +511,17 @@ public class PlayerController : MonoBehaviour
     {
         if (!dashRequest)
         {
-            StartCoroutine(gc.FreezeTime(dashFreezeTime));
+            if (dashDirection == 0)
+                dashDirection = isFacingLeft ? -1 : 1;
             dashRequest = true;
             dashExpireTime = dashTime;
         }
+        
+
     }
 
 
-    public void Dash()
+    public int Dash(int dashDirection)
     {
         if (dashRequest && !dashAlow)
             dashRequest = false;
@@ -504,10 +529,16 @@ public class PlayerController : MonoBehaviour
         else if (dashRequest)
         {
             dashParticles.Play();
+            var secondFrame = dashTime - Time.fixedDeltaTime;
+
+            if (dashExpireTime - secondFrame == 0)
+            {
+                StartCoroutine(GameController.Instance.FreezeTime(dashFreezeTime));
+            }
+
             if (dashExpireTime > Mathf.Epsilon && dashAlow)
             {
                 dustParticles.Play();
-                int dashDirection = isFacingLeft ? -1 : 1;
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 //isDashing = true;
                 Vector2 velocity = rb.velocity;
@@ -529,6 +560,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (dashExpireTime <= Mathf.Epsilon)
             {
+                dashDirection = 0;
                 currentState = PlayerState.Fall;
                 rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
 
@@ -545,7 +577,7 @@ public class PlayerController : MonoBehaviour
             //isDashing = false;
         }
 
-
+        return dashDirection;
     }
 
     public void OnPressJump()
@@ -688,11 +720,11 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.CompareTag("CheckPoint"))
         {
-            gc.SetChekpoint(collision.transform.position);
+            GameController.Instance.SetChekpoint(collision.transform.position);
         }
         else if(collision.CompareTag("Hazards"))
         {
-            StartCoroutine(gc.DeathCoroutine());
+            StartCoroutine(GameController.Instance.DeathCoroutine());
             dashRequest = false;
             //isDashing = false;
             //wallSliding = false;
@@ -705,7 +737,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.CompareTag("Hazards") && rb.velocity.y <= 0)
         {
-            StartCoroutine(gc.DeathCoroutine());
+            StartCoroutine(GameController.Instance.DeathCoroutine());
             dashRequest = false;
             //isDashing = false;
             //wallSliding = false;
