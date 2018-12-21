@@ -7,12 +7,10 @@ public class SpringBehaviour : MonoBehaviour {
     [SerializeField] Vector2 springVector = new Vector2(0, 10f);
     PlayerController player;
     CinemachineImpulseSource impulse;
-    GameController gc;
     Animator anim;
 
     private void Start()
     {
-        gc = FindObjectOfType<GameController>();
         impulse = GetComponent<CinemachineImpulseSource>();
         anim = GetComponent<Animator>();
     }
@@ -29,7 +27,9 @@ public class SpringBehaviour : MonoBehaviour {
             //player.dashExpireTime = 0;
             player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             anim.Play("Spring");
+            player.dashRequest = false;
             player.currentState = PlayerState.SpringJump;
+
             player.rb.velocity = springVector;
             player.dustParticles.Play();
             player.jumpsCount = 2;

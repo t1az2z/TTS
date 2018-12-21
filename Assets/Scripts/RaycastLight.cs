@@ -88,7 +88,7 @@ public class RaycastLight : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (isDynamic && Physics2D.OverlapCircle(transform.position, lightRadius) != null && isMoved)
+        if (isDynamic && Physics2D.OverlapCircle(transform.position, lightRadius) != null)
         {
             DrawLightField();
         }

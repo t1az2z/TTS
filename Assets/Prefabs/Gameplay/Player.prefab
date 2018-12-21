@@ -24477,7 +24477,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  gc: {fileID: 0}
   rb: {fileID: 0}
   animator: {fileID: 0}
   wallslideParticles: {fileID: 1286438719890728}
@@ -24505,7 +24504,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2304
   dashTime: 0.19
-  dashFreezeTime: 0.025
+  dashFreezeTime: 0.06
   dashAlow: 1
   dashRequest: 0
   isDashing: 0
@@ -24524,11 +24523,11 @@ MonoBehaviour:
     m_Bits: 256
   wallJumped: 0
   wallJumping: 0
-  wallJumpXVelocity: 4.5
+  wallJumpXVelocity: 5.5
   initialWallSlidingVelocity: 1.5
   maxlWallSlidingVelocity: 3
   wallslidingVelocityStep: 0.38
-  wallJumpForce: 10
+  wallJumpForce: 11
 --- !u!212 &212345021319634474
 SpriteRenderer:
   m_ObjectHideFlags: 0

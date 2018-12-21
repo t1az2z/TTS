@@ -123,7 +123,7 @@ public class GameController : MonoBehaviour {
         {
             currentCamera.SetActive(true);
             previousCamera.SetActive(false);
-            StartCoroutine(player.FreezePlayer(timeToStop));
+            
 
         }
         else if(previousCamera == currentCamera)

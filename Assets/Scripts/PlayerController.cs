@@ -93,9 +93,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        //gc = FindObjectOfType<GameController>();
         animator = GetComponent<Animator>();
-
     }
 
 
@@ -107,16 +105,11 @@ public class PlayerController : MonoBehaviour
         wsParticlesEmissionModule = wallslideParticles.GetComponent<ParticleSystem>().emission;
         wsParticlesEmissionModule.enabled = false;
         currentState = PlayerState.Grounded;
-        //runEmission = runParticles.emission;
-
-
     }
     void Update()
     {
         if (controllsEnabled)
             PcControlls();
-
-        //GroundInteractionLogic();
 
         FlipSprite();
 
@@ -272,13 +265,15 @@ public class PlayerController : MonoBehaviour
 
                 HorizontalMovement(xInput);
                 JumpLogicProcessing();
-
+                wallDir = WallHitCheck();
                 if (dashRequest)
                     currentState = PlayerState.Dash;
                 else if (rb.velocity.y < 0f && jumpsCount < 2)
                     currentState = PlayerState.Fall;
                 else if (rb.velocity.y < -3f && jumpsCount == 2)
                     currentState = PlayerState.Fall;
+                else if (wallDir != 0)
+                    currentState = PlayerState.WallSlide;
                 else if (jumpRequest)
                     JumpLogicProcessing();
                 else if (GroundCheck())
@@ -311,7 +306,7 @@ public class PlayerController : MonoBehaviour
                     currentState = PlayerState.Grounded;
                     GroundInteractionLogic();
                 }
-                else if (wallDir != 0 && rb.velocity.y <= 0 && Mathf.Sign(xInput) == wallDir && xInput != 0)
+                else if (wallDir != 0 /*&& rb.velocity.y <= .1*/ && Mathf.Sign(xInput) == wallDir && xInput != 0)
                 {
                     WallsInteractionLogic();
                     currentState = PlayerState.WallSlide;
@@ -342,16 +337,18 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.WallJump:
                 wallDir = WallHitCheck();
-                WallJumpLogicProcessing(wallDir);
+                if (jumpsCount < 1 && jumpRequest)
+                    WallJumpLogicProcessing(wallDir);
+                else if (jumpsCount >= 1 && jumpRequest)
+                    currentState = PlayerState.Jump;
                 WallJumpingHorizontalMovemetn();
 
                 if (dashRequest)
                     currentState = PlayerState.Dash;
+
                 else if (rb.velocity.y <= -.5f)
                     currentState = PlayerState.Fall;
-                else if (jumpRequest)
-                    currentState = PlayerState.Jump;
-                else if (wallDir != 0 && rb.velocity.y <= 0)
+                else if (wallDir != 0 && rb.velocity.y <= .1)
                 {
                     WallsInteractionLogic();
                     currentState = PlayerState.WallSlide;
@@ -360,16 +357,17 @@ public class PlayerController : MonoBehaviour
                 {
                     currentState = PlayerState.Grounded;
                 }
+
                 break;
 
             case PlayerState.SpringJump:
                 HorizontalMovement(xInput);
+                JumpLogicProcessing();
                 if (dashRequest)
                     currentState = PlayerState.Dash;
-                else if (rb.velocity.y < -3f)
-                {
+                else if (rb.velocity.y < -3)
                     currentState = PlayerState.Fall;
-                }
+
 
                 break;
             case PlayerState.Dead:
@@ -405,32 +403,17 @@ public class PlayerController : MonoBehaviour
     private void WallJumpingHorizontalMovemetn()
     {
         var velocity = rb.velocity;
-        rb.AddForce(new Vector2(xInput * runSpeed * 450 * Time.fixedDeltaTime, 0), ForceMode2D.Force);
-        if (rb.velocity.x > 5f)
+        rb.AddForce(new Vector2(xInput * runSpeed * 480 * Time.fixedDeltaTime, 0), ForceMode2D.Force);
+        if (rb.velocity.x > wallJumpXVelocity)
         {
             velocity.x = 5f;
             rb.velocity = velocity;
         }
-        else if (rb.velocity.x <= -5f)
+        else if (rb.velocity.x <= -wallJumpXVelocity)
         {
             velocity.x = -5f;
             rb.velocity = velocity;
         }
-    }
-
-    public IEnumerator FreezePlayer(float time)
-    {
-        /*var vel = rb.velocity;
-        animator.speed = 0;
-        yield return new WaitForSeconds(time/2);
-        controllsEnabled = false;
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        yield return new WaitForSeconds(time/2);
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-        rb.velocity = vel;
-        animator.speed = 1;
-        controllsEnabled = true;*/
-        yield return new WaitForEndOfFrame();
     }
 
     private void HandleWallSliding(int wallDirX, ParticleSystem.EmissionModule wsEmission)
@@ -441,7 +424,7 @@ public class PlayerController : MonoBehaviour
             wallslideParticles.transform.localPosition = new Vector2(-.14f, wallslideParticles.transform.localPosition.y);
         else if (wallDirX == 1)
             wallslideParticles.transform.localPosition = new Vector2(.14f, wallslideParticles.transform.localPosition.y);
-        if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0 && rb.velocity.y <= 0)
+        if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0) //&& rb.velocity.y <= 0)
         {
             wsEmission.enabled = true;
             if (rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0)
@@ -490,7 +473,6 @@ public class PlayerController : MonoBehaviour
         }
         else if (currentState == PlayerState.Jump || currentState == PlayerState.WallJump || currentState == PlayerState.SpringJump)
         {
-            //runEmission.enabled = false;
             if (rb.velocity.y > 0 && jumpsCount <= 1)
                 animator.Play("Jump");
             else if (jumpsCount >= 2)
@@ -500,7 +482,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (currentState == PlayerState.Fall)
             animator.Play("Fall");
-        else if (currentState == PlayerState.WallSlide) //!wallJumping && !isGrounded && wallSliding && rb.velocity.y <= 0)
+        else if (currentState == PlayerState.WallSlide)
         {
             animator.Play("Climb");
         }
@@ -528,6 +510,7 @@ public class PlayerController : MonoBehaviour
 
         else if (dashRequest)
         {
+
             dashParticles.Play();
             var secondFrame = dashTime - Time.fixedDeltaTime;
 
@@ -583,10 +566,6 @@ public class PlayerController : MonoBehaviour
     public void OnPressJump()
     {
         jumpRequest = true;
-        /*if (wallSliding && jumpRequest && !isGrounded && Mathf.Sign(xInput) == wallDirX)
-        {
-            wallJumped = true;
-        }*/
     }
 
     public void OnReleaseJump()
@@ -599,19 +578,10 @@ public class PlayerController : MonoBehaviour
     private void JumpLogicProcessing()
     {
         Vector2 velocity = rb.velocity;
-
         if (jumpsCount < allowedJumps && jumpRequest)
         {
             jumpCancel = false;
             jumpsCount++;
-            /*if (wallJumped)
-            {
-                rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX), wallJumpForce);
-                wallJumping = true;
-                wallJumped = false;
-            }
-            else
-            {*/
             jumpParticles.Play();
             Jump(velocity);
 
@@ -622,15 +592,12 @@ public class PlayerController : MonoBehaviour
             jumpRequest = false;
         }
 
-        if (jumpCancel && rb.velocity.y >= velocityTopSlice) // && !springJumping) //todo сделать красиво (хотя и так работает)
+        if (jumpCancel && rb.velocity.y >= velocityTopSlice)
         {
             velocity.y = velocityTopSlice;
             rb.velocity = velocity;
             jumpCancel = false;
         }
-        /*if (rb.velocity.y < 0 || Mathf.Sign(xInput) == -wallDirX || xInput == 0)
-            wallJumping = false;*/
-
     }
 
     private void WallJumpLogicProcessing(int wallDirX)
@@ -640,13 +607,13 @@ public class PlayerController : MonoBehaviour
         {
             jumpCancel = false;
             jumpsCount++;
-            rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX), wallJumpForce);
+            rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX) * Mathf.Abs(xInput), wallJumpForce);
             jumpRequest = false;
         }
         else
             jumpRequest = false;
 
-        if (jumpCancel && rb.velocity.y >= velocityTopSlice) //&& !springJumping) //todo сделать красиво (хотя и так работает)
+        if (jumpCancel && rb.velocity.y >= velocityTopSlice)
         {
             velocity.y = velocityTopSlice;
             rb.velocity = velocity;
@@ -668,6 +635,10 @@ public class PlayerController : MonoBehaviour
             {
                 rb.velocity = new Vector2(rb.velocity.x, maxFallVelocity);
             }
+        }
+        else if (currentState == PlayerState.WallSlide)
+        {
+
         }
         else
         {
@@ -712,10 +683,6 @@ public class PlayerController : MonoBehaviour
         else return false;
     }
 
-
-    
-
-    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("CheckPoint"))
