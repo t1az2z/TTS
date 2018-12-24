@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
         SetAnimationsParameters();
 
-        xInput = SimpleInput.GetAxis("Horizontal");
+        xInput = SimpleInput.GetAxisRaw("Horizontal");
 
         if (currentState == PlayerState.Dead)
         {
@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
     private void WallsInteractionLogic()
     {
         jumpsCount = 0;
-        jumpCancel = false;
+        //jumpCancel = false;
         /*int OldWallDir = wallDirX;
         isWallHit = wallSliding;
         if (OldWallHit != isWallHit && isWallHit)
@@ -272,7 +272,7 @@ public class PlayerController : MonoBehaviour
                     currentState = PlayerState.Fall;
                 else if (rb.velocity.y < -3f && jumpsCount == 2)
                     currentState = PlayerState.Fall;
-                else if (wallDir != 0)
+                else if (wallDir != 0 && Mathf.Sign(xInput) == wallDir && xInput != 0)
                     currentState = PlayerState.WallSlide;
                 else if (jumpRequest)
                     JumpLogicProcessing();
@@ -306,7 +306,7 @@ public class PlayerController : MonoBehaviour
                     currentState = PlayerState.Grounded;
                     GroundInteractionLogic();
                 }
-                else if (wallDir != 0 /*&& rb.velocity.y <= .1*/ && Mathf.Sign(xInput) == wallDir && xInput != 0)
+                else if (wallDir != 0 && Mathf.Sign(xInput) == wallDir && xInput != 0)
                 {
                     WallsInteractionLogic();
                     currentState = PlayerState.WallSlide;
@@ -321,7 +321,10 @@ public class PlayerController : MonoBehaviour
                 if (jumpRequest)
                 {
                     wsParticlesEmissionModule.enabled = false;
-                    currentState = PlayerState.WallJump;
+                    if (Mathf.Sign(xInput) == wallDir)
+                        currentState = PlayerState.WallJump;
+                    else
+                        currentState = PlayerState.Jump;
                 }
                 else if (dashRequest)
                 {
@@ -341,11 +344,18 @@ public class PlayerController : MonoBehaviour
                     WallJumpLogicProcessing(wallDir);
                 else if (jumpsCount >= 1 && jumpRequest)
                     currentState = PlayerState.Jump;
+                if (jumpCancel && rb.velocity.y >= velocityTopSlice)
+                {
+                    var velocity = rb.velocity;
+                    velocity.y = velocityTopSlice;
+                    rb.velocity = velocity;
+                    jumpCancel = false;
+                }
                 WallJumpingHorizontalMovemetn();
 
                 if (dashRequest)
                     currentState = PlayerState.Dash;
-
+                
                 else if (rb.velocity.y <= -.5f)
                     currentState = PlayerState.Fall;
                 else if (wallDir != 0 && rb.velocity.y <= .1)
@@ -362,7 +372,8 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.SpringJump:
                 HorizontalMovement(xInput);
-                JumpLogicProcessing();
+                if (jumpsCount <2)
+                    JumpLogicProcessing();
                 if (dashRequest)
                     currentState = PlayerState.Dash;
                 else if (rb.velocity.y < -3)
@@ -384,20 +395,6 @@ public class PlayerController : MonoBehaviour
         {
             print(currentState);
         }
-
-        /*if (currentState != State.Disabled)
-        {
-            HorizontalMovement(xInput);
-            Dash();
-            JumpLogicProcessing();
-            HandleWallSliding(WallHitCheck());
-            GravityScaleChange();
-        }
-        if (currentState == State.Dead)
-        {
-            
-        }
-        */
     }
 
     private void WallJumpingHorizontalMovemetn()
@@ -419,7 +416,6 @@ public class PlayerController : MonoBehaviour
     private void HandleWallSliding(int wallDirX, ParticleSystem.EmissionModule wsEmission)
     {
         WallsInteractionLogic();
-        //wallSliding = false;
         if (wallDirX == -1)
             wallslideParticles.transform.localPosition = new Vector2(-.14f, wallslideParticles.transform.localPosition.y);
         else if (wallDirX == 1)
@@ -427,7 +423,7 @@ public class PlayerController : MonoBehaviour
         if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0) //&& rb.velocity.y <= 0)
         {
             wsEmission.enabled = true;
-            if (rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0)
+            if ((rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0) || jumpCancel)
             {
                 var velocity = rb.velocity;
                 velocity.y = -maxlWallSlidingVelocity;
@@ -534,11 +530,11 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = velocity;
                 impulse.GenerateImpulse(new Vector3(0, dashDirection, 0));
 
-                if (jumpRequest)
+                /*if (jumpRequest)
                 {
                     rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
                     rb.velocity = new Vector2(xInput * runSpeed * 300 * Time.deltaTime, jumpMaxForce * 2);
-                }
+                }*/
 
             }
             else if (dashExpireTime <= Mathf.Epsilon)
@@ -566,6 +562,7 @@ public class PlayerController : MonoBehaviour
     public void OnPressJump()
     {
         jumpRequest = true;
+        jumpCancel = false;
     }
 
     public void OnReleaseJump()
@@ -605,20 +602,13 @@ public class PlayerController : MonoBehaviour
         Vector2 velocity = rb.velocity;
         if (jumpsCount < allowedJumps && jumpRequest)
         {
-            jumpCancel = false;
+            //jumpCancel = false;
             jumpsCount++;
             rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX) * Mathf.Abs(xInput), wallJumpForce);
             jumpRequest = false;
         }
         else
             jumpRequest = false;
-
-        if (jumpCancel && rb.velocity.y >= velocityTopSlice)
-        {
-            velocity.y = velocityTopSlice;
-            rb.velocity = velocity;
-            jumpCancel = false;
-        }
     }
 
     private void Jump( Vector2 vel)
