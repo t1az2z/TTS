@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     SpriteRenderer spriteRenderer;
     private float timeInState = 0f;
+    private float timeInPrevState;
     public GameObject wallslideParticles;
     private ParticleSystem.EmissionModule wsParticlesEmissionModule;
 
@@ -112,6 +113,8 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        if (rb.velocity.y < -.1f) 
+            print(rb.velocity.y);
         if (controllsEnabled)
             PcControlls();
 
@@ -342,6 +345,11 @@ public class PlayerController : MonoBehaviour
                     wsParticlesEmissionModule.enabled = false;
                     currentState = PlayerState.Grounded;
                 }
+                else if (wallDir == 0 && rb.velocity.y > 0)
+                {
+                    currentState = PlayerState.Jump;
+                    jumpsCount = 1;
+                }
                 break;
 
             case PlayerState.WallJump:
@@ -389,6 +397,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case PlayerState.Dead:
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                reachedMaxFallVelocity = false;
                 GameController.Instance.DeathCoroutine();
                 break;
 
@@ -399,11 +408,16 @@ public class PlayerController : MonoBehaviour
         }
         if (prevState != currentState)
         {
-            timeInState = 0;
+            if (currentState != PlayerState.Dead)
+            {
+                timeInPrevState = timeInState;
+                timeInState = 0;
+            }
             print(currentState);
         }
         else
             timeInState += Time.fixedDeltaTime;
+
     }
 
     private void WallJumpingHorizontalMovemetn()
@@ -418,6 +432,11 @@ public class PlayerController : MonoBehaviour
         else if (rb.velocity.x <= -wallJumpXVelocity)
         {
             velocity.x = -5f;
+            rb.velocity = velocity;
+        }
+        if (Mathf.Abs(xInput) <= Mathf.Epsilon)
+        {
+            velocity.x = 0;
             rb.velocity = velocity;
         }
     }
@@ -471,7 +490,7 @@ public class PlayerController : MonoBehaviour
         {
             if (timeInState <= landingTime)
             {
-                if (reachedMaxFallVelocity)
+                if (timeInPrevState > .45f && reachedMaxFallVelocity)
                     animator.Play("Landing2");
                 else
                     animator.Play("Landing");
@@ -486,7 +505,7 @@ public class PlayerController : MonoBehaviour
         {
             if (timeInState <= landingTime)
             {
-                if (reachedMaxFallVelocity)
+                if (timeInPrevState > .45f && reachedMaxFallVelocity)
                     animator.Play("Landing2");
                 else
                     animator.Play("Landing");
@@ -655,7 +674,7 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = fallMultiplier;
             if (rb.velocity.y <= maxFallVelocity)
             {
-                if (rb.velocity.y <= -12f)
+                if (rb.velocity.y <= -10f)
                     reachedMaxFallVelocity = true;
                 rb.velocity = new Vector2(rb.velocity.x, maxFallVelocity);
             }
@@ -686,18 +705,21 @@ public class PlayerController : MonoBehaviour
         int wallHitDir = 0;
         bool whLeft = false;
         bool whRight = false;
+
         foreach (var wallCheck in wallChecksLeft)
         {
-            whLeft = RaycastCheck(wallCheck.position, Vector2.left, wallCheckLength, whatIsWalls);
+            if (RaycastCheck(wallCheck.position, Vector2.left, wallCheckLength, whatIsWalls))
+                whLeft = true;
         }
         foreach (var wallCheck in wallChecksRight)
         {
-            whRight = RaycastCheck(wallCheck.position, Vector2.right, wallCheckLength, whatIsWalls);
+            if (RaycastCheck(wallCheck.position, Vector2.right, wallCheckLength, whatIsWalls))
+                whRight = true;
         }
         if (!whLeft && !whRight) wallHitDir = 0;
         else if (whLeft && !whRight) wallHitDir = -1;
         else if (!whLeft && whRight) wallHitDir = 1;
-        else wallHitDir = (int)Mathf.Sign(xInput);
+        else Debug.LogWarning("Unexpected WallHit Condition!");
         return wallHitDir;
     }
 
