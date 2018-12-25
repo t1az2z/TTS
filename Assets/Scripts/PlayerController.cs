@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rb;
     public Animator animator;
     SpriteRenderer spriteRenderer;
-
+    private float timeInState = 0f;
     public GameObject wallslideParticles;
     private ParticleSystem.EmissionModule wsParticlesEmissionModule;
 
@@ -43,7 +43,9 @@ public class PlayerController : MonoBehaviour
     private const float velocityTopSlice = 3f;
     [SerializeField] float maxFallVelocity = -10f;
     [SerializeField] float groundCheckLength = .0625f;
+    [SerializeField] float landingTime = .21f;
     public ParticleSystem jumpParticles;
+    private bool reachedMaxFallVelocity = false;
     [Space(8)]
 
     [Header("Jump gravity variables:")]
@@ -63,6 +65,7 @@ public class PlayerController : MonoBehaviour
     int dashDirection = 0;
     [SerializeField] float dashTime = .14f;
     [SerializeField] float dashFreezeTime = .17f;
+    [SerializeField] float dashSpeed = 200;
     public bool dashAlow = true;
     public bool dashRequest = false;
     public bool isDashing = false;
@@ -70,6 +73,7 @@ public class PlayerController : MonoBehaviour
     public CinemachineImpulseSource impulse;
     [SerializeField] ParticleSystem dashParticles;
     public ParticleSystem dustParticles;
+
     [Space(8)]
 
     [Foldout("Wall jump parameters", true)]
@@ -112,9 +116,7 @@ public class PlayerController : MonoBehaviour
             PcControlls();
 
         FlipSprite();
-
-        SetAnimationsParameters();
-
+        
         xInput = SimpleInput.GetAxisRaw("Horizontal");
 
         if (currentState == PlayerState.Dead)
@@ -239,6 +241,8 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         prevState = currentState;
+
+        SetAnimationsParameters();
         switch (currentState)
         {
             case PlayerState.Grounded:
@@ -286,6 +290,7 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case PlayerState.Dash:
+                reachedMaxFallVelocity = false;
                 dashDirection = Dash(dashDirection);
                 break;
 
@@ -315,6 +320,7 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.WallSlide:
                 var wsParticlesEmissionModule = wallslideParticles.GetComponent<ParticleSystem>().emission;
+                reachedMaxFallVelocity = false;
                 wallDir = WallHitCheck();
                 HandleWallSliding(wallDir, wsParticlesEmissionModule);
 
@@ -393,8 +399,11 @@ public class PlayerController : MonoBehaviour
         }
         if (prevState != currentState)
         {
+            timeInState = 0;
             print(currentState);
         }
+        else
+            timeInState += Time.fixedDeltaTime;
     }
 
     private void WallJumpingHorizontalMovemetn()
@@ -460,11 +469,33 @@ public class PlayerController : MonoBehaviour
             animator.Play("Dash");
         else if (currentState == PlayerState.Grounded && Mathf.Abs(rb.velocity.x) <= Mathf.Epsilon)
         {
-            animator.Play("Idle");
+            if (timeInState <= landingTime)
+            {
+                if (reachedMaxFallVelocity)
+                    animator.Play("Landing2");
+                else
+                    animator.Play("Landing");
+            }
+            else
+            {
+                reachedMaxFallVelocity = false;
+                animator.Play("Idle");
+            }
         }
         else if (currentState == PlayerState.Grounded && rb.velocity.x != 0)
         {
-            animator.Play("Walk");
+            if (timeInState <= landingTime)
+            {
+                if (reachedMaxFallVelocity)
+                    animator.Play("Landing2");
+                else
+                    animator.Play("Landing");
+            }
+            else
+            {
+                reachedMaxFallVelocity = false;
+                animator.Play("Walk");
+            }
             //runEmission.enabled = true;
         }
         else if (currentState == PlayerState.Jump || currentState == PlayerState.WallJump || currentState == PlayerState.SpringJump)
@@ -501,6 +532,7 @@ public class PlayerController : MonoBehaviour
 
     public int Dash(int dashDirection)
     {
+        //Debug.Break();
         if (dashRequest && !dashAlow)
             dashRequest = false;
 
@@ -508,23 +540,23 @@ public class PlayerController : MonoBehaviour
         {
 
             dashParticles.Play();
-            var secondFrame = dashTime - Time.fixedDeltaTime;
+            var secondFrame = dashTime;// - Time.fixedDeltaTime;
 
             if (dashExpireTime - secondFrame == 0)
             {
                 StartCoroutine(GameController.Instance.FreezeTime(dashFreezeTime));
             }
 
-            if (dashExpireTime > Mathf.Epsilon && dashAlow)
+            if (dashExpireTime > Mathf.Epsilon && dashAlow)// && dashExpireTime <= dashExpireTime-secondFrame)
             {
                 dustParticles.Play();
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 //isDashing = true;
                 Vector2 velocity = rb.velocity;
                 if (xInput == 0)
-                    velocity.x = dashDirection * runSpeed * 300 * Time.fixedDeltaTime;
+                    velocity.x = dashDirection * runSpeed * dashSpeed * Time.fixedDeltaTime;
                 else
-                    velocity.x = Mathf.Sign(xInput) * runSpeed * 300 * Time.fixedDeltaTime;
+                    velocity.x = Mathf.Sign(xInput) * runSpeed * dashSpeed * Time.fixedDeltaTime;
 
                 dashExpireTime -= Time.fixedDeltaTime;
                 rb.velocity = velocity;
@@ -623,6 +655,8 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = fallMultiplier;
             if (rb.velocity.y <= maxFallVelocity)
             {
+                if (rb.velocity.y <= -12f)
+                    reachedMaxFallVelocity = true;
                 rb.velocity = new Vector2(rb.velocity.x, maxFallVelocity);
             }
         }

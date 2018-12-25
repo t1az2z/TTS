@@ -18,6 +18,8 @@ MonoBehaviour:
   - Revive
   - Dash
   - Jump2
+  - Landing
+  - Landing2
   _automaticImporting: 1
   _spritePixelsPerUnit: 16
   _targetObjectType: 0
