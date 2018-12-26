@@ -5,7 +5,7 @@ using UnityEngine;
 public class DestroyTilesOnCollision : MonoBehaviour {
     DestructiblesBehaviour desBeh;
     public GameObject destroyParticle;
-
+    [SerializeField] float disabledTime = .3f;
     Vector3Int[] coordinates = new Vector3Int[6]{new Vector3Int(0, 0, 0),
                                                  new Vector3Int(0, 1, 0),
                                                  new Vector3Int(0, -1, 0),
@@ -20,6 +20,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
+
         if (player.currentState == PlayerState.Dash)
         {
             int xDirection = player.isFacingLeft ? -1 : 1;
@@ -37,7 +38,9 @@ public class DestroyTilesOnCollision : MonoBehaviour {
                     desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition) + addition, destroyParticle);
                 }
             }
-            player.isDashing = false;
+            player.controllsDisabledTimer = disabledTime;
+            player.currentState = PlayerState.WallBreak;
+            player.isDashing = false; 
             player.dashExpireTime = 0;
             player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             player.impulse.GenerateImpulse(new Vector3(0, 1, 0));

@@ -32,11 +32,12 @@ public class GameController : MonoBehaviour {
     public float frequency = .3f;
     public float amplitude = .1f;
     public float duration = .2f;
-
+    public int targetFps = 60;
 
     void Awake()
     {
         SingletonImplementation();
+        Application.targetFrameRate = targetFps;
     }
 
     private void SingletonImplementation()

@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private float timeInPrevState;
     public GameObject wallslideParticles;
     private ParticleSystem.EmissionModule wsParticlesEmissionModule;
+    public float controllsDisabledTimer = .2f;
 
     public bool isDead = false;
     public bool controllsEnabled = true;
@@ -70,6 +71,7 @@ public class PlayerController : MonoBehaviour
     public bool dashAlow = true;
     public bool dashRequest = false;
     public bool isDashing = false;
+    [SerializeField] Vector2 destroyWallsKnockback = new Vector2(2, 2);
     [HideInInspector] public float dashExpireTime;
     public CinemachineImpulseSource impulse;
     [SerializeField] ParticleSystem dashParticles;
@@ -104,6 +106,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        print(gameObject.name);
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         impulse = GetComponent<CinemachineImpulseSource>();
@@ -113,8 +116,9 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (rb.velocity.y < -.1f) 
-            print(rb.velocity.y);
+        SetAnimationsParameters();
+        //if (rb.velocity.y < -.1f) 
+        //    print(rb.velocity.y);
         if (controllsEnabled)
             PcControlls();
 
@@ -160,12 +164,12 @@ public class PlayerController : MonoBehaviour
         isRunning = Mathf.Abs(rb.velocity.x) > .01f;
         if (currentState != PlayerState.WallSlide && isRunning)
         {
-            if (rb.velocity.x < .01f)
+            if (rb.velocity.x < .01f && xInput < .01f)
             {
                 spriteRenderer.flipX = true;
                 isFacingLeft = true;
             }
-            else if (rb.velocity.x > .01f)
+            else if (rb.velocity.x > .01f && xInput > .01f)
             {
                 spriteRenderer.flipX = false;
                 isFacingLeft = false;
@@ -245,7 +249,6 @@ public class PlayerController : MonoBehaviour
     {
         prevState = currentState;
 
-        SetAnimationsParameters();
         switch (currentState)
         {
             case PlayerState.Grounded:
@@ -259,12 +262,10 @@ public class PlayerController : MonoBehaviour
                 else if (dashRequest)
                 {
                     currentState = PlayerState.Dash;
-                    //Dash(dashDirection);
                 }
                 else if (rb.velocity.y < -Mathf.Epsilon)
                 {
                     currentState = PlayerState.Fall;
-                    //horizontal movement
                 }
                 break;
 
@@ -392,9 +393,38 @@ public class PlayerController : MonoBehaviour
                     currentState = PlayerState.Dash;
                 else if (rb.velocity.y < -3)
                     currentState = PlayerState.Fall;
-
-
                 break;
+
+            case PlayerState.WallBreak:
+                dashExpireTime = 0;
+                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                dashParticles.Stop();
+                if (controllsDisabledTimer > 0)
+                {
+                    rb.AddForce(new Vector2(wallJumpXVelocity * (isFacingLeft ? 1 : -1) * destroyWallsKnockback.x, destroyWallsKnockback.y), ForceMode2D.Impulse);
+                    controllsDisabledTimer -= Time.fixedDeltaTime;
+                    dashAlow = true;
+                    jumpsCount = 0;
+                }
+                else if (rb.velocity.y >= 0)
+                    WallJumpingHorizontalMovemetn();
+                else
+                {
+                    if (GroundCheck())
+                    {
+                        currentState = PlayerState.Grounded;
+                    }
+                    else if (dashRequest)
+                    {
+                        currentState = PlayerState.Dash;
+                    }
+                    else
+                    {
+                        currentState = PlayerState.Fall;
+                    }
+                }
+                break;
+
             case PlayerState.Dead:
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                 reachedMaxFallVelocity = false;
@@ -413,7 +443,7 @@ public class PlayerController : MonoBehaviour
                 timeInPrevState = timeInState;
                 timeInState = 0;
             }
-            print(currentState);
+            //print(currentState);
         }
         else
             timeInState += Time.fixedDeltaTime;
@@ -486,6 +516,8 @@ public class PlayerController : MonoBehaviour
 
         if (currentState == PlayerState.Dash && dashAlow)
             animator.Play("Dash");
+        else if (currentState == PlayerState.WallBreak)
+            animator.Play("Fall");
         else if (currentState == PlayerState.Grounded && Mathf.Abs(rb.velocity.x) <= Mathf.Epsilon)
         {
             if (timeInState <= landingTime)
@@ -557,7 +589,6 @@ public class PlayerController : MonoBehaviour
 
         else if (dashRequest)
         {
-
             dashParticles.Play();
             var secondFrame = dashTime;// - Time.fixedDeltaTime;
 
@@ -579,7 +610,7 @@ public class PlayerController : MonoBehaviour
 
                 dashExpireTime -= Time.fixedDeltaTime;
                 rb.velocity = velocity;
-                impulse.GenerateImpulse(new Vector3(0, dashDirection, 0));
+                impulse.GenerateImpulse();//new Vector3(0, dashDirection, 0));
 
                 /*if (jumpRequest)
                 {
@@ -591,7 +622,14 @@ public class PlayerController : MonoBehaviour
             else if (dashExpireTime <= Mathf.Epsilon)
             {
                 dashDirection = 0;
-                currentState = PlayerState.Fall;
+                if (GroundCheck())
+                    currentState = PlayerState.Grounded;
+                else if (WallHitCheck() != 0)
+                {
+                    currentState = PlayerState.WallSlide;
+                }
+                else
+                    currentState = PlayerState.Fall;
                 rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
 
                 //isDashing = false;
@@ -802,7 +840,7 @@ public enum PlayerState
     Fall,
     Dead,
     Disabled,
-
-    SpringJump
+    WallBreak,
+    SpringJump,
 
 }
