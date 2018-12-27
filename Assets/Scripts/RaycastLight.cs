@@ -28,7 +28,6 @@ public class RaycastLight : MonoBehaviour
     public bool lightOverlap = false;
     [Range(0, .1f)] public float lightMultiplierRange = .07f;
     private float lightMultiplier = 1;
-
     /*[Header("Light Parameters (shader)")]
     public Material material;
     private Material tempMaterial;

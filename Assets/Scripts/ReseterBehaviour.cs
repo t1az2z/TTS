@@ -19,6 +19,7 @@ public class ReseterBehaviour : MonoBehaviour {
     [SerializeField] float reactivateTime = 3f;
 
 	void Start () {
+
         collider = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
         lightObject = transform.GetChild(0).gameObject;
@@ -67,6 +68,7 @@ public class ReseterBehaviour : MonoBehaviour {
                 player.jumpsCount = 0;
             }
             impulse.GenerateImpulse();
+            StartCoroutine(GameController.Instance.FreezeTime(.06f));
             isActive = false;
         }
 
@@ -76,11 +78,12 @@ public class ReseterBehaviour : MonoBehaviour {
 
     private IEnumerator ResetDashAfterDelay(float time)
     {
+        WaitForSeconds delay = new WaitForSeconds(.01f);
         while (time > 0)
         {
             if (player.currentState == PlayerState.Dash)
             {
-                yield return new WaitForSeconds(.01f);
+                yield return delay;
             }
             else
             {
@@ -94,11 +97,12 @@ public class ReseterBehaviour : MonoBehaviour {
  
     private IEnumerator TemporarlyDeactivate()
     {
+        WaitForSeconds reactTime = new WaitForSeconds(reactivateTime);
         //deactive animation
         collider.enabled = false;
         sr.enabled = false;
         lightObject.SetActive(false);
-        yield return new WaitForSeconds(reactivateTime);
+        yield return reactTime;
         //activate animation
         sr.enabled = true;
         collider.enabled = true;
