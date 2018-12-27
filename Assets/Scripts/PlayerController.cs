@@ -7,6 +7,7 @@ using Homebrew;
 public class PlayerController : MonoBehaviour
 {
     public PlayerState currentState;
+    private PlayerState prevFrameState;
     private PlayerState prevState;
     [Foldout("Setup", true)]
     //public GameController gc;
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public GameObject wallslideParticles;
     private ParticleSystem.EmissionModule wsParticlesEmissionModule;
     public float controllsDisabledTimer = .2f;
+    private Vector2 velocity;
 
     public bool isDead = false;
     public bool controllsEnabled = true;
@@ -70,7 +72,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashSpeed = 200;
     public bool dashAlow = true;
     public bool dashRequest = false;
-    public bool isDashing = false;
     [SerializeField] Vector2 destroyWallsKnockback = new Vector2(2, 2);
     [HideInInspector] public float dashExpireTime;
     public CinemachineImpulseSource impulse;
@@ -86,7 +87,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask whatIsWalls;
     public bool wallJumped;
     public bool wallJumping;
-    //public bool wallSliding = false;
     public float wallJumpXVelocity = 5f;
 
     bool isWallHit = false;
@@ -106,7 +106,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        print(gameObject.name);
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         impulse = GetComponent<CinemachineImpulseSource>();
@@ -117,8 +116,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         SetAnimationsParameters();
-        //if (rb.velocity.y < -.1f) 
-        //    print(rb.velocity.y);
         if (controllsEnabled)
             PcControlls();
 
@@ -162,7 +159,7 @@ public class PlayerController : MonoBehaviour
     private void FlipSprite()
     {
         isRunning = Mathf.Abs(rb.velocity.x) > .01f;
-        if (currentState != PlayerState.WallSlide && isRunning)
+        if (currentState != PlayerState.WallSlide && currentState != PlayerState.WallBreak && isRunning)
         {
             if (rb.velocity.x < .01f && xInput < .01f)
             {
@@ -175,7 +172,7 @@ public class PlayerController : MonoBehaviour
                 isFacingLeft = false;
             }
         }
-        else if (currentState == PlayerState.WallSlide)
+        else if (currentState == PlayerState.WallSlide && Mathf.RoundToInt(xInput) == wallDir)
         {
             if (wallDir == -1)
             {
@@ -196,37 +193,17 @@ public class PlayerController : MonoBehaviour
 
         dashAlow = true;
 
-        //wallJumping = false;
-        //if (dashDenyIndicator.activeSelf)
-        //    dashDenyIndicator.SetActive(false);
-
-
-        //bool OldIsGrounded = isGrounded;
-        //isGrounded = GroundCheck();
-
-        if (GroundCheck() && prevState != currentState)
+        if (GroundCheck() && prevFrameState != currentState)
         {
             jumpsCount = 0;
             jumpCancel = false;
-            //springJumping = false;
             jumpParticles.Emit(8);
         }
     }
     private void WallsInteractionLogic()
     {
         jumpsCount = 0;
-        //jumpCancel = false;
-        /*int OldWallDir = wallDirX;
-        isWallHit = wallSliding;
-        if (OldWallHit != isWallHit && isWallHit)
-        {
-            jumpsCount = 0;
-            jumpCancel = false;
-            springJumping = false;
-        }
-        */
     }
-
 
     private void PcControlls()
     {
@@ -247,8 +224,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        prevState = currentState;
-
+        if (prevState != prevFrameState && prevFrameState != currentState)
+            prevState = prevFrameState;
         switch (currentState)
         {
             case PlayerState.Grounded:
@@ -295,7 +272,7 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.Dash:
                 reachedMaxFallVelocity = false;
-                dashDirection = Dash(dashDirection);
+                Dash();
                 break;
 
             case PlayerState.Fall:
@@ -361,7 +338,7 @@ public class PlayerController : MonoBehaviour
                     currentState = PlayerState.Jump;
                 if (jumpCancel && rb.velocity.y >= velocityTopSlice)
                 {
-                    var velocity = rb.velocity;
+                    velocity = rb.velocity;
                     velocity.y = velocityTopSlice;
                     rb.velocity = velocity;
                     jumpCancel = false;
@@ -397,26 +374,25 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.WallBreak:
                 dashExpireTime = 0;
+                dashRequest = false;
                 rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                 dashParticles.Stop();
+                WallJumpingHorizontalMovemetn();
                 if (controllsDisabledTimer > 0)
                 {
-                    rb.AddForce(new Vector2(wallJumpXVelocity * (isFacingLeft ? 1 : -1) * destroyWallsKnockback.x, destroyWallsKnockback.y), ForceMode2D.Impulse);
+                    velocity = rb.velocity;
+                    velocity = new Vector2(wallJumpXVelocity * (-dashDirection) * destroyWallsKnockback.x, destroyWallsKnockback.y * Mathf.Abs(dashDirection));
+                   
+                    rb.velocity = velocity;
                     controllsDisabledTimer -= Time.fixedDeltaTime;
                     dashAlow = true;
                     jumpsCount = 0;
                 }
-                else if (rb.velocity.y >= 0)
-                    WallJumpingHorizontalMovemetn();
                 else
                 {
                     if (GroundCheck())
                     {
                         currentState = PlayerState.Grounded;
-                    }
-                    else if (dashRequest)
-                    {
-                        currentState = PlayerState.Dash;
                     }
                     else
                     {
@@ -436,35 +412,37 @@ public class PlayerController : MonoBehaviour
                 break;
 
         }
-        if (prevState != currentState)
+        if (prevFrameState != currentState)
         {
             if (currentState != PlayerState.Dead)
             {
                 timeInPrevState = timeInState;
                 timeInState = 0;
             }
-            //print(currentState);
         }
         else
             timeInState += Time.fixedDeltaTime;
+
+
+        prevFrameState = currentState;
 
     }
 
     private void WallJumpingHorizontalMovemetn()
     {
-        var velocity = rb.velocity;
+        velocity = rb.velocity;
         rb.AddForce(new Vector2(xInput * runSpeed * 480 * Time.fixedDeltaTime, 0), ForceMode2D.Force);
         if (rb.velocity.x > wallJumpXVelocity)
         {
             velocity.x = 5f;
             rb.velocity = velocity;
         }
-        else if (rb.velocity.x <= -wallJumpXVelocity)
+        else if (rb.velocity.x < -wallJumpXVelocity)
         {
             velocity.x = -5f;
             rb.velocity = velocity;
         }
-        if (Mathf.Abs(xInput) <= Mathf.Epsilon)
+        if (xInput == 0)
         {
             velocity.x = 0;
             rb.velocity = velocity;
@@ -478,12 +456,12 @@ public class PlayerController : MonoBehaviour
             wallslideParticles.transform.localPosition = new Vector2(-.14f, wallslideParticles.transform.localPosition.y);
         else if (wallDirX == 1)
             wallslideParticles.transform.localPosition = new Vector2(.14f, wallslideParticles.transform.localPosition.y);
-        if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0) //&& rb.velocity.y <= 0)
+        if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0)
         {
             wsEmission.enabled = true;
             if ((rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0) || jumpCancel)
             {
-                var velocity = rb.velocity;
+                velocity = rb.velocity;
                 velocity.y = -maxlWallSlidingVelocity;
                 rb.velocity = velocity;
             }
@@ -493,11 +471,6 @@ public class PlayerController : MonoBehaviour
             wsEmission.enabled = false;
             currentState = PlayerState.Fall;
         }
-        //hack
-        /*if (currentState == State.WallSlide)
-            wsEmission.enabled = true;
-        else
-            wsEmission.enabled = false;*/
     }
 
     void HorizontalMovement(float xInput)
@@ -524,7 +497,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (timeInPrevState > .45f && reachedMaxFallVelocity)
                     animator.Play("Landing2");
-                else
+                else if (prevFrameState != PlayerState.Dash)
                     animator.Play("Landing");
             }
             else
@@ -539,7 +512,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (timeInPrevState > .45f && reachedMaxFallVelocity)
                     animator.Play("Landing2");
-                else
+                else if (prevFrameState != PlayerState.Dash)
                     animator.Play("Landing");
             }
             else
@@ -571,53 +544,37 @@ public class PlayerController : MonoBehaviour
     {
         if (!dashRequest)
         {
-            if (dashDirection == 0)
-                dashDirection = isFacingLeft ? -1 : 1;
             dashRequest = true;
             dashExpireTime = dashTime;
         }
-        
-
     }
 
 
-    public int Dash(int dashDirection)
+    public void Dash()
     {
-        //Debug.Break();
         if (dashRequest && !dashAlow)
             dashRequest = false;
 
         else if (dashRequest)
         {
             dashParticles.Play();
-            var secondFrame = dashTime;// - Time.fixedDeltaTime;
+            
 
-            if (dashExpireTime - secondFrame == 0)
+            if (dashExpireTime == dashTime)
             {
                 StartCoroutine(GameController.Instance.FreezeTime(dashFreezeTime));
+                dashDirection = isFacingLeft ? -1 : 1;
+                impulse.GenerateImpulse();
             }
 
-            if (dashExpireTime > Mathf.Epsilon && dashAlow)// && dashExpireTime <= dashExpireTime-secondFrame)
+            if (dashExpireTime > Mathf.Epsilon && dashAlow)
             {
                 dustParticles.Play();
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-                //isDashing = true;
                 Vector2 velocity = rb.velocity;
-                if (xInput == 0)
-                    velocity.x = dashDirection * runSpeed * dashSpeed * Time.fixedDeltaTime;
-                else
-                    velocity.x = Mathf.Sign(xInput) * runSpeed * dashSpeed * Time.fixedDeltaTime;
-
+                velocity.x = dashDirection * runSpeed * dashSpeed * Time.fixedDeltaTime;
                 dashExpireTime -= Time.fixedDeltaTime;
                 rb.velocity = velocity;
-                impulse.GenerateImpulse();//new Vector3(0, dashDirection, 0));
-
-                /*if (jumpRequest)
-                {
-                    rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-                    rb.velocity = new Vector2(xInput * runSpeed * 300 * Time.deltaTime, jumpMaxForce * 2);
-                }*/
-
             }
             else if (dashExpireTime <= Mathf.Epsilon)
             {
@@ -631,8 +588,6 @@ public class PlayerController : MonoBehaviour
                 else
                     currentState = PlayerState.Fall;
                 rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-
-                //isDashing = false;
                 dashRequest = false;
                 dashExpireTime = 0f;
                 dashAlow = false;
@@ -642,10 +597,8 @@ public class PlayerController : MonoBehaviour
         {
             currentState = PlayerState.Fall;
             rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-            //isDashing = false;
         }
 
-        return dashDirection;
     }
 
     public void OnPressJump()
@@ -691,9 +644,9 @@ public class PlayerController : MonoBehaviour
         Vector2 velocity = rb.velocity;
         if (jumpsCount < allowedJumps && jumpRequest)
         {
-            //jumpCancel = false;
             jumpsCount++;
-            rb.velocity = new Vector2(wallJumpXVelocity * (-wallDirX) * Mathf.Abs(xInput), wallJumpForce);
+            velocity = new Vector2(wallJumpXVelocity * (-wallDirX), wallJumpForce);
+            rb.velocity = velocity;
             jumpRequest = false;
         }
         else
@@ -777,10 +730,7 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(GameController.Instance.DeathCoroutine());
             dashRequest = false;
-            //isDashing = false;
-            //wallSliding = false;
             wsParticlesEmissionModule.enabled = false;
-            //isDead = true;
         }
     }
 
@@ -790,14 +740,8 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(GameController.Instance.DeathCoroutine());
             dashRequest = false;
-            //isDashing = false;
-            //wallSliding = false;
             wsParticlesEmissionModule.enabled = false;
-            //isDead = true;
         }
-
-
-
     }
 
     private void OnDrawGizmosSelected()
