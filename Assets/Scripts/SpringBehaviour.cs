@@ -8,6 +8,7 @@ public class SpringBehaviour : MonoBehaviour {
     PlayerController player;
     CinemachineImpulseSource impulse;
     Animator anim;
+    [SerializeField] int jumpsAfterSpring = 2;
 
     private void Start()
     {
@@ -32,7 +33,7 @@ public class SpringBehaviour : MonoBehaviour {
 
             player.rb.velocity = springVector;
             player.dustParticles.Play();
-            player.jumpsCount = 2;
+            player.jumpsCount = jumpsAfterSpring;
             player.dashAlow = true;
             impulse.GenerateImpulse();
 

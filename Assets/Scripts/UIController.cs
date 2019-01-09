@@ -18,6 +18,7 @@ public class UIController : MonoBehaviour {
     //Counters
     [SerializeField] Text deathsCounter;
     [SerializeField] Text collectiblesCounter;
+    int collectiblesAmmount;
 
 
     void Start () {
@@ -26,6 +27,7 @@ public class UIController : MonoBehaviour {
         SetSplashScreenReference();
         SetTextFieldsReferences();
         splashAnimationLength = CountSplashAnimationLength();
+        collectiblesAmmount = FindObjectsOfType<CollectiblesBehaviour>().Length;
 
 	}
 	
@@ -77,7 +79,7 @@ public class UIController : MonoBehaviour {
             Debug.Log("Collectibles Counter Reference lost. Fix It");
             collectiblesCounter = transform.Find("Collectibles/Counter").GetComponent<Text>();
         }
-        collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString();
+        collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString() +"/"+ collectiblesAmmount;
 
 
     }
@@ -89,7 +91,7 @@ public class UIController : MonoBehaviour {
 
     public void CollectiblesTextUpdate()
     {
-        collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString();
+        collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString() + "/" + collectiblesAmmount;
     }
     #endregion
 

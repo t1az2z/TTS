@@ -8,20 +8,19 @@ public class ReseterBehaviour : MonoBehaviour {
     [SerializeField] bool resetDash = true;
     [SerializeField] bool resetJumpCounter = true;
     Collider2D col;
-    SpriteRenderer sr;
+    [SerializeField] SpriteRenderer sr;
     bool isActive = true;
     float waitTime = .5f;
     GameObject lightObject;
     CinemachineImpulseSource impulse;
     [SerializeField] ParticleSystem particles;
-
+    [SerializeField] float freezeTime = .02f;
 
     [SerializeField] float reactivateTime = 3f;
 
 	void Start () {
 
         col = GetComponent<Collider2D>();
-        sr = GetComponent<SpriteRenderer>();
         lightObject = transform.GetChild(0).gameObject;
         impulse = GetComponent<CinemachineImpulseSource>();
         if (particles == null)
@@ -68,7 +67,7 @@ public class ReseterBehaviour : MonoBehaviour {
                 player.jumpsCount = 0;
             }
             impulse.GenerateImpulse();
-            StartCoroutine(GameController.Instance.FreezeTime(.06f));
+            StartCoroutine(GameController.Instance.FreezeTime(freezeTime));
             isActive = false;
         }
 
