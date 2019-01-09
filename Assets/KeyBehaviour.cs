@@ -5,12 +5,12 @@ using UnityEngine;
 public class KeyBehaviour : MonoBehaviour
 {
     private DoorBehaviour doorBehaviour;
-    private Collider2D collider;
+    private Collider2D col;
 
     public void Init(DoorBehaviour doorBehaviour)
     {
         this.doorBehaviour = doorBehaviour;
-        collider = GetComponent<Collider2D>();
+        col = GetComponent<Collider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -19,12 +19,12 @@ public class KeyBehaviour : MonoBehaviour
         {
             //play activated animation & sound
             doorBehaviour.ActivateKey();
-            collider.enabled = false;
+            col.enabled = false;
         }
     }
 
     public void KeyReset()
     {
-        collider.enabled = true;
+        col.enabled = true;
     }
 }

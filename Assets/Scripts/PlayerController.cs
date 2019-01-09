@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
     [Space(8)]
 
-    [Foldout("Wall jump parameters", true)]
+    [Foldout("Wall jump/slide parameters", true)]
     int wallDir;
     [SerializeField] Transform[] wallChecksLeft;
     [SerializeField] Transform[] wallChecksRight;
@@ -89,12 +89,14 @@ public class PlayerController : MonoBehaviour
     public bool wallJumped;
     public bool wallJumping;
     public float wallJumpXVelocity = 5f;
+    [SerializeField] float wallJumpForce = 9.76f;
 
     bool isWallHit = false;
-    [SerializeField] float initialWallSlidingVelocity = 3f;
+    [SerializeField] float initialWallSlidingVelocity = 1.5f;
     [SerializeField] float maxlWallSlidingVelocity = 3f;
-    [SerializeField] float wallslidingVelocityStep = .3f;
-    [SerializeField] float wallJumpForce = 9.76f;
+    [SerializeField] float wallSlideTimeToReachMaxVelocity = 1f;
+    private float wsTimeTRMV;
+
 
 
     Vector3 scaleChange = new Vector3(1, 1, 1);
@@ -113,6 +115,7 @@ public class PlayerController : MonoBehaviour
         wsParticlesEmissionModule = wallslideParticles.GetComponent<ParticleSystem>().emission;
         wsParticlesEmissionModule.enabled = false;
         currentState = PlayerState.Grounded;
+        wsTimeTRMV = wallSlideTimeToReachMaxVelocity;
     }
     void Update()
     {
@@ -161,7 +164,8 @@ public class PlayerController : MonoBehaviour
         if (prevState != prevFrameState && prevFrameState != currentState)
             prevState = currentState;
         prevFrameState = currentState;
-
+        if (currentState != PlayerState.WallSlide)
+            wsTimeTRMV = wallSlideTimeToReachMaxVelocity;
         switch (currentState)
         {
             case PlayerState.Grounded:
@@ -239,7 +243,7 @@ public class PlayerController : MonoBehaviour
                 var wsParticlesEmissionModule = wallslideParticles.GetComponent<ParticleSystem>().emission;
                 reachedMaxFallVelocity = false;
                 wallDir = WallHitCheck();
-                HandleWallSliding(wallDir, wsParticlesEmissionModule);
+                WallSlideLogicProcessing(wallDir, wsParticlesEmissionModule);
 
                 if (jumpRequest)
                 {
@@ -267,6 +271,7 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case PlayerState.WallJump:
+
                 wallDir = WallHitCheck();
                 if (jumpsCount < 1 && jumpRequest)
                     WallJumpLogicProcessing(wallDir);
@@ -498,7 +503,7 @@ public class PlayerController : MonoBehaviour
             jumpRequest = false;
     }
 
-    private void HandleWallSliding(int wallDirX, ParticleSystem.EmissionModule wsEmission)
+    private void WallSlideLogicProcessing(int wallDirX, ParticleSystem.EmissionModule wsEmission)
     {
         WallsInteractionLogic();
         if (wallDirX == -1)
@@ -508,16 +513,29 @@ public class PlayerController : MonoBehaviour
         if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0)
         {
             wsEmission.enabled = true;
-            if ((rb.velocity.y < -initialWallSlidingVelocity && rb.velocity.y < 0) || jumpCancel)
+            if (rb.velocity.y <= 0)
             {
+                if (wsTimeTRMV > 0)
+                {
+                    velocity.y = -initialWallSlidingVelocity * (wallSlideTimeToReachMaxVelocity / wsTimeTRMV);
+                    if (velocity.y <= -maxlWallSlidingVelocity)
+                        velocity.y = -maxlWallSlidingVelocity;
 
-                velocity.y = -maxlWallSlidingVelocity;
-                rb.velocity = velocity;
+                    wsTimeTRMV -= Time.fixedDeltaTime;
+                    rb.velocity = velocity;
+                }
+                else if (wsTimeTRMV <= 0 || jumpCancel)
+                {
+                    velocity.y = -maxlWallSlidingVelocity;
+                    rb.velocity = velocity;
+                }
             }
+
         }
         else
         {
             wsEmission.enabled = false;
+            wsTimeTRMV = initialWallSlidingVelocity;
             currentState = PlayerState.Fall;
         }
     }
