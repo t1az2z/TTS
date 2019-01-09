@@ -34,6 +34,9 @@ public class GameController : MonoBehaviour {
     public float duration = .2f;
     public int targetFps = 60;
 
+    //reseters
+    ReseterBehaviour[] resetersArray;
+
     void Awake()
     {
         SingletonImplementation();
@@ -58,7 +61,7 @@ public class GameController : MonoBehaviour {
         ui = FindObjectOfType<UIController>();
 
         SetPlayerReference();
-
+        resetersArray = FindObjectsOfType<ReseterBehaviour>();
 
         previousCamera = currentCamera;
     }
@@ -87,6 +90,8 @@ public class GameController : MonoBehaviour {
 
         if (player == null)
             SetPlayerReference();
+        if (resetersArray == null)
+            resetersArray = FindObjectsOfType<ReseterBehaviour>();
     }
 
     private void DebugKeys()
@@ -106,6 +111,7 @@ public class GameController : MonoBehaviour {
 
     private void RestartLevel()
     {
+        resetersArray = null;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         SetChekpoint(Vector2.zero);
         deaths = 0;
@@ -159,8 +165,14 @@ public class GameController : MonoBehaviour {
         ui.SplashShow();
 
 
+
         yield return new WaitForSeconds(ui.splashAnimationLength);
         MovePlayerToCheckpoint();
+        foreach (var reseter in resetersArray)
+        {
+            if (reseter != null)
+                reseter.ReactivateAtPlayersDeath();
+        }
         ui.SplashHide();
         yield return new WaitForSeconds(ui.splashAnimationLength);
         player.animator.Play("Revive"); //todo get it out of here

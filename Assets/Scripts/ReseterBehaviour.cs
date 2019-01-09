@@ -31,7 +31,7 @@ public class ReseterBehaviour : MonoBehaviour {
         }
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (player != null)
         {
@@ -44,12 +44,12 @@ public class ReseterBehaviour : MonoBehaviour {
                 isActive = true;
             }
         }
-    }
+    }*/
     private void OnTriggerEnter2D(Collider2D collision)
     {
         player = collision.GetComponent<PlayerController>();
 
-        if (isActive)
+        if (isActive && player.currentState != PlayerState.Dead)
         {
             particles.Play();
             if (resetDash)
@@ -109,11 +109,12 @@ public class ReseterBehaviour : MonoBehaviour {
         lightObject.SetActive(true);
         isActive = true;
     }
-    private IEnumerator ReactivateAtPlayersDeath(float timeDelay)
+    public void ReactivateAtPlayersDeath()
     {
-        yield return new WaitForSeconds(.05f);
+        StopAllCoroutines();
         sr.enabled = true;
         lightObject.SetActive(true);
+        col.enabled = true;
         isActive = true;
     }
 }
