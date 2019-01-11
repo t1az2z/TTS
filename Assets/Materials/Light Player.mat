@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Light Player
   m_Shader: {fileID: 4800000, guid: 73a125a3388080148a0c630bfb66c7d9, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ALPHABLEND_ON _EMISSION
@@ -138,7 +139,7 @@ Material:
     - _VerticalTranslation: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.8537736, g: 0.99159, b: 1, a: 0.1764706}
+    - _Color: {r: 0.759434, g: 0.9869964, b: 1, a: 0.1882353}
     - _EmissionColor: {r: 4.2870936, g: 4.2870936, b: 5.723607, a: 0.07058824}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

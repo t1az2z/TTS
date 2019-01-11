@@ -7,8 +7,8 @@ public class LevelChanger : MonoBehaviour {
 
 public void OnTriggerEnter2D()
     {
-        FindObjectOfType<GameController>().SetChekpoint(Vector3.zero);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameController.Instance.SetChekpoint(Vector3.zero);
+        GameController.Instance.RestartLevel();
 
     }
 }

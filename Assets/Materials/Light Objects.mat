@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Light Objects
   m_Shader: {fileID: 4800000, guid: 73a125a3388080148a0c630bfb66c7d9, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
@@ -27,4 +28,4 @@ Material:
     - _IntensityFactor: 0.5
     - _UVScale: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 0.28627452}
+    - _Color: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 0.75686276}

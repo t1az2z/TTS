@@ -53,6 +53,7 @@ MonoBehaviour:
   resetJumpCounter: 1
   sr: {fileID: 806383314927827032}
   particles: {fileID: 0}
+  freezeTime: 0.02
   reactivateTime: 2
 --- !u!114 &114266827882517792
 MonoBehaviour:
@@ -4974,7 +4975,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6cfc80007ac794540b4bcfad1e6a84c9, type: 2}
+  - {fileID: 2100000, guid: bfd359dcd5643d1408c4ff13a0af6387, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4995,7 +4996,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 63151ec0b7643c043a55312a50a8632a, type: 3}
-  m_Color: {r: 0.990566, g: 0.899749, b: 0.4906105, a: 0.5372549}
+  m_Color: {r: 0.9339623, g: 0.8681087, b: 0.4801976, a: 0.48235294}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

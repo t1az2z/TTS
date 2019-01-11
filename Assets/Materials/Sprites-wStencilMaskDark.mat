@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Sprites-wStencilMaskDark
   m_Shader: {fileID: 4800000, guid: a26debd1e5931ad47939fcd837d45b05, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA

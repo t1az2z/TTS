@@ -37,7 +37,7 @@ Shader "Custom/DefaultSprite-StencilObject"
 					Pass IncrSat
 				}
 
-				Blend DstAlpha OneMinusSrcAlpha
+				Blend DstAlpha OneMinusSrcColor
 				//Blend DstColor One
 				CGPROGRAM
 				#pragma vertex vert

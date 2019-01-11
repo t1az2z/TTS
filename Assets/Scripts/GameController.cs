@@ -109,7 +109,7 @@ public class GameController : MonoBehaviour {
 
     }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         resetersArray = null;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
