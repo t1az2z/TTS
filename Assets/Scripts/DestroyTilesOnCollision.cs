@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class DestroyTilesOnCollision : MonoBehaviour {
     DestructiblesBehaviour desBeh;
     public GameObject destroyParticle;

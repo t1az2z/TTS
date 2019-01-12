@@ -15645,9 +15645,9 @@ ParticleSystem:
       time: 0
       countCurve:
         serializedVersion: 2
-        minMaxState: 0
-        scalar: 8
-        minScalar: 0
+        minMaxState: 3
+        scalar: 6
+        minScalar: 4
         maxCurve:
           serializedVersion: 2
           m_Curve:
@@ -15696,8 +15696,8 @@ ParticleSystem:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-      cycleCount: 1
-      repeatInterval: 1000
+      cycleCount: 3
+      repeatInterval: 0.017
       probability: 1
   SizeModule:
     enabled: 1
@@ -19409,7 +19409,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -291150333
   m_SortingLayer: 3
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_RenderMode: 0
   m_SortMode: 3
   m_MinParticleSize: 0
@@ -19548,8 +19548,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.18
-      minScalar: 0.16
+      scalar: 0.17
+      minScalar: 0.14
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -24480,6 +24480,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   animator: {fileID: 0}
   wallslideParticles: {fileID: 1286438719890728}
+  controllsDisabledTimer: 0.2
   isDead: 0
   controllsEnabled: 1
   deathParticles: {fileID: 198297673802657020}
@@ -24494,6 +24495,7 @@ MonoBehaviour:
   jumpsCount: 0
   maxFallVelocity: -10
   groundCheckLength: 0.0625
+  landingTime: 0.14
   jumpParticles: {fileID: 198015253266034744}
   fallMultiplier: 1.2
   groundChecks:
@@ -24503,11 +24505,12 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 2304
-  dashTime: 0.19
+  dashTime: 0.2
   dashFreezeTime: 0.06
+  dashSpeed: 250
   dashAlow: 1
   dashRequest: 0
-  isDashing: 0
+  destroyWallsKnockback: {x: 0.8, y: 2}
   dashExpireTime: 0
   impulse: {fileID: 0}
   dashParticles: {fileID: 198934553973939342}
@@ -24524,10 +24527,10 @@ MonoBehaviour:
   wallJumped: 0
   wallJumping: 0
   wallJumpXVelocity: 5.5
-  initialWallSlidingVelocity: 1.5
-  maxlWallSlidingVelocity: 3
-  wallslidingVelocityStep: 0.38
   wallJumpForce: 11
+  initialWallSlidingVelocity: 0.7
+  maxlWallSlidingVelocity: 4
+  wallSlideTimeToReachMaxVelocity: 0.5
 --- !u!212 &212345021319634474
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24611,7 +24614,7 @@ MonoBehaviour:
     m_ImpulseChannel: 1
     m_RawSignal: {fileID: 11400000, guid: 87a08328ac25b034bb3af87ca44d7395, type: 2}
     m_AmplitudeGain: 0.3
-    m_FrequencyGain: 1
+    m_FrequencyGain: 0.7
     m_RepeatMode: 0
     m_Randomize: 0
     m_TimeEnvelope:
@@ -24621,43 +24624,61 @@ MonoBehaviour:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -1.4285814
-          outSlope: -1.4285814
+          inSlope: -1.0187492
+          outSlope: -1.0187492
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.3897447
-          value: 0.44321796
-          inSlope: -2.7728188
-          outSlope: -2.7728188
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.18067078
-        - serializedVersion: 3
           time: 1
           value: 0
-          inSlope: -1.0945947
-          outSlope: -1.0945947
-          tangentMode: 0
+          inSlope: -1.0187492
+          outSlope: -1.0187492
+          tangentMode: 34
           weightedMode: 0
-          inWeight: 0.15416664
+          inWeight: 0.33333334
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_DecayShape:
         serializedVersion: 2
-        m_Curve: []
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -3.3899162
+          outSlope: -3.3899162
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.14765128
+          value: 0.49947453
+          inSlope: -1.6759992
+          outSlope: -1.6759992
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.13250598
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.2505063
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_AttackTime: 0.1
       m_SustainTime: 0
       m_DecayTime: 0
-      m_ScaleWithImpact: 0
+      m_ScaleWithImpact: 1
       m_HoldForever: 0
     m_ImpactRadius: 100
     m_DirectionMode: 0

@@ -153,7 +153,8 @@ public class GameController : MonoBehaviour {
     {
         player.currentState = PlayerState.Dead;
         deaths++;
-        ui.DeathsTextUpdate();
+        if (ui != null)
+            ui.DeathsTextUpdate();
         player_animator.Play("Death");
         player.deathParticles.Play();
         if (deathReviveAnimationLength == 0)
@@ -162,7 +163,8 @@ public class GameController : MonoBehaviour {
         }
         yield return new WaitForSeconds(deathReviveAnimationLength);
         //player.isDead = true;
-        ui.SplashShow();
+        if (ui != null)
+            ui.SplashShow();
 
 
 
@@ -173,7 +175,8 @@ public class GameController : MonoBehaviour {
             if (reseter != null)
                 reseter.ReactivateAtPlayersDeath();
         }
-        ui.SplashHide();
+        if (ui != null)
+            ui.SplashHide();
         yield return new WaitForSeconds(ui.splashAnimationLength);
         player.animator.Play("Revive"); //todo get it out of here
         yield return new WaitForSeconds(deathReviveAnimationLength);

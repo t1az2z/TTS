@@ -16,7 +16,7 @@ public class DestructiblesBehaviour : MonoBehaviour {
         if (m_Destructible == null)
         {
             Debug.Log("Destructibles Tilemap is not assigned.");
-            m_Destructible = GameObject.Find("Destructibles").GetComponent<Tilemap>();
+            m_Destructible = GameObject.FindObjectOfType<DestroyTilesOnCollision>().GetComponent<Tilemap>();
         }
 	}
 	
