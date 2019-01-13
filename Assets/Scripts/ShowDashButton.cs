@@ -13,13 +13,26 @@ public class ShowDashButton : MonoBehaviour {
         }
 
         if (!Debug.isDebugBuild)
+        {
             button.SetActive(false);
-
+        }
     }
 
+#if !UNITY_WEBGL
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
         button.SetActive(true);
         gameObject.SetActive(false);
+        GameController.Instance.player.dashEnabled = true;
     }
+#endif
+
+#if UNITY_WEBGL
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        gameObject.SetActive(false);
+        GameController.Instance.player.dashEnabled = true;
+    }
+#endif
 }

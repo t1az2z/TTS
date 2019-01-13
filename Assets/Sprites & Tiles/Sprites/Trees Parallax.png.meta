@@ -6,6 +6,10 @@ TextureImporter:
     21300002: Trees Parallax_5
     21300004: Trees Parallax_2
     21300006: Trees Parallax_1
+    21300008: Trees Parallax_5
+    21300010: Trees Parallax_4
+    21300012: Trees Parallax_6
+    21300014: Trees Parallax_7
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -114,69 +118,17 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 182
-        width: 320
-        height: 180
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -160, y: 90}
-        - {x: -160, y: -90}
-        - {x: 160, y: -90}
-        - {x: 160, y: 90}
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f5f833da25a1af64b9515bb7fd8173d2
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Trees Parallax_5
-      rect:
-        serializedVersion: 2
-        x: 1
         y: 0
         width: 320
         height: 180
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -160, y: -90}
-        - {x: -160, y: 90}
-        - {x: 160, y: 90}
-        - {x: 160, y: -90}
+      outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0a0448ef53463804993c92241a182b89
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Trees Parallax_2
-      rect:
-        serializedVersion: 2
-        x: 332
-        y: 181
-        width: 310
-        height: 180
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 154, y: 90}
-        - {x: -155, y: 90}
-        - {x: -155, y: -90}
-        - {x: 155, y: -90}
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7d53c9e6c1cdf5741a1f1e3c88de6082
+      spriteID: 7950d127215bbbb44916ee920bce9de2
       vertices: []
       indices: 
       edges: []
@@ -188,19 +140,55 @@ TextureImporter:
         x: 322
         y: 0
         width: 320
-        height: 177
+        height: 180
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -160, y: -88.5}
-        - {x: -160, y: 88.5}
-        - {x: 160, y: 88.5}
-        - {x: 160, y: -88.5}
+      outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ecb668041c065484b859ff893073fe50
+      spriteID: 081676bbd22e9ed4bb841c9425fa87c7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Trees Parallax_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 182
+        width: 320
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9aaa3ec414b0ffc4b9d1053abc71b14c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Trees Parallax_5
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 182
+        width: 320
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d76a559814f4cee48a05095cf0d49723
       vertices: []
       indices: 
       edges: []

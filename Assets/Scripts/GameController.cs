@@ -41,6 +41,7 @@ public class GameController : MonoBehaviour {
     {
         SingletonImplementation();
         Application.targetFrameRate = targetFps;
+
     }
 
     private void SingletonImplementation()
@@ -61,9 +62,12 @@ public class GameController : MonoBehaviour {
         ui = FindObjectOfType<UIController>();
 
         SetPlayerReference();
+
         resetersArray = FindObjectsOfType<ReseterBehaviour>();
 
         previousCamera = currentCamera;
+
+
     }
 
 
@@ -80,6 +84,11 @@ public class GameController : MonoBehaviour {
     {
         player = FindObjectOfType<PlayerController>();
         player_animator = player.animator;
+
+        if (Debug.isDebugBuild)
+        {
+            player.dashEnabled = true;
+        }
     }
     private void Update()
     {

@@ -15,12 +15,12 @@ public class DestroyTilesOnCollision : MonoBehaviour {
                                                  new Vector3Int(1, -1, 0) };
     private void Start()
     {
-        desBeh = FindObjectOfType<DestructiblesBehaviour>();
+        desBeh = transform.parent.gameObject.GetComponent<DestructiblesBehaviour>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        PlayerController player = collision.collider.GetComponent<PlayerController>();
+        PlayerController player = GameController.Instance.player;
 
         if (player.currentState == PlayerState.WallBreak)
         {

@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Foldout("Dash parameters", true)]
+    public bool dashEnabled = false;
     int dashDirection = 0;
     [SerializeField] float dashTime = .14f;
     [SerializeField] float dashFreezeTime = .17f;
@@ -379,7 +380,7 @@ public class PlayerController : MonoBehaviour
             OnReleaseJump();
         }
 
-        if (SimpleInput.GetButtonDown("Dash"))
+        if (SimpleInput.GetButtonDown("Dash") && dashEnabled)
         {
             OnPressDash();
         }
