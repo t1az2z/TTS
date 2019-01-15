@@ -312,6 +312,10 @@ public class PlayerController : MonoBehaviour
                     currentState = PlayerState.Dash;
                 else if (rb.velocity.y < -3)
                     currentState = PlayerState.Fall;
+                else if (GroundCheck())
+                {
+                    currentState = PlayerState.Grounded;
+                }
                 break;
 
             case PlayerState.WallBreak:
