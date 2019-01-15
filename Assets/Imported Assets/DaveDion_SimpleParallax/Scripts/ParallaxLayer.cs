@@ -40,7 +40,7 @@ public class ParallaxLayer : MonoBehaviour {
         movementY = distance.y * speedY*direction;
 
         var nextPos = transform.position + new Vector3(movementX, movementY, transform.position.z);
-        transformNextPos = Vector3.Lerp(transform.position, nextPos, options.smoothing*Time.deltaTime) ;
+        transformNextPos = Vector3.Lerp(transform.position, nextPos, options.smoothing*Time.unscaledDeltaTime) ;
 
         transform.position = transformNextPos;
         previousCameraPosition = cameraTransform.position;

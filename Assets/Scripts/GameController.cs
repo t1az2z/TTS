@@ -12,7 +12,9 @@ public class GameController : MonoBehaviour {
     //cameras
     public GameObject currentCamera;
     private GameObject previousCamera;
-
+    public float timeToStopForScreenTransition = .7f;
+    bool timeStoped = false;
+    public float transitionMoveDistance = 2f;
 
     //player references
     [HideInInspector] public PlayerController player;
@@ -36,7 +38,7 @@ public class GameController : MonoBehaviour {
 
     //reseters
     ReseterBehaviour[] resetersArray;
-
+    
     void Awake()
     {
         SingletonImplementation();
@@ -127,10 +129,9 @@ public class GameController : MonoBehaviour {
         collectiblesCollected = 0;
     }
 
-    public void SwitchCamera(GameObject newCamera)
+    public void SwitchCamera(GameObject newCamera, bool stopTime)
     {
 
-        float timeToStop = .5f;
         previousCamera = currentCamera;
         currentCamera = newCamera;
 
@@ -139,14 +140,38 @@ public class GameController : MonoBehaviour {
         {
             currentCamera.SetActive(true);
             previousCamera.SetActive(false);
-            
-
+            if (!timeStoped && stopTime)
+            {
+                timeStoped = true;
+                MoveAtCameraTransition(previousCamera.transform.parent.position, currentCamera.transform.parent.position, player.transform, timeToStopForScreenTransition);
+            }
         }
         else if(previousCamera == currentCamera)
         {
             currentCamera.SetActive(true);
         }
 
+    }
+
+    public void MoveAtCameraTransition(Vector2 prevScreen, Vector2 nextScreen, Transform objToMove, float transitionTime, float timer = 0)
+    {
+        /*var currentPos = objToMove.position;
+        var t = 0f;
+        while (t<1)
+        {
+            t += Time.unscaledDeltaTime / transitionTime;
+            Vector3 destination = (nextScreen - prevScreen).normalized;
+            objToMove.transform.position = Vector3.Lerp(currentPos, destination*transitionMoveDistance, t); //возможет баг с суммой векторов
+            yield return null;
+        }*/
+        Vector2 direction = (nextScreen - prevScreen).normalized;
+        if (direction.y < .1f)
+            StartCoroutine(FreezeTime(timeToStopForScreenTransition));
+        if (timer < transitionTime)
+        {
+            objToMove.Translate(direction * transitionMoveDistance *(Time.unscaledDeltaTime * (transitionMoveDistance / transitionTime)));
+            timer += Time.unscaledDeltaTime;
+        }
     }
 
     public void SetChekpoint(Vector2 checkpoint)
@@ -219,13 +244,16 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator FreezeTime(float stopTime)
     {
+
         Time.timeScale = 0f;
-        float stopEndTime = Time.realtimeSinceStartup + stopTime;
+        /*float stopEndTime = Time.realtimeSinceStartup + stopTime;
         while (Time.realtimeSinceStartup < stopEndTime)
         {
             yield return 0;
-        }
+        }*/
+        yield return new WaitForSecondsRealtime(stopTime);
         Time.timeScale = 1f;
+        timeStoped = false;
     }
     //todo add stopframes on transition
 }

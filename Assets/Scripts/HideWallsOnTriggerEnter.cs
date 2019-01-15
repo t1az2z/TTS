@@ -8,6 +8,7 @@ public class HideWallsOnTriggerEnter : MonoBehaviour {
     bool isHiden = true;
 	void Start () {
         animator = GetComponent<Animator>();
+        animator.updateMode = AnimatorUpdateMode.UnscaledTime;
 	}
 	
     private void OnTriggerEnter2D(Collider2D collision)

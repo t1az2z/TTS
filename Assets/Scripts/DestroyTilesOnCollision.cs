@@ -24,7 +24,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
 
 
-        if (player.currentState == PlayerState.WallBreak)
+        if (player.currentState == PlayerState.Dash)
         {
             int xDirection = player.isFacingLeft ? -1 : 1;
             Vector3 hitPosition = Vector3.zero;
@@ -54,7 +54,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
     private void OnCollisionStay2D(Collision2D collision)
     {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player.currentState == PlayerState.WallBreak)
+        if (player.currentState == PlayerState.Dash)
         {
             int xDirection = player.isFacingLeft ? -1 : 1;
             Vector3 hitPosition = Vector3.zero;

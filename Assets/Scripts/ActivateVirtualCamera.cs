@@ -4,7 +4,6 @@ using UnityEngine;
 public class ActivateVirtualCamera : MonoBehaviour {
 
     GameObject vcam;
-
     private void Awake()
     {
         vcam = transform.GetChild(0).gameObject;
@@ -18,14 +17,14 @@ public class ActivateVirtualCamera : MonoBehaviour {
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameController.Instance.SwitchCamera(vcam);
+        GameController.Instance.SwitchCamera(vcam, true);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if(!vcam.activeSelf)
         {
-            GameController.Instance.SwitchCamera(vcam);
+            GameController.Instance.SwitchCamera(vcam, false);
         }
     }
 }

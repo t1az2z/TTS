@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem deathParticles;
     [Space(8)]
     [Foldout("Run parameters", true)]
-    [SerializeField] float runSpeed;
+    public float runSpeed;
     public bool isFacingLeft;
     bool isRunning;
     float xInput;
