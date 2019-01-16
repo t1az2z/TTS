@@ -11,7 +11,7 @@ public class DisappearingPlatform : MonoBehaviour {
     public Transform visuals;
     [Tooltip("Particle system for disappearing block. Should be the second child of an object")]
     public ParticleSystem particles;
-    GameController gc;
+
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +20,6 @@ public class DisappearingPlatform : MonoBehaviour {
             Debug.Log("Visuals reference not set");
             visuals =  transform.GetChild(0);
         }
-        gc = FindObjectOfType<GameController>();
         if (particles == null)
         {
             Debug.Log("Particles reference not set");
@@ -32,7 +31,7 @@ public class DisappearingPlatform : MonoBehaviour {
 	}
     void Update()
     {
-        if (gc != null && gc.player.isDead)
+        if (GameController.Instance.player.isDead)
         {
             anim.SetTrigger("Reset");
         }

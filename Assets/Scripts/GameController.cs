@@ -164,6 +164,7 @@ public class GameController : MonoBehaviour {
             objToMove.transform.position = Vector3.Lerp(currentPos, destination*transitionMoveDistance, t); //возможет баг с суммой векторов
             yield return null;
         }*/
+
         Vector2 direction = (nextScreen - prevScreen).normalized;
         if (direction.y < .1f)
             StartCoroutine(FreezeTime(timeToStopForScreenTransition));

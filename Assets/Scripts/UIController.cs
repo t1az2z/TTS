@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour {
 
     public static UIController Instance;
-    public GameController gc;
+
     
 
     //SplashScreen
@@ -21,9 +21,8 @@ public class UIController : MonoBehaviour {
     int collectiblesAmmount;
 
 
-    void Start () {
-
-        gc = FindObjectOfType<GameController>();
+    void Start ()
+    {
         SetSplashScreenReference();
         SetTextFieldsReferences();
         splashAnimationLength = CountSplashAnimationLength();
@@ -72,27 +71,30 @@ public class UIController : MonoBehaviour {
             Debug.Log("Death Counter Reference lost. Fix It");
             deathsCounter = transform.Find("Deaths/Counter").GetComponent<Text>();
         }
-        deathsCounter.text = "x " + gc.deaths.ToString();
+        deathsCounter.text = "x " + GameController.Instance.deaths.ToString();
 
         if (collectiblesCounter == null)
         {
             Debug.Log("Collectibles Counter Reference lost. Fix It");
             collectiblesCounter = transform.Find("Collectibles/Counter").GetComponent<Text>();
         }
-        collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString() +"/"+ collectiblesAmmount;
+        collectiblesCounter.text = "x " + GameController.Instance.collectiblesCollected.ToString() +"/"+ collectiblesAmmount;
 
 
     }
 
     public void DeathsTextUpdate()
     {
-        deathsCounter.text = "x " + gc.deaths.ToString();
+        deathsCounter.text = "x " + GameController.Instance.deaths.ToString();
     }
 
     public void CollectiblesTextUpdate()
     {
-        collectiblesCounter.text = "x " + gc.collectiblesCollected.ToString() + "/" + collectiblesAmmount;
+        collectiblesCounter.text = "x " + GameController.Instance.collectiblesCollected.ToString() + "/" + collectiblesAmmount;
     }
     #endregion
-
+    public void ReloadLevel()
+    {
+        GameController.Instance.RestartLevel();
+    }
 }

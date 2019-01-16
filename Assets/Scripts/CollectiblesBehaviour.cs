@@ -14,13 +14,11 @@ public class CollectiblesBehaviour : MonoBehaviour {
     private Vector3 velocity = Vector3.zero;
     public Vector3 followingOffset = new Vector3(-1, 1, 0);
     [SerializeField] float destroyDelay = .26f;
-    private GameController gc;
     bool collected = false;
     GameObject lightObject;
 
 	void Start ()
     {
-        gc = FindObjectOfType<GameController>();
         initialPosition = transform.position;
         animator = GetComponent<Animator>();
         lightObject = transform.GetChild(0).gameObject;
@@ -70,7 +68,7 @@ public class CollectiblesBehaviour : MonoBehaviour {
                 animator.Play("Collect");
                 lightObject.SetActive(false);
                 Destroy(gameObject, destroyDelay);
-                gc.CollectiblesUpdate();
+                GameController.Instance.CollectiblesUpdate();
                 collected = false;
             }
         }
@@ -84,8 +82,8 @@ public class CollectiblesBehaviour : MonoBehaviour {
 
             animator.Play("Collect");
             Destroy(gameObject, destroyDelay);
-            gc.applesCollected++;
-            print(gc.applesCollected);
+            GameController.Instance.applesCollected++;
+            print(GameController.Instance.applesCollected);
         }
         print("Coroutie running");*/
 
