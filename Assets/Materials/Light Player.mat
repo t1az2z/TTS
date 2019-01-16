@@ -139,7 +139,7 @@ Material:
     - _VerticalTranslation: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.759434, g: 0.9869964, b: 1, a: 0.1882353}
+    - _Color: {r: 0.6650944, g: 0.98352927, b: 1, a: 0.1882353}
     - _EmissionColor: {r: 4.2870936, g: 4.2870936, b: 5.723607, a: 0.07058824}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
