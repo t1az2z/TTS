@@ -42,7 +42,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
                 }
             }
             player.controllsDisabledTimer = disabledTime;
-            //player.currentState = PlayerState.WallBreak;
+            player.currentState = PlayerState.WallBreak;
             player.dashExpireTime = 0;
             player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
@@ -72,7 +72,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
                 }
             }
             player.controllsDisabledTimer = disabledTime;
-            //player.currentState = PlayerState.WallBreak;
+            player.currentState = PlayerState.WallBreak;
             player.dashExpireTime = 0;
             player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             player.impulse.GenerateImpulse(new Vector3(0, 1, 0));

@@ -779,19 +779,19 @@ public class PlayerController : MonoBehaviour
             dashRequest = false;
             wsParticlesEmissionModule.enabled = false;
         }
-        else if (collision.collider.CompareTag("Destructibles") && currentState == PlayerState.Dash)
+        /*else if (collision.collider.CompareTag("Destructibles") && currentState == PlayerState.Dash)
         {
             currentState = PlayerState.WallBreak;
-        }
+        }*/
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    /*private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Destructibles") && currentState == PlayerState.Dash)
         {
             currentState = PlayerState.WallBreak;
         }
-    }
+    }*/
     #endregion
 
     private void OnDrawGizmosSelected()
