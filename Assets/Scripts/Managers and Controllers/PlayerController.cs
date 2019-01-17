@@ -835,5 +835,4 @@ public enum PlayerState
     Disabled,
     WallBreak,
     SpringJump,
-
 }
