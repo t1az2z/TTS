@@ -823,16 +823,4 @@ public class PlayerController : MonoBehaviour
     }
 }
 
-public enum PlayerState
-{
-    Grounded,
-    Jump,
-    Dash,
-    WallSlide,
-    WallJump,
-    Fall,
-    Dead,
-    Disabled,
-    WallBreak,
-    SpringJump,
-}
+

@@ -18,7 +18,7 @@ public class DemoScene : MonoBehaviour
 	private CharacterController2D _controller;
 	private Animator _animator;
 	private RaycastHit2D _lastControllerColliderHit;
-	private Vector3 _velocity;
+	public Vector3 _velocity;
 
 
     //my additions
