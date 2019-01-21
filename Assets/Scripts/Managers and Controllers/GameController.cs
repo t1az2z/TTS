@@ -18,9 +18,11 @@ public class GameController : MonoBehaviour {
 
     //player references
     [HideInInspector] public PlayerController player;
-    Animator player_animator;
     AnimatorClipInfo[] p_CurrentClipInfo;
     float deathReviveAnimationLength;
+
+    //global variables
+    //public float gravity = -25f;
 
     //todo перенести логику обработки переменных полностью в GameController
     [HideInInspector]
@@ -85,7 +87,6 @@ public class GameController : MonoBehaviour {
     private void SetPlayerReference()
     {
         player = FindObjectOfType<PlayerController>();
-        player_animator = player.animator;
 
         if (Debug.isDebugBuild)
         {
@@ -115,7 +116,6 @@ public class GameController : MonoBehaviour {
         {
             
             StartCoroutine("DeathCoroutine");
-            player.isDead = true;
         }
 
     }
@@ -143,7 +143,7 @@ public class GameController : MonoBehaviour {
             if (!timeStoped && stopTime)
             {
                 timeStoped = true;
-                MoveAtCameraTransition(previousCamera.transform.parent.position, currentCamera.transform.parent.position, player.transform, timeToStopForScreenTransition);
+                //MoveAtCameraTransition(previousCamera.transform.parent.position, currentCamera.transform.parent.position, player.transform, timeToStopForScreenTransition);
             }
         }
         else if(previousCamera == currentCamera)
@@ -186,11 +186,11 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator DeathCoroutine()
     {
-        player.currentState = PlayerState.Dead;
+        player._currentState = PlayerState.Dead;
         deaths++;
         if (ui != null)
             ui.DeathsTextUpdate();
-        player_animator.Play("Death");
+        player.animator.Play("Death");
         player.deathParticles.Play();
         if (deathReviveAnimationLength == 0)
         {
@@ -217,15 +217,16 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(deathReviveAnimationLength);
         //player.isDead = false;
         //player.controllsEnabled = true;
-        player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        player.currentGravity = player.gravity;
         player.jumpRequest = false;
         player.dashRequest = false;
-        player.currentState = PlayerState.Fall;
+        player.gravityActive = true;
+        player._currentState = PlayerState.Fall;
     }
 
     private void CountDeathReviveAnimationLength()
     {
-        p_CurrentClipInfo = player_animator.GetCurrentAnimatorClipInfo(0);
+        p_CurrentClipInfo = player.animator.GetCurrentAnimatorClipInfo(0);
         deathReviveAnimationLength = p_CurrentClipInfo[0].clip.length;
     }
 

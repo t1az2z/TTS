@@ -31,7 +31,7 @@ public class DisappearingPlatform : MonoBehaviour {
 	}
     void Update()
     {
-        if (GameController.Instance.player.isDead)
+        if (GameController.Instance.player._currentState == PlayerState.Dead)
         {
             anim.SetTrigger("Reset");
         }
@@ -39,12 +39,12 @@ public class DisappearingPlatform : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.GetComponent<PlayerController>().currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
+        if (collision.collider.gameObject.GetComponent<PlayerController>()._currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
             anim.SetBool("Active", false);
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.GetComponent<PlayerController>().currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
+        if (collision.collider.gameObject.GetComponent<PlayerController>()._currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
             anim.SetBool("Active", false);
 
     }

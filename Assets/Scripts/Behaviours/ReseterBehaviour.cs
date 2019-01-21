@@ -34,7 +34,7 @@ public class ReseterBehaviour : MonoBehaviour {
     {
         if (player != null)
         {
-            if (player.currentState == PlayerState.Dead)
+            if (player._currentState == PlayerState.Dead)
             {
                 StopAllCoroutines();
                 sr.enabled = true;
@@ -48,16 +48,16 @@ public class ReseterBehaviour : MonoBehaviour {
     {
         player = collision.GetComponent<PlayerController>();
 
-        if (isActive && player.currentState != PlayerState.Dead)
+        if (isActive && player._currentState != PlayerState.Dead)
         {
             particles.Play();
             if (resetDash)
             {
-                if (player.currentState != PlayerState.Dash)
+                if (player._currentState != PlayerState.Dash)
                 {
                     player.dashAlow = true;
                 }
-                else if (player.currentState == PlayerState.Dash)
+                else if (player._currentState == PlayerState.Dash)
                 {
                     StartCoroutine(ResetDashAfterDelay(waitTime));
                 }
@@ -80,7 +80,7 @@ public class ReseterBehaviour : MonoBehaviour {
         WaitForSeconds delay = new WaitForSeconds(.01f);
         while (time > 0)
         {
-            if (player.currentState == PlayerState.Dash)
+            if (player._currentState == PlayerState.Dash)
             {
                 yield return delay;
             }

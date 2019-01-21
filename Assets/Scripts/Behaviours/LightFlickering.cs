@@ -18,7 +18,7 @@ public class LightFlickering : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         anim.SetTrigger("Walk Near");
-        if (collision.gameObject.GetComponent<PlayerController>().currentState == PlayerState.Dash)
+        if (collision.gameObject.GetComponent<PlayerController>()._currentState == PlayerState.Dash)
             anim.Play("Off");
     }
 

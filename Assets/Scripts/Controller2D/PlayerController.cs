@@ -4,7 +4,7 @@ using Prime31;
 using Homebrew;
 
 [RequireComponent(typeof(CharacterController2D))]
-public class NewPlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
 
     #region Properties
@@ -13,12 +13,13 @@ public class NewPlayerController : MonoBehaviour
     public Animator animator;
     private CharacterController2D controller;
     public Vector3 velocity;
+    public float controllsDisabledTimer = .2f;
     //private RaycastHit2D _lastControllerColliderHit;
     public bool controllsEnabled = true;
     public bool gravityActive = true;
     //gravity
     public float gravity = -25f;
-    private float currentGravity;
+    public float currentGravity;
     public float fallGravityMultiplier = 1.2f;
     bool isGrounded;
     public float maxFallVelocity = -10f;
@@ -29,11 +30,12 @@ public class NewPlayerController : MonoBehaviour
     private PlayerState _prevState;
     private float timeInState = 0f;
     private float timeInPrevState;
+    public ParticleSystem deathParticles;
 
     //movement
     public int xInput;
     bool isRunning;
-    bool isFacingLeft;
+    public bool isFacingLeft;
     public float runSpeed = 3f;
     public float groundDamping = 50f;
 
@@ -78,6 +80,10 @@ public class NewPlayerController : MonoBehaviour
         controller.onTriggerStayEvent += onTriggerStayEvent;
         controller.onTriggerExitEvent += onTriggerExitEvent;
     }
+    private void Start()
+    {
+        impulse = GetComponent<CinemachineImpulseSource>();
+    }
 
     private void Update()
     {
@@ -85,9 +91,16 @@ public class NewPlayerController : MonoBehaviour
             PcControlls();
         xInput = (int)SimpleInput.GetAxisRaw("Horizontal");
 
+        if (_currentState == PlayerState.Dead)
+        {
+            dashRequest = false;
+            jumpRequest = false;
+            dashAlow = false;
+        }
+        if (_currentState == PlayerState.Fall || _currentState == PlayerState.Grounded || _currentState == PlayerState.WallSlide || _currentState == PlayerState.SpringJump)
+            GravityScaleChange();
 
-
-        if(_prevState != _prevFrameState && _prevFrameState != _currentState)
+        if (_prevState != _prevFrameState && _prevFrameState != _currentState)
             _prevState = _currentState;
         _prevFrameState = _currentState;
 
@@ -141,6 +154,13 @@ public class NewPlayerController : MonoBehaviour
                     GroundInteractionLogic();
                 }
                 break;
+
+            case PlayerState.Dead:
+                gravityActive = false;
+                velocity = Vector2.zero;
+                reachedMaxFallVelocity = false;
+                GameController.Instance.DeathCoroutine();
+                break;
         }
         CountTimeInState();
         GravityScaleChange();
@@ -167,9 +187,9 @@ public class NewPlayerController : MonoBehaviour
 
             if (dashExpireTime == dashTime)
             {
-                //StartCoroutine(GameController.Instance.FreezeTime(dashFreezeTime));
+                StartCoroutine(GameController.Instance.FreezeTime(dashFreezeTime));
                 dashDirection = isFacingLeft ? -1 : 1;
-                //impulse.GenerateImpulse();
+                impulse.GenerateImpulse();
             }
 
             if (dashExpireTime > Mathf.Epsilon && dashAlow)
@@ -273,7 +293,7 @@ public class NewPlayerController : MonoBehaviour
         {
             animator.Play("Climb");
         }
-        else
+        else if (_currentState != PlayerState.Dead)
             animator.Play("Idle");
 
     }
@@ -408,7 +428,14 @@ public class NewPlayerController : MonoBehaviour
     void onControllerCollider(RaycastHit2D hit)
     {
         // logs any collider hits if uncommented. it gets noisy so it is commented out for the demo
-        //Debug.Log( "flags: " + _controller.collisionState + ", hit.normal: " + hit.normal );
+        //Debug.Log( "flags: " + controller.collisionState + ", hit.normal: " + hit.normal );
+        if (hit.collider.CompareTag("Hazards"))
+        {
+            StartCoroutine(GameController.Instance.DeathCoroutine());
+            dashRequest = false;
+            //wsParticlesEmissionModule.enabled = false;
+        }
+
     }
 
 

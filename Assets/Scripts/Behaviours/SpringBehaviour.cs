@@ -26,12 +26,12 @@ public class SpringBehaviour : MonoBehaviour {
         {
             //player.isDashing = false;
             //player.dashExpireTime = 0;
-            player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            player.gravityActive = true;
             anim.Play("Spring");
             player.dashRequest = false;
-            player.currentState = PlayerState.SpringJump;
+            player._currentState = PlayerState.SpringJump;
 
-            player.rb.velocity = springVector;
+            player.velocity = springVector;
             player.dustParticles.Play();
             player.jumpsCount = jumpsAfterSpring;
             player.dashAlow = true;

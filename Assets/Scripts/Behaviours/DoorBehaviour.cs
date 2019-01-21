@@ -20,7 +20,7 @@ public class DoorBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (GameController.Instance.player.currentState == PlayerState.Dead)
+        if (GameController.Instance.player._currentState == PlayerState.Dead)
             DoorReset();
     }
     public void ActivateKey()

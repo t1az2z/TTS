@@ -24,7 +24,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
 
 
-        if (player.currentState == PlayerState.Dash)
+        if (player._currentState == PlayerState.Dash)
         {
             int xDirection = player.isFacingLeft ? -1 : 1;
             Vector3 hitPosition = Vector3.zero;
@@ -42,9 +42,9 @@ public class DestroyTilesOnCollision : MonoBehaviour {
                 }
             }
             player.controllsDisabledTimer = disabledTime;
-            player.currentState = PlayerState.WallBreak;
+            player._currentState = PlayerState.WallBreak;
             player.dashExpireTime = 0;
-            player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            player.gravityActive = true;
             player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
 
         }
@@ -54,7 +54,7 @@ public class DestroyTilesOnCollision : MonoBehaviour {
     private void OnCollisionStay2D(Collision2D collision)
     {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player.currentState == PlayerState.Dash)
+        if (player._currentState == PlayerState.Dash)
         {
             int xDirection = player.isFacingLeft ? -1 : 1;
             Vector3 hitPosition = Vector3.zero;
@@ -72,9 +72,9 @@ public class DestroyTilesOnCollision : MonoBehaviour {
                 }
             }
             player.controllsDisabledTimer = disabledTime;
-            player.currentState = PlayerState.WallBreak;
+            player._currentState = PlayerState.WallBreak;
             player.dashExpireTime = 0;
-            player.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            player.gravityActive = true;
             player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
 
         }
