@@ -26,23 +26,37 @@ public class CharacterController2D : MonoBehaviour
 		public bool below;
 		public bool becameGroundedThisFrame;
 		public bool wasGroundedLastFrame;
+        public int wallDirLastFrame = 0;
 
 		public bool hasCollision()
 		{
 			return below || right || left || above;
 		}
 
-
+        
 		public void reset()
 		{
-			right = left = above = below = becameGroundedThisFrame = false;
+			left = right = above = below = becameGroundedThisFrame = false;
 
+                //if (wallDirLastFrame == 1)
+                //{
+                //    left = false;
+                //    right = true;
+                //}
+                //else if (wallDirLastFrame == -1)
+                //{
+                //    left = true;
+                //    right = false;
+                //}
+                //else
+                //    left = right = false;
+            
 		}
 
 
 		public override string ToString()
 		{
-			return string.Format( "[CharacterCollisionState2D] r: {0}, l: {1}, a: {2}, b: {3},  wasGroundedLastFrame: {4}, becameGroundedThisFrame: {5}, layerMask: {6}",
+			return string.Format( "[CharacterCollisionState2D] r: {0}, l: {1}, a: {2}, b: {3},  wasGroundedLastFrame: {4}, becameGroundedThisFrame: {5}",
 			                     right, left, above, below, wasGroundedLastFrame, becameGroundedThisFrame);
 		}
 	}
@@ -122,13 +136,13 @@ public class CharacterController2D : MonoBehaviour
 	[HideInInspector][NonSerialized]
 	public Vector3 velocity;
 	public bool isGrounded { get { return collisionState.below; } }
-    /*public int wallDirX { get {if (collisionState.left)
+    public int wallDirX { get {if (collisionState.left)
                                     return -1;
                                else if (collisionState.right)
                                    return 1;
                                else
                                    return 0;}
-                        }*/
+                        }
 	const float kSkinWidthFloatFudgeFactor = 0.001f;
 
 	#endregion
@@ -222,12 +236,16 @@ public class CharacterController2D : MonoBehaviour
 	{
 		// save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
 		collisionState.wasGroundedLastFrame = collisionState.below;
-        //coiilisionState.wallhitLastFrame
+        if (collisionState.right)
+            collisionState.wallDirLastFrame = 1;
+        else if (collisionState.left)
+            collisionState.wallDirLastFrame = -1;
+        else
+            collisionState.wallDirLastFrame = 0;
 
 		// clear our state
 		collisionState.reset();
 		_raycastHitsThisFrame.Clear();
-		//_isGoingUpSlope = false;
 
 		primeRaycastOrigins();
 
