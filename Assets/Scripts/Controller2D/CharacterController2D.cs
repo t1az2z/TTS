@@ -136,14 +136,20 @@ public class CharacterController2D : MonoBehaviour
 	[HideInInspector][NonSerialized]
 	public Vector3 velocity;
 	public bool isGrounded { get { return collisionState.below; } }
-    public int wallDirX { get {if (collisionState.left)
-                                    return -1;
-                               else if (collisionState.right)
-                                   return 1;
-                               else
-                                   return 0;}
-                        }
-	const float kSkinWidthFloatFudgeFactor = 0.001f;
+    public int faceDir;
+
+    //public int wallDirX { get
+    //        {
+    //            //if (collisionState.right)
+    //            //    return 1;
+    //            //else if (collisionState.left)
+    //            //    return -1;
+    //            //else
+    //            //    return 0;
+    //            return collisionState.left ? -1 : 1;
+    //        }
+    //    }
+    const float kSkinWidthFloatFudgeFactor = 0.001f;
 
 	#endregion
 
@@ -234,14 +240,16 @@ public class CharacterController2D : MonoBehaviour
 	/// <param name="deltaMovement">Delta movement.</param>
 	public void move( Vector3 deltaMovement )
 	{
+        if (Mathf.Abs(deltaMovement.x) >= .0625f)
+            faceDir = (int)Mathf.Sign(deltaMovement.x);
 		// save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
 		collisionState.wasGroundedLastFrame = collisionState.below;
-        if (collisionState.right)
-            collisionState.wallDirLastFrame = 1;
-        else if (collisionState.left)
-            collisionState.wallDirLastFrame = -1;
-        else
-            collisionState.wallDirLastFrame = 0;
+        //if (collisionState.right)
+        //    collisionState.wallDirLastFrame = 1;
+        //else if (collisionState.left)
+        //    collisionState.wallDirLastFrame = -1;
+        //else
+        //    collisionState.wallDirLastFrame = 0;
 
 		// clear our state
 		collisionState.reset();
@@ -276,7 +284,7 @@ public class CharacterController2D : MonoBehaviour
 				onControllerCollidedEvent( _raycastHitsThisFrame[i] );
 		}
 
-		ignoreOneWayPlatformsThisFrame = false;
+		//ignoreOneWayPlatformsThisFrame = false;
 	}
 
 
@@ -339,44 +347,55 @@ public class CharacterController2D : MonoBehaviour
 	/// </summary>
 	void moveHorizontally( ref Vector3 deltaMovement )
 	{
-		var isGoingRight = deltaMovement.x > 0;
+            //var isGoingRight = deltaMovement.x > 0;
+            //var isGoingLeft = deltaMovement.x < 0;
+        float rayDirectionX = faceDir;
 		var rayDistance = Mathf.Abs( deltaMovement.x ) + _skinWidth;
-		var rayDirection = isGoingRight ? Vector2.right : -Vector2.right;
-		var initialRayOrigin = isGoingRight ? _raycastOrigins.bottomRight : _raycastOrigins.bottomLeft;
+            if (Mathf.Abs(deltaMovement.x) < skinWidth)
+                rayDistance = 2 * skinWidth;
+		var initialRayOrigin = faceDir == 1 ? _raycastOrigins.bottomRight : _raycastOrigins.bottomLeft;
+        
 
 		for( var i = 0; i < totalHorizontalRays; i++ )
 		{
 			var ray = new Vector2( initialRayOrigin.x, initialRayOrigin.y + i * _verticalDistanceBetweenRays );
 
-			DrawRay( ray, rayDirection * rayDistance, Color.red );
+			DrawRay( ray, rayDirectionX * Vector2.right, Color.red );
 
-			_raycastHit = Physics2D.Raycast( ray, rayDirection, rayDistance, platformMask & ~oneWayPlatformMask );
+			_raycastHit = Physics2D.Raycast( ray, rayDirectionX*Vector2.right, rayDistance, platformMask & ~oneWayPlatformMask );
 
 			if( _raycastHit )
 			{
-                
-				// set our new deltaMovement and recalculate the rayDistance taking it into account
-				deltaMovement.x = _raycastHit.point.x - ray.x;
-				rayDistance = Mathf.Abs( deltaMovement.x );
+                if (_raycastHit.distance == 0)
+                    continue;
+                // set our new deltaMovement and recalculate the rayDistance taking it into account
+                //deltaMovement.x = _raycastHit.point.x - ray.x;
+                deltaMovement.x = (_raycastHit.distance - skinWidth) * rayDirectionX;
+                rayDistance = _raycastHit.distance;
+
+                collisionState.left = rayDirectionX == -1;
+                collisionState.right = rayDirectionX == 1;
+				//rayDistance = Mathf.Abs( deltaMovement.x );
 
 				// remember to remove the skinWidth from our deltaMovement
-				if( isGoingRight )
-				{
-					deltaMovement.x -= _skinWidth;
-					collisionState.right = true;
-				}
-				else
-				{
-					deltaMovement.x += _skinWidth;
-					collisionState.left = true;
-				}
+				//if( collisionState.faceDir == 1 )
+				//{
+				//	deltaMovement.x -= _skinWidth;
+				//	collisionState.right = true;
+				//}
+				//else if (collisionState.faceDir == -1)
+    //            {
+				//	deltaMovement.x += _skinWidth;
+				//	collisionState.left = true;
+				//}
+
                 
 				_raycastHitsThisFrame.Add( _raycastHit );
 
 				// we add a small fudge factor for the float operations here. if our rayDistance is smaller
 				// than the width + fudge bail out because we have a direct impact
-				if( rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor )
-					break;
+				//if( rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor )
+				//	break;
 			}
 		}
 	}

@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 {
 
     #region Properties
+    
     //generals
     SpriteRenderer spriteRenderer;
     public Animator animator;
@@ -69,6 +70,8 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     [Foldout("Wall jump/slide parameters", true)]
+    int wallDirX;
+    bool wallHit;
     public bool wallJumped;
     public bool wallJumping;
     public float wallJumpXVelocity = 5f;
@@ -104,6 +107,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        wallDirX = controller.collisionState.left ? -1 : 1;
+        wallHit = controller.collisionState.left || controller.collisionState.right;
         if (controllsEnabled)
             PcControlls();
         xInput = (int)SimpleInput.GetAxisRaw("Horizontal");
@@ -144,7 +149,7 @@ public class PlayerController : MonoBehaviour
                     _currentState = PlayerState.Fall;
                 else if (velocity.y < -3f && jumpsCount == 2)
                     _currentState = PlayerState.Fall;
-                else if (controller.wallDirX != 0)
+                else if (wallHit)
                     _currentState = PlayerState.WallSlide;
                 else if (GroundCheck())
                 {
@@ -167,7 +172,7 @@ public class PlayerController : MonoBehaviour
                     _currentState = PlayerState.Jump;
                     JumpLogicProcessing();
                 }
-                else if (controller.wallDirX != 0)
+                else if (wallHit)
                     _currentState = PlayerState.WallSlide;
                 else if (GroundCheck())
                 {
@@ -179,12 +184,12 @@ public class PlayerController : MonoBehaviour
             case PlayerState.WallSlide:
                 var wsParticlesEmissionModule = wallslideParticles.GetComponent<ParticleSystem>().emission;
                 reachedMaxFallVelocity = false;
-                WallSlideLogicProcessing(controller.wallDirX, wsParticlesEmissionModule);
+                WallSlideLogicProcessing(wallDirX, wsParticlesEmissionModule);
 
                 if (jumpRequest)
                 {
                     wsParticlesEmissionModule.enabled = false;
-                    if (Mathf.Sign(xInput) == controller.wallDirX)
+                    if (Mathf.Sign(xInput) == wallDirX)
                         _currentState = PlayerState.WallJump;
                     else
                         _currentState = PlayerState.Jump;
@@ -199,7 +204,7 @@ public class PlayerController : MonoBehaviour
                     wsParticlesEmissionModule.enabled = false;
                     _currentState = PlayerState.Grounded;
                 }
-                else if (controller.wallDirX == 0 && velocity.y > 0)
+                else if (!wallHit && velocity.y > 0)
                 {
                     _currentState = PlayerState.Jump;
                     jumpsCount = 1;
@@ -208,7 +213,6 @@ public class PlayerController : MonoBehaviour
 
             //case PlayerState.WallJump:
 
-            //    wallDir = WallHitCheck();
             //    if (jumpsCount < 1 && jumpRequest)
             //        WallJumpLogicProcessing(wallDir);
             //    else if (jumpsCount >= 1 && jumpRequest)
@@ -262,15 +266,16 @@ public class PlayerController : MonoBehaviour
     private void WallSlideLogicProcessing(int wallDirX, ParticleSystem.EmissionModule wsEmission)
     {
         WallsInteractionLogic();
-        print(controller.wallDirX);
-        if (wallDirX == -1)
+        //print(controller.wallDirX);
+
+        if (wallDirX == -1 )
             wallslideParticles.transform.localPosition = new Vector2(-.14f, wallslideParticles.transform.localPosition.y);
         else if (wallDirX == 1)
             wallslideParticles.transform.localPosition = new Vector2(.14f, wallslideParticles.transform.localPosition.y);
-        if ((wallDirX == -1 || wallDirX == 1) && Mathf.Sign(xInput) == wallDirX && xInput != 0)
+        if (wallHit && Mathf.Sign(xInput) == wallDirX && xInput != 0)
         {
             wsEmission.enabled = true;
-            if (velocity.y <= 0)
+            if (velocity.y < 0)
             {
                 if (wsTimeTRMV > 0)
                 {
@@ -300,26 +305,26 @@ public class PlayerController : MonoBehaviour
         jumpsCount = 0;
     }
 
-    /*private void WallJumpingHorizontalMovemetn()
-    {
+    //private void WallJumpingHorizontalMovemetn()
+    //{
 
-        rb.AddForce(new Vector2(xInput * runSpeed * 480 * Time.fixedDeltaTime, 0), ForceMode2D.Force);
-        if (rb.velocity.x > wallJumpXVelocity)
-        {
-            velocity.x = 5f;
-            rb.velocity = velocity;
-        }
-        else if (rb.velocity.x < -wallJumpXVelocity)
-        {
-            velocity.x = -5f;
-            rb.velocity = velocity;
-        }
-        if (xInput == 0)
-        {
-            velocity.x = 0;
-            rb.velocity = velocity;
-        }
-    }*/
+    //    rb.AddForce(new Vector2(xInput * runSpeed * 480 * Time.fixedDeltaTime, 0), ForceMode2D.Force);
+    //    if (rb.velocity.x > wallJumpXVelocity)
+    //    {
+    //        velocity.x = 5f;
+    //        rb.velocity = velocity;
+    //    }
+    //    else if (rb.velocity.x < -wallJumpXVelocity)
+    //    {
+    //        velocity.x = -5f;
+    //        rb.velocity = velocity;
+    //    }
+    //    if (xInput == 0)
+    //    {
+    //        velocity.x = 0;
+    //        rb.velocity = velocity;
+    //    }
+    //}
 
     public void Dash()
     {
@@ -508,12 +513,12 @@ public class PlayerController : MonoBehaviour
         isRunning = Mathf.Abs(velocity.x) > .01f;
         if (_currentState != PlayerState.WallSlide && _currentState != PlayerState.WallBreak && _prevFrameState != PlayerState.WallBreak && isRunning)
         {
-            if (velocity.x < .01f && xInput < .01f)
+            if (controller.faceDir == -1 && xInput < .01f)
             {
                 spriteRenderer.flipX = true;
                 isFacingLeft = true;
             }
-            else if (velocity.x > .01f && xInput > .01f)
+            else if (controller.faceDir == 1 && xInput > .01f)
             {
                 spriteRenderer.flipX = false;
                 isFacingLeft = false;
@@ -521,12 +526,12 @@ public class PlayerController : MonoBehaviour
         }
         else if (_currentState == PlayerState.WallSlide)
         {
-            if (controller.wallDirX == -1)
+            if (wallDirX == -1)
             {
                 spriteRenderer.flipX = true;
                 isFacingLeft = true;
             }
-            else if (controller.wallDirX == 1)
+            else if (wallDirX == 1)
             {
                 spriteRenderer.flipX = false;
                 isFacingLeft = false;
