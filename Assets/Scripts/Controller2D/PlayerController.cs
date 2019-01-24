@@ -257,6 +257,32 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
 
+            case PlayerState.WallBreak:
+                dashExpireTime = 0;
+                dashRequest = false;
+                dashParticles.Stop();
+                if (controllsDisabledTimer > 0)
+                {
+
+                    velocity = new Vector2(-dashDirection * destroyWallsKnockback.x, destroyWallsKnockback.y);
+
+                    controllsDisabledTimer -= Time.fixedDeltaTime;
+                    dashAlow = true;
+                    jumpsCount = 0;
+                }
+                else
+                {
+                    if (GroundCheck())
+                    {
+                        _currentState = PlayerState.Grounded;
+                    }
+                    else
+                    {
+                        _currentState = PlayerState.Fall;
+                    }
+                }
+                break;
+
             case PlayerState.Dead:
                 gravityActive = false;
                 velocity = Vector2.zero;
@@ -563,9 +589,9 @@ public class PlayerController : MonoBehaviour
         if (controllsEnabled)
         {
             var smoothMovementFactor = groundDamping;
-            if (_currentState != PlayerState.WallJump)
+            if (_currentState != PlayerState.WallJump && _currentState != PlayerState.WallBreak)
                 smoothMovementFactor = controller.isGrounded ? groundDamping : inAirDumping;
-            else if (_currentState == PlayerState.WallJump)
+            else if (_currentState == PlayerState.WallJump || _currentState == PlayerState.WallBreak)
                 smoothMovementFactor = wallJumpDumping;
 
             velocity.x = Mathf.Lerp(velocity.x, input * runSpeed, Time.deltaTime * smoothMovementFactor);
@@ -628,7 +654,13 @@ public class PlayerController : MonoBehaviour
             dashRequest = false;
             //wsParticlesEmissionModule.enabled = false;
         }
-
+        if (hit.collider.CompareTag("Destructibles"))
+        {
+            if (_currentState == PlayerState.Dash)
+                hit.collider.GetComponent<DestroyTilesOnCollision>().DestroyTiles(hit);
+        }
+        if (hit.collider.CompareTag("Disappearing") && (_currentState == PlayerState.Grounded || _currentState == PlayerState.WallSlide))
+            hit.collider.GetComponent<DisappearingPlatform>().Disappear();
 
     }
 
@@ -636,16 +668,26 @@ public class PlayerController : MonoBehaviour
     void onTriggerEnterEvent(Collider2D col)
     {
         //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
-        if (col.CompareTag("Spring"))
+        if (col.CompareTag("Spring") && velocity.y <= 0)
         {
             var spring = col.GetComponent<SpringBehaviour>();
             SpringJumpLogicProcessing(spring);
         }
+        if (col.CompareTag("CheckPoint"))
+        {
+            GameController.Instance.SetChekpoint(col.transform.position);
+        }
+
     }
 
     void onTriggerStayEvent(Collider2D col)
     {
         //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
+        if (col.CompareTag("Spring") && velocity.y <= 0)
+        {
+            var spring = col.GetComponent<SpringBehaviour>();
+            SpringJumpLogicProcessing(spring);
+        }
     }
 
     void onTriggerExitEvent(Collider2D col)

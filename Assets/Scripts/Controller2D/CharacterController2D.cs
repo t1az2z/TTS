@@ -404,7 +404,7 @@ public class CharacterController2D : MonoBehaviour
 	{
 		var isGoingUp = deltaMovement.y > 0;
 		var rayDistance = Mathf.Abs( deltaMovement.y ) + _skinWidth;
-		var rayDirection = isGoingUp ? Vector2.up : -Vector2.up;
+		var rayDirectionY = isGoingUp ? Vector2.up : -Vector2.up;
 		var initialRayOrigin = isGoingUp ? _raycastOrigins.topLeft : _raycastOrigins.bottomLeft;
 
 		// apply our horizontal deltaMovement here so that we do our raycast from the actual position we would be in if we had moved
@@ -419,8 +419,8 @@ public class CharacterController2D : MonoBehaviour
 		{
 			var ray = new Vector2( initialRayOrigin.x + i * _horizontalDistanceBetweenRays, initialRayOrigin.y );
 
-			DrawRay( ray, rayDirection * rayDistance, Color.red );
-			_raycastHit = Physics2D.Raycast( ray, rayDirection, rayDistance, mask );
+			DrawRay( ray, rayDirectionY * Vector2.up, Color.red );
+			_raycastHit = Physics2D.Raycast( ray, rayDirectionY, rayDistance, mask );
 			if( _raycastHit )
 			{
 				// set our new deltaMovement and recalculate the rayDistance taking it into account

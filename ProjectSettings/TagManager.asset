@@ -8,6 +8,7 @@ TagManager:
   - Hazards
   - Destructibles
   - Spring
+  - Disappearing
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,7 @@ TagManager:
   - Light Sources Static
   - Destructibles
   - Trigger
-  - 
+  - Checkpoint
   - 
   - ShadowReciever
   - 

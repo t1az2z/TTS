@@ -4,6 +4,7 @@ using UnityEngine;
 
 
 public class DestroyTilesOnCollision : MonoBehaviour {
+    PlayerController player;
     DestructiblesBehaviour desBeh;
     public GameObject destroyParticle;
     [SerializeField] float disabledTime = .3f;
@@ -13,70 +14,93 @@ public class DestroyTilesOnCollision : MonoBehaviour {
                                                  new Vector3Int(1, 1, 0),
                                                  new Vector3Int(1, 0, 0),
                                                  new Vector3Int(1, -1, 0) };
+
     private void Start()
     {
-        desBeh = FindObjectOfType<DestructiblesBehaviour>();
-
+        desBeh = FindObjectOfType<DestructiblesBehaviour>(); //change to transform.parent
+        player = FindObjectOfType<PlayerController>();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void DestroyTiles(RaycastHit2D hit)
     {
-        PlayerController player = collision.collider.GetComponent<PlayerController>();
+        int xDirection = player.isFacingLeft ? -1 : 1;
+        Vector3 hitPosition = Vector3.zero;
 
 
-        if (player._currentState == PlayerState.Dash)
+
+        hitPosition.x = (hit.point.x - 0.01f * hit.normal.x) + xDirection * (desBeh.m_Grid.cellSize.x / 2);
+        hitPosition.y = hit.point.y - 0.01f * hit.normal.y;
+        desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition), destroyParticle);
+
+        foreach (Vector3Int addition in coordinates)
         {
-            int xDirection = player.isFacingLeft ? -1 : 1;
-            Vector3 hitPosition = Vector3.zero;
-
-            foreach (ContactPoint2D hit in collision.contacts)
-            {
-
-                hitPosition.x = (hit.point.x - 0.01f * hit.normal.x) + xDirection *(desBeh.m_Grid.cellSize.x / 2);
-                hitPosition.y = hit.point.y - 0.01f * hit.normal.y;
-                desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition), destroyParticle);
-
-                foreach (Vector3Int addition in coordinates)
-                {
-                    desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition) + addition, destroyParticle);
-                }
-            }
-            player.controllsDisabledTimer = disabledTime;
-            player._currentState = PlayerState.WallBreak;
-            player.dashExpireTime = 0;
-            player.gravityActive = true;
-            player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
-
+            desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition) + addition, destroyParticle);
         }
+
+        player.controllsDisabledTimer = disabledTime;
+        player._currentState = PlayerState.WallBreak;
+        player.dashExpireTime = 0;
+        player.gravityActive = true;
+        player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
     }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    PlayerController player = collision.collider.GetComponent<PlayerController>();
 
- 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player._currentState == PlayerState.Dash)
-        {
-            int xDirection = player.isFacingLeft ? -1 : 1;
-            Vector3 hitPosition = Vector3.zero;
 
-            foreach (ContactPoint2D hit in collision.contacts)
-            {
+    //    if (player._currentState == PlayerState.Dash)
+    //    {
+    //        int xDirection = player.isFacingLeft ? -1 : 1;
+    //        Vector3 hitPosition = Vector3.zero;
 
-                hitPosition.x = (hit.point.x - 0.01f * hit.normal.x) + xDirection * (desBeh.m_Grid.cellSize.x / 2);
-                hitPosition.y = hit.point.y - 0.01f * hit.normal.y;
-                desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition), destroyParticle);
+    //        foreach (ContactPoint2D hit in collision.contacts)
+    //        {
 
-                foreach (Vector3Int addition in coordinates)
-                {
-                    desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition) + addition, destroyParticle);
-                }
-            }
-            player.controllsDisabledTimer = disabledTime;
-            player._currentState = PlayerState.WallBreak;
-            player.dashExpireTime = 0;
-            player.gravityActive = true;
-            player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
+    //            hitPosition.x = (hit.point.x - 0.01f * hit.normal.x) + xDirection *(desBeh.m_Grid.cellSize.x / 2);
+    //            hitPosition.y = hit.point.y - 0.01f * hit.normal.y;
+    //            desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition), destroyParticle);
 
-        }
-    }
+    //            foreach (Vector3Int addition in coordinates)
+    //            {
+    //                desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition) + addition, destroyParticle);
+    //            }
+    //        }
+    //        player.controllsDisabledTimer = disabledTime;
+    //        player._currentState = PlayerState.WallBreak;
+    //        player.dashExpireTime = 0;
+    //        player.gravityActive = true;
+    //        player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
+
+    //    }
+    //}
+
+
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    PlayerController player = collision.collider.GetComponent<PlayerController>();
+    //    if (player._currentState == PlayerState.Dash)
+    //    {
+    //        int xDirection = player.isFacingLeft ? -1 : 1;
+    //        Vector3 hitPosition = Vector3.zero;
+
+    //        foreach (ContactPoint2D hit in collision.contacts)
+    //        {
+
+    //            hitPosition.x = (hit.point.x - 0.01f * hit.normal.x) + xDirection * (desBeh.m_Grid.cellSize.x / 2);
+    //            hitPosition.y = hit.point.y - 0.01f * hit.normal.y;
+    //            desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition), destroyParticle);
+
+    //            foreach (Vector3Int addition in coordinates)
+    //            {
+    //                desBeh.DestoyCell(desBeh.CountCellsPosition(hitPosition) + addition, destroyParticle);
+    //            }
+    //        }
+    //        player.controllsDisabledTimer = disabledTime;
+    //        player._currentState = PlayerState.WallBreak;
+    //        player.dashExpireTime = 0;
+    //        player.gravityActive = true;
+    //        player.impulse.GenerateImpulse(new Vector3(0, 1, 0));
+
+    //    }
+    //}
 }

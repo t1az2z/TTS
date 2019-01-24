@@ -36,16 +36,20 @@ public class DisappearingPlatform : MonoBehaviour {
             anim.SetTrigger("Reset");
         }
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void Disappear()
     {
-        if (collision.collider.gameObject.GetComponent<PlayerController>()._currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
-            anim.SetBool("Active", false);
+        anim.SetBool("Active", false);
     }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.collider.gameObject.GetComponent<PlayerController>()._currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
-            anim.SetBool("Active", false);
 
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.collider.gameObject.GetComponent<PlayerController>()._currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
+    //        anim.SetBool("Active", false);
+    //}
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (collision.collider.gameObject.GetComponent<PlayerController>()._currentState == PlayerState.Grounded)// || collision.collider.gameObject.GetComponent<PlayerController>().wallSliding)
+    //        anim.SetBool("Active", false);
+
+    //}
 }
