@@ -4,39 +4,26 @@ using Cinemachine;
 
 public class SpringBehaviour : MonoBehaviour {
 
-    [SerializeField] Vector2 springVector = new Vector2(0, 10f);
-    PlayerController player;
-    CinemachineImpulseSource impulse;
-    Animator anim;
-    [SerializeField] int jumpsAfterSpring = 2;
+    public Vector2 springVector = new Vector2(0, 10f);
+    public CinemachineImpulseSource impulse;
+    public Animator anim;
+    public int jumpsAfterSpring = 2;
+    public bool activated = false;
 
-    private void Start()
+    private void Awake()
     {
-        impulse = GetComponent<CinemachineImpulseSource>();
         anim = GetComponent<Animator>();
+        impulse = GetComponent<CinemachineImpulseSource>();
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void Update()
     {
-        if (player == null)
+        if (activated)
         {
-            player = collision.gameObject.GetComponent<PlayerController>();
-        }
-
-        if (collision.relativeVelocity.y <= Mathf.Epsilon)
-        {
-            //player.isDashing = false;
-            //player.dashExpireTime = 0;
-            player.gravityActive = true;
-            anim.Play("Spring");
-            player.dashRequest = false;
-            player._currentState = PlayerState.SpringJump;
-
-            player.velocity = springVector;
-            player.dustParticles.Play();
-            player.jumpsCount = jumpsAfterSpring;
-            player.dashAlow = true;
             impulse.GenerateImpulse();
+            anim.Play("Spring");
 
+            activated = false;
         }
     }
 }

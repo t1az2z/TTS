@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
     {
         wallDirX = controller.collisionState.left ? -1 : 1;
         wallHit = controller.collisionState.left || controller.collisionState.right;
-        print(wallHit + "  " + velocity.x);
+        //print(wallHit + "  " + velocity.x);
         if (controllsEnabled)
             PcControlls();
         xInput = (int)SimpleInput.GetAxisRaw("Horizontal");
@@ -121,6 +121,8 @@ public class PlayerController : MonoBehaviour
         }
         if (_currentState == PlayerState.Fall || _currentState == PlayerState.Grounded || _currentState == PlayerState.WallSlide || _currentState == PlayerState.SpringJump)
             GravityScaleChange();
+        if (_currentState != PlayerState.WallSlide)
+            wsTimeTRMV = wallSlideTimeToReachMaxVelocity;
 
         if (_prevState != _prevFrameState && _prevFrameState != _currentState)
             _prevState = _currentState;
@@ -241,6 +243,19 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
 
+            case PlayerState.SpringJump:
+                HorizontalMovement(xInput);
+                if (jumpsCount < 2)
+                    JumpLogicProcessing();
+                if (dashRequest)
+                    _currentState = PlayerState.Dash;
+                else if (velocity.y < -3)
+                    _currentState = PlayerState.Fall;
+                else if (GroundCheck())
+                {
+                    _currentState = PlayerState.Grounded;
+                }
+                break;
 
             case PlayerState.Dead:
                 gravityActive = false;
@@ -415,6 +430,19 @@ public class PlayerController : MonoBehaviour
             velocity.y = velocityTopSlice;
             jumpCancel = false;
         }
+    }
+
+
+    private void SpringJumpLogicProcessing(SpringBehaviour spring)
+    {
+        gravityActive = true;
+        dashRequest = false;
+        _currentState = PlayerState.SpringJump;
+        spring.activated = true;
+        velocity = spring.springVector;
+        dustParticles.Play();
+        jumpsCount = spring.jumpsAfterSpring;
+        dashAlow = true;
     }
 
     private bool GroundCheck()
@@ -601,12 +629,18 @@ public class PlayerController : MonoBehaviour
             //wsParticlesEmissionModule.enabled = false;
         }
 
+
     }
 
 
     void onTriggerEnterEvent(Collider2D col)
     {
         //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
+        if (col.CompareTag("Spring"))
+        {
+            var spring = col.GetComponent<SpringBehaviour>();
+            SpringJumpLogicProcessing(spring);
+        }
     }
 
     void onTriggerStayEvent(Collider2D col)
