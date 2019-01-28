@@ -41,12 +41,13 @@ public class PlayerController : MonoBehaviour
     public float groundDamping = 50f;
 
     //jumps
+    public int jumpCost = 1;
     public float jumpMaxSpeed = 9.3f;
     public bool jumpRequest;
     public bool jumpCancel;
     public float inAirDumping = 50;
-    public int allowedJumps = 2;
-    public int jumpsCount = 0;
+    public int batteryCapacity = 2;
+    public int batterySpent = 0;
     private const float velocityTopSlice = 3f;
     [SerializeField] float landingTime = .21f;
     public ParticleSystem jumpParticles;
@@ -55,12 +56,14 @@ public class PlayerController : MonoBehaviour
     [Space(8)]
 
     [Foldout("Dash parameters", true)]
+    public bool isDashing = false;
+    public int dashCost = 1;
     public bool dashEnabled = false;
     int dashDirection = 0;
     [SerializeField] float dashTime = .2f;
     [SerializeField] float dashFreezeTime = .06f;
     [SerializeField] float dashSpeed = 250;
-    public bool dashAlow = true;
+    //public bool dashAlow = true;
     public bool dashRequest = false;
     [SerializeField] Vector2 destroyWallsKnockback = new Vector2(2, 2);
     [HideInInspector] public float dashExpireTime;
@@ -117,7 +120,7 @@ public class PlayerController : MonoBehaviour
         {
             dashRequest = false;
             jumpRequest = false;
-            dashAlow = false;
+            //dashAlow = false;
         }
         if (_currentState == PlayerState.Fall || _currentState == PlayerState.Grounded || _currentState == PlayerState.WallSlide || _currentState == PlayerState.SpringJump)
             GravityScaleChange();
@@ -148,9 +151,9 @@ public class PlayerController : MonoBehaviour
                 JumpLogicProcessing();
                 if (dashRequest)
                     _currentState = PlayerState.Dash;
-                else if (velocity.y < 0f && jumpsCount < 2)
+                else if (velocity.y < 0f && batterySpent < 2)
                     _currentState = PlayerState.Fall;
-                else if (velocity.y < -3f && jumpsCount == 2)
+                else if (velocity.y < -3f && batterySpent == 2)
                     _currentState = PlayerState.Fall;
                 else if (wallHit)
                     _currentState = PlayerState.WallSlide;
@@ -163,7 +166,27 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.Dash:
                 reachedMaxFallVelocity = false;
-                Dash();
+                if (dashRequest && batterySpent >= batteryCapacity)
+                {
+                    dashRequest = false;
+                }
+
+                else if (dashRequest && batterySpent < batteryCapacity)
+                {
+                    dashRequest = false;
+                    isDashing = true;
+                }
+                
+
+                if (isDashing && !dashRequest)
+                    Dash();
+                else if (!isDashing)
+                {
+                    _currentState = PlayerState.Fall;
+                    gravityActive = true;
+                    currentGravity = gravity;
+                }
+                
                 break;
 
             case PlayerState.Fall:
@@ -210,15 +233,15 @@ public class PlayerController : MonoBehaviour
                 else if (!wallHit && velocity.y > 0)
                 {
                     _currentState = PlayerState.Jump;
-                    jumpsCount = 1;
+                    batterySpent = 1;
                 }
                 break;
 
             case PlayerState.WallJump:
                 HorizontalMovement(xInput);
-                if (jumpsCount < 1 && jumpRequest)
+                if (batterySpent < 1 && jumpRequest)
                     WallJumpLogicProcessing(wallDirX);
-                else if (jumpsCount >= 1 && jumpRequest)
+                else if (batterySpent >= 1 && jumpRequest)
                     _currentState = PlayerState.Jump;
                 if (jumpCancel && velocity.y >= velocityTopSlice)
                 {
@@ -245,7 +268,7 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.SpringJump:
                 HorizontalMovement(xInput);
-                if (jumpsCount < 2)
+                if (batterySpent < 2)
                     JumpLogicProcessing();
                 if (dashRequest)
                     _currentState = PlayerState.Dash;
@@ -267,8 +290,8 @@ public class PlayerController : MonoBehaviour
                     velocity = new Vector2(-dashDirection * destroyWallsKnockback.x, destroyWallsKnockback.y);
 
                     controllsDisabledTimer -= Time.fixedDeltaTime;
-                    dashAlow = true;
-                    jumpsCount = 0;
+                    //dashAlow = true;
+                    batterySpent = 0;
                 }
                 else
                 {
@@ -343,9 +366,9 @@ public class PlayerController : MonoBehaviour
     private void WallJumpLogicProcessing(int wallDirX)
     {
 
-        if (jumpsCount < allowedJumps && jumpRequest)
+        if (batterySpent < batteryCapacity && jumpRequest)
         {
-            jumpsCount++;
+            batterySpent++;
             velocity = new Vector2(wallJumpXVelocity * (-wallDirX), wallJumpYVelocity);
             jumpRequest = false;
         }
@@ -355,58 +378,51 @@ public class PlayerController : MonoBehaviour
 
     private void WallsInteractionLogic()
     {
-        jumpsCount = 0;
+        batterySpent = 0;
     }
 
     public void Dash()
     {
-        if (dashRequest && !dashAlow)
-            dashRequest = false;
+        dashParticles.Play();
+        gravityActive = false;
 
-        else if (dashRequest)
+        if (dashExpireTime == dashTime)
         {
-            dashParticles.Play();
-            gravityActive = false;
+            StartCoroutine(GameController.Instance.FreezeTime(dashFreezeTime));
+            dashDirection = isFacingLeft ? -1 : 1;
+            impulse.GenerateImpulse();
+        }
 
-            if (dashExpireTime == dashTime)
-            {
-                StartCoroutine(GameController.Instance.FreezeTime(dashFreezeTime));
-                dashDirection = isFacingLeft ? -1 : 1;
-                impulse.GenerateImpulse();
-            }
+        if (dashExpireTime > 0 && batterySpent < batteryCapacity)
+        {
+            dustParticles.Play();
+            velocity.y = 0;
 
-            if (dashExpireTime > Mathf.Epsilon && dashAlow)
+            velocity.x = dashDirection * dashSpeed;
+            dashExpireTime -= Time.deltaTime;
+        }
+        else if (dashExpireTime <= 0)
+        {
+            dashDirection = 0;
+            gravityActive = true;
+            batterySpent += dashCost;
+            if (GroundCheck())
+                _currentState = PlayerState.Grounded;
+            else if (wallHit)
             {
-                dustParticles.Play();
-                velocity.y = 0;
-
-                velocity.x = dashDirection * dashSpeed;
-                dashExpireTime -= Time.deltaTime;
+                _currentState = PlayerState.WallSlide;
             }
-            else if (dashExpireTime <= Mathf.Epsilon)
-            {
-                dashDirection = 0;
-                gravityActive = true;
-                if (GroundCheck())
-                    _currentState = PlayerState.Grounded;
-                else if (wallHit)
-                {
-                    _currentState = PlayerState.WallSlide;
-                }
-                else
-                    _currentState = PlayerState.Fall;
-                currentGravity = gravity;
-                dashRequest = false;
-                dashExpireTime = 0f;
-                dashAlow = false;
-            }
+            else
+                _currentState = PlayerState.Fall;
+            currentGravity = gravity;
+            dashExpireTime = 0f;
+            isDashing = false;
         }
         else
         {
-            _currentState = PlayerState.Fall;
-            gravityActive = true;
-            currentGravity = gravity;
+            isDashing = false;
         }
+
 
     }
     private void CountTimeInState()
@@ -425,11 +441,11 @@ public class PlayerController : MonoBehaviour
 
     private void GroundInteractionLogic()
     {
-        dashAlow = true;
+        //dashAlow = true;
 
         if (GroundCheck() && _prevFrameState != _currentState)
         {
-            jumpsCount = 0;
+            batterySpent = 0;
             jumpCancel = false;
             jumpParticles.Play();
         }
@@ -437,10 +453,10 @@ public class PlayerController : MonoBehaviour
 
     private void JumpLogicProcessing()
     {
-        if (jumpsCount < allowedJumps && jumpRequest)
+        if (batterySpent < batteryCapacity && jumpRequest)
         {
             jumpCancel = false;
-            jumpsCount++;
+            batterySpent += jumpCost;
             jumpParticles.Play();
             velocity.y = jumpMaxSpeed;
 
@@ -467,8 +483,8 @@ public class PlayerController : MonoBehaviour
         spring.activated = true;
         velocity = spring.springVector;
         dustParticles.Play();
-        jumpsCount = spring.jumpsAfterSpring;
-        dashAlow = true;
+        batterySpent = spring.springJumpCost;
+        //dashAlow = true;
     }
 
     private bool GroundCheck()
@@ -525,7 +541,7 @@ public class PlayerController : MonoBehaviour
     private void SetAnimations()
     {
 
-        if (_currentState == PlayerState.Dash && dashAlow)
+        if (_currentState == PlayerState.Dash && batterySpent < batteryCapacity)
             animator.Play("Dash");
         else if (_currentState == PlayerState.WallBreak)
             animator.Play("Fall");
@@ -562,9 +578,9 @@ public class PlayerController : MonoBehaviour
         }
         else if (_currentState == PlayerState.Jump || _currentState == PlayerState.WallJump || _currentState == PlayerState.SpringJump)
         {
-            if (velocity.y > 0 && jumpsCount <= 1)
+            if (velocity.y > 0 && batterySpent <= 1)
                 animator.Play("Jump");
-            else if (jumpsCount >= 2)
+            else if (batterySpent >= 2)
             {
                 animator.Play("Jump2");
             }

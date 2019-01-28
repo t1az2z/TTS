@@ -33,4 +33,4 @@ sysinfo.txt
 
 # Builds
 *.apk
-*.unitypackage
+*.unitypackage # Gradle cache directory .gradle/

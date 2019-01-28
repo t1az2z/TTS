@@ -10,7 +10,7 @@ public class ReseterBehaviour : MonoBehaviour {
     Collider2D col;
     [SerializeField] SpriteRenderer sr;
     bool isActive = true;
-    float waitTime = .5f;
+    float waitTime = .25f;
     GameObject lightObject;
     CinemachineImpulseSource impulse;
     [SerializeField] ParticleSystem particles;
@@ -51,7 +51,7 @@ public class ReseterBehaviour : MonoBehaviour {
         if (isActive && player._currentState != PlayerState.Dead)
         {
             particles.Play();
-            if (resetDash)
+            /*if (resetDash)
             {
                 if (player._currentState != PlayerState.Dash)
                 {
@@ -64,7 +64,13 @@ public class ReseterBehaviour : MonoBehaviour {
             }
             if (resetJumpCounter)
             {
-                player.jumpsCount = 0;
+                player.batterySpent = 0;
+            }*/
+            if (player._currentState != PlayerState.Dash)
+                player.batterySpent = 0;
+            else if (player._currentState == PlayerState.Dash)
+            {
+                StartCoroutine(ResetDashAfterDelay(waitTime));
             }
             impulse.GenerateImpulse();
             StartCoroutine(GameController.Instance.FreezeTime(freezeTime));
@@ -86,7 +92,7 @@ public class ReseterBehaviour : MonoBehaviour {
             }
             else
             {
-                player.dashAlow = true;
+                player.batterySpent = 0;
                 break;
             }
             time -= Time.deltaTime;
