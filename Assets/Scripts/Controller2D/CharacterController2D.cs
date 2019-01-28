@@ -117,7 +117,7 @@ public class CharacterController2D : MonoBehaviour
 	/// the threshold in the change in vertical movement between frames that constitutes jumping
 	/// </summary>
 	/// <value>The jumping threshold.</value>
-	public float jumpingThreshold = 0.0625f;
+	//public float jumpingThreshold = .0001f;
 
 	[Range( 2, 20 )]
 	public int totalHorizontalRays = 8;
@@ -240,7 +240,7 @@ public class CharacterController2D : MonoBehaviour
 	/// <param name="deltaMovement">Delta movement.</param>
 	public void move( Vector3 deltaMovement )
 	{
-        if (Mathf.Abs(deltaMovement.x) >= .0001f)
+        if (Mathf.Abs(deltaMovement.x) >= .000001f)
             faceDir = (int)Mathf.Sign(deltaMovement.x);
 		// save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
 		collisionState.wasGroundedLastFrame = collisionState.below;
@@ -269,9 +269,9 @@ public class CharacterController2D : MonoBehaviour
 		deltaMovement.z = 0;
 		transform.Translate( deltaMovement, Space.World );
 
-		// only calculate velocity if we have a non-zero deltaTime
-		if( Time.deltaTime > 0f )
-			velocity = deltaMovement / Time.deltaTime;
+        // only calculate velocity if we have a non-zero deltaTime
+        if( Time.deltaTime > 0f )
+            velocity = deltaMovement / Time.deltaTime;
 
 		// set our becameGrounded state based on the previous and current collision state
 		if( !collisionState.wasGroundedLastFrame && collisionState.below )
@@ -291,13 +291,13 @@ public class CharacterController2D : MonoBehaviour
 	/// <summary>
 	/// moves directly down until grounded
 	/// </summary>
-	public void warpToGrounded()
-	{
-		do
-		{
-			move( new Vector3( 0, -1f, 0 ) );
-		} while( !isGrounded );
-	}
+	//public void warpToGrounded()
+	//{
+	//	do
+	//	{
+	//		move( new Vector3( 0, -1f, 0 ) );
+	//	} while( !isGrounded );
+	//}
 
 
 	/// <summary>

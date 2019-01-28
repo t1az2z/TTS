@@ -258,4 +258,9 @@ public class GameController : MonoBehaviour {
         timeStoped = false;
     }
     //todo add stopframes on transition
+    public void ResetFreezeTime()
+    {
+        StopCoroutine("FreezeTime");
+        Time.timeScale = 1f;
+    }
 }
