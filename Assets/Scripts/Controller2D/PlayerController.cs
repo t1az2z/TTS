@@ -143,9 +143,9 @@ public class PlayerController : MonoBehaviour
                 if (controller.collisionState.becameGroundedThisFrame)
                     GroundInteractionLogic();
                 HorizontalMovement(xInput);
-                if (dashRequest)
+                if (dashRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Dash;
-                else if (jumpRequest)
+                else if (jumpRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Jump;
                 else if (velocity.y < -.01f)
                     _currentState = PlayerState.Fall;
@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviour
             case PlayerState.Jump:
                 HorizontalMovement(xInput);
                 JumpLogicProcessing(jumpMaxSpeed);
-                if (dashRequest)
+                if (dashRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Dash;
                 else if (velocity.y < 0f && batterySpent < 2)
                     _currentState = PlayerState.Fall;
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
                 else if (dashExpireTime < superJumpDashTimeWindow)
                 {
                     print("duperjump");
-
+                    //batterySpent = 0;
                     HorizontalMovement(dashDirection * superJumpExtraBoost);
                     SuperJumpLogicProcessing(jumpMaxSpeed);
                 }
@@ -245,6 +245,7 @@ public class PlayerController : MonoBehaviour
 
                 if (isDashing && !dashRequest)
                     Dash();
+
                 else if (!isDashing)
                 {
                     _currentState = PlayerState.Fall;
@@ -256,9 +257,9 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.Fall:
                 HorizontalMovement(xInput);
-                if (dashRequest)
+                if (dashRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Dash;
-                else if (jumpRequest)
+                else if (jumpRequest && batterySpent < batteryCapacity)
                 {
                     _currentState = PlayerState.Jump;
                     JumpLogicProcessing(jumpMaxSpeed);
@@ -277,7 +278,7 @@ public class PlayerController : MonoBehaviour
                 reachedMaxFallVelocity = false;
                 WallSlideLogicProcessing(wallDirX, wsParticlesEmissionModule);
 
-                if (jumpRequest)
+                if (jumpRequest && batterySpent < batteryCapacity)
                 {
                     wsParticlesEmissionModule.enabled = false;
                     if (Mathf.Sign(xInput) == wallDirX)
@@ -285,7 +286,7 @@ public class PlayerController : MonoBehaviour
                     else
                         _currentState = PlayerState.Jump;
                 }
-                else if (dashRequest)
+                else if (dashRequest && batterySpent < batteryCapacity)
                 {
                     wsParticlesEmissionModule.enabled = false;
                     _currentState = PlayerState.Dash;
@@ -315,7 +316,7 @@ public class PlayerController : MonoBehaviour
                     jumpCancel = false;
                 }
 
-                if (dashRequest)
+                if (dashRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Dash;
 
                 else if (velocity.y <= -.5f)
@@ -333,11 +334,11 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.SpringJump:
                 HorizontalMovement(xInput);
-                if (batterySpent < 2)
-                    JumpLogicProcessing(jumpMaxSpeed);
-                if (dashRequest)
+                if (jumpRequest && batterySpent < batteryCapacity)
+                    _currentState = PlayerState.Jump;
+                if (dashRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Dash;
-                else if (velocity.y < -3)
+                else if (velocity.y < 0)
                     _currentState = PlayerState.Fall;
                 else if (GroundCheck())
                 {
@@ -456,12 +457,13 @@ public class PlayerController : MonoBehaviour
             dashDirection = isFacingLeft ? -1 : 1;
             impulse.GenerateImpulse();
             velocity.y = 0;
+            batterySpent += dashCost;
 
         }
 
-        if (dashExpireTime > 0 && batterySpent < batteryCapacity)
+        if (dashExpireTime > 0 && batterySpent <= batteryCapacity)
         {
-            if (jumpRequest)
+            if (jumpRequest && batterySpent+jumpCost <= batteryCapacity)
             {
                 GameController.Instance.ResetFreezeTime();
                 _currentState = PlayerState.SuperJump;
@@ -480,7 +482,6 @@ public class PlayerController : MonoBehaviour
         {
             dashDirection = 0;
             gravityActive = true;
-            batterySpent += dashCost;
             if (GroundCheck())
                 _currentState = PlayerState.Grounded;
             else if (wallHit)
@@ -516,14 +517,19 @@ public class PlayerController : MonoBehaviour
 
     private void GroundInteractionLogic()
     {
-        //dashAlow = true;
-
         if (GroundCheck() && _prevFrameState != _currentState)
         {
-            batterySpent = 0;
-            jumpCancel = false;
+            ResetVariablesAndRequests();
             jumpParticles.Play();
         }
+    }
+
+    public void ResetVariablesAndRequests()
+    {
+        //jumpRequest = false;
+        dashRequest = false;
+        batterySpent = 0;
+        jumpCancel = false;
     }
 
     private void JumpLogicProcessing(float jumpSpeed)
@@ -554,7 +560,7 @@ public class PlayerController : MonoBehaviour
         if (batterySpent < batteryCapacity && jumpRequest)
         {
             jumpCancel = false;
-            batterySpent += jumpCost;
+            batterySpent += jumpCost+dashCost;
             jumpParticles.Play();
             velocity.y = jumpSpeed;
 
@@ -577,12 +583,12 @@ public class PlayerController : MonoBehaviour
     {
         gravityActive = true;
         dashRequest = false;
+        velocity.y = 0;
         _currentState = PlayerState.SpringJump;
         spring.activated = true;
         velocity = spring.springVector;
         dustParticles.Play();
         batterySpent = spring.springJumpCost;
-        //dashAlow = true;
     }
 
     private bool GroundCheck()

@@ -67,7 +67,7 @@ public class ReseterBehaviour : MonoBehaviour {
                 player.batterySpent = 0;
             }*/
             if (player._currentState != PlayerState.Dash)
-                player.batterySpent = 0;
+                player.ResetVariablesAndRequests();
             else if (player._currentState == PlayerState.Dash)
             {
                 StartCoroutine(ResetDashAfterDelay(waitTime));
@@ -92,7 +92,7 @@ public class ReseterBehaviour : MonoBehaviour {
             }
             else
             {
-                player.batterySpent = 0;
+                player.ResetVariablesAndRequests();
                 break;
             }
             time -= Time.deltaTime;

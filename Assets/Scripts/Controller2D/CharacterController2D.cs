@@ -244,12 +244,7 @@ public class CharacterController2D : MonoBehaviour
             faceDir = (int)Mathf.Sign(deltaMovement.x);
 		// save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
 		collisionState.wasGroundedLastFrame = collisionState.below;
-        //if (collisionState.right)
-        //    collisionState.wallDirLastFrame = 1;
-        //else if (collisionState.left)
-        //    collisionState.wallDirLastFrame = -1;
-        //else
-        //    collisionState.wallDirLastFrame = 0;
+
 
 		// clear our state
 		collisionState.reset();
@@ -286,19 +281,6 @@ public class CharacterController2D : MonoBehaviour
 
 		//ignoreOneWayPlatformsThisFrame = false;
 	}
-
-
-	/// <summary>
-	/// moves directly down until grounded
-	/// </summary>
-	//public void warpToGrounded()
-	//{
-	//	do
-	//	{
-	//		move( new Vector3( 0, -1f, 0 ) );
-	//	} while( !isGrounded );
-	//}
-
 
 	/// <summary>
 	/// this should be called anytime you have to modify the BoxCollider2D at runtime. It will recalculate the distance between the rays used for collision detection.
@@ -347,8 +329,6 @@ public class CharacterController2D : MonoBehaviour
 	/// </summary>
 	void moveHorizontally( ref Vector3 deltaMovement )
 	{
-            //var isGoingRight = deltaMovement.x > 0;
-            //var isGoingLeft = deltaMovement.x < 0;
         float rayDirectionX = faceDir;
 		var rayDistance = Mathf.Abs( deltaMovement.x ) + _skinWidth;
             if (Mathf.Abs(deltaMovement.x) < skinWidth)
@@ -375,28 +355,14 @@ public class CharacterController2D : MonoBehaviour
 
                 collisionState.left = rayDirectionX == -1;
                 collisionState.right = rayDirectionX == 1;
-				//rayDistance = Mathf.Abs( deltaMovement.x );
-
-				// remember to remove the skinWidth from our deltaMovement
-				//if( collisionState.faceDir == 1 )
-				//{
-				//	deltaMovement.x -= _skinWidth;
-				//	collisionState.right = true;
-				//}
-				//else if (collisionState.faceDir == -1)
-    //            {
-				//	deltaMovement.x += _skinWidth;
-				//	collisionState.left = true;
-				//}
-
                 
 				_raycastHitsThisFrame.Add( _raycastHit );
 
-				// we add a small fudge factor for the float operations here. if our rayDistance is smaller
-				// than the width + fudge bail out because we have a direct impact
-				//if( rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor )
-				//	break;
-			}
+                    //// we add a small fudge factor for the float operations here. if our rayDistance is smaller
+                    //// than the width + fudge bail out because we have a direct impact
+                    //if (rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor)
+                    //    break;
+                }
 		}
 	}
 
@@ -441,10 +407,10 @@ public class CharacterController2D : MonoBehaviour
 
 				_raycastHitsThisFrame.Add( _raycastHit );
 
-				// we add a small fudge factor for the float operations here. if our rayDistance is smaller
-				// than the width + fudge bail out because we have a direct impact
-				if( rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor )
-					break;
+				//// we add a small fudge factor for the float operations here. if our rayDistance is smaller
+				//// than the width + fudge bail out because we have a direct impact
+				//if( rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor )
+				//	break;
 			}
 		}
 	}

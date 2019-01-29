@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
+using Cinemachine;
 
 public class GameController : MonoBehaviour {
 
@@ -22,6 +23,7 @@ public class GameController : MonoBehaviour {
     float deathReviveAnimationLength;
 
     //global variables
+    CinemachineImpulseSource impulse;
     //public float gravity = -25f;
 
     //todo перенести логику обработки переменных полностью в GameController
@@ -71,7 +73,7 @@ public class GameController : MonoBehaviour {
 
         previousCamera = currentCamera;
 
-
+        impulse = GetComponent<CinemachineImpulseSource>();
     }
 
 
@@ -186,6 +188,7 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator DeathCoroutine()
     {
+        impulse.GenerateImpulse();
         player._currentState = PlayerState.Dead;
         deaths++;
         if (ui != null)
