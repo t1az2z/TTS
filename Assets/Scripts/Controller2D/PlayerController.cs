@@ -187,11 +187,18 @@ public class PlayerController : MonoBehaviour
                     SuperJumpLogicProcessing(jumpMaxSpeed * superJumpHeightMultiplier);
                 }
 
-                else if (dashExpireTime < superJumpDashTimeWindow)
+                else if (dashExpireTime < superJumpDashTimeWindow * 2 && dashExpireTime > superJumpDashTimeWindow)
                 {
                     print("duperjump");
                     //batterySpent = 0;
                     HorizontalMovement(dashDirection * superJumpExtraBoost);
+                    SuperJumpLogicProcessing(jumpMaxSpeed);
+                }
+                else if (dashExpireTime <superJumpDashTimeWindow)
+                {
+                    print("jumpOut");
+
+                    HorizontalMovement(dashDirection);
                     SuperJumpLogicProcessing(jumpMaxSpeed);
                 }
                 else
@@ -797,7 +804,7 @@ public class PlayerController : MonoBehaviour
         }
         if (hit.collider.CompareTag("Disappearing") && (_currentState == PlayerState.Grounded || _currentState == PlayerState.WallSlide))
             hit.collider.GetComponent<DisappearingPlatform>().Disappear();
-
+        
     }
 
 
@@ -813,6 +820,7 @@ public class PlayerController : MonoBehaviour
         {
             GameController.Instance.SetChekpoint(col.transform.position);
         }
+
 
     }
 
