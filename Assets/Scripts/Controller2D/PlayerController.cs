@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
                     _currentState = PlayerState.Fall;
                 else if (velocity.y < -3f && batterySpent == 2)
                     _currentState = PlayerState.Fall;
-                else if (wallHit)
+                else if (wallHit && velocity.y <0)
                     _currentState = PlayerState.WallSlide;
                 else if (dashRequest && jumpRequest)
                     _currentState = PlayerState.SuperJump;
@@ -264,7 +264,7 @@ public class PlayerController : MonoBehaviour
                     _currentState = PlayerState.Jump;
                     JumpLogicProcessing(jumpMaxSpeed);
                 }
-                else if (wallHit && xInput == wallDirX)
+                else if (wallHit && xInput == wallDirX && !GroundCheck())
                     _currentState = PlayerState.WallSlide;
                 else if (GroundCheck())
                 {
@@ -661,7 +661,7 @@ public class PlayerController : MonoBehaviour
     private void SetAnimations()
     {
 
-        if (_currentState == PlayerState.Dash && batterySpent < batteryCapacity)
+        if (_currentState == PlayerState.Dash && batterySpent <= batteryCapacity)
             animator.Play("Dash");
         else if (_currentState == PlayerState.WallBreak)
             animator.Play("Fall");

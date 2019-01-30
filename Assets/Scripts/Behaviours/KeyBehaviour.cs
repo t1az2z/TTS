@@ -20,11 +20,14 @@ public class KeyBehaviour : MonoBehaviour
             //play activated animation & sound
             doorBehaviour.ActivateKey();
             col.enabled = false;
+            GetComponent<SpriteRenderer>().enabled = false;
         }
     }
 
     public void KeyReset()
     {
         col.enabled = true;
+        GetComponent<SpriteRenderer>().enabled = true;
+
     }
 }

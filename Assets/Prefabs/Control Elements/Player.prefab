@@ -9782,11 +9782,10 @@ MonoBehaviour:
     m_Bits: 4352
   triggerMask:
     serializedVersion: 2
-    m_Bits: 262144
+    m_Bits: 828416
   oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 10240
-  jumpingThreshold: 0.07
   totalHorizontalRays: 4
   totalVerticalRays: 3
   faceDir: 0
@@ -9809,27 +9808,34 @@ MonoBehaviour:
   gravityActive: 1
   gravity: -25
   currentGravity: 0
-  fallGravityMultiplier: 1.2
-  maxFallVelocity: -10
+  fallGravityMultiplier: 1.5
+  maxFallVelocity: -12
   _currentState: 5
   deathParticles: {fileID: 3056759377113828865}
   xInput: 0
   isFacingLeft: 0
   runSpeed: 4.5
   groundDamping: 50
+  jumpCost: 1
   jumpMaxSpeed: 9.3
   jumpRequest: 0
   jumpCancel: 0
-  inAirDumping: 50
-  allowedJumps: 2
-  jumpsCount: 0
+  inAirDumping: 12
+  batteryCapacity: 2
+  batterySpent: 0
   landingTime: 0.21
   jumpParticles: {fileID: 3032269487966130885}
+  superJumpUncontrolableTime: 0.3
+  superJumpSpeedBoost: 2.1
+  superJumpExtraBoost: 2.5
+  superJumpDashTimeWindow: 0.034
+  superJumpHeightMultiplier: 0.8
+  isDashing: 0
+  dashCost: 1
   dashEnabled: 1
-  dashTime: 0.2
+  dashTime: 0.25
   dashFreezeTime: 0.06
-  dashSpeed: 12
-  dashAlow: 1
+  dashSpeed: 10
   dashRequest: 0
   destroyWallsKnockback: {x: 4, y: 2}
   dashExpireTime: 0
@@ -11322,7 +11328,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.77254903, g: 0.8627451, b: 0.93333334, a: 1}
+        key0: {r: 0.77254903, g: 0.8627451, b: 0.93333334, a: 0.6627451}
         key1: {r: 0.5186454, g: 0.990566, b: 0.9507111, a: 0}
         key2: {r: 0.5186454, g: 0.990566, b: 0.9507111, a: 0}
         key3: {r: 1, g: 0.15566039, b: 0.15566039, a: 0}
@@ -11351,7 +11357,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
-        key0: {r: 0.14509805, g: 0.29411766, b: 0.4745098, a: 1}
+        key0: {r: 0.14509805, g: 0.29411766, b: 0.4745098, a: 0.54901963}
         key1: {r: 1, g: 1, b: 1, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
