@@ -795,7 +795,8 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(GameController.Instance.DeathCoroutine());
             dashRequest = false;
-            //wsParticlesEmissionModule.enabled = false;
+            var wsParticlesEmissionModule = wallslideParticles.GetComponent<ParticleSystem>().emission;
+            wsParticlesEmissionModule.enabled = false; //todo remove from here
         }
         if (hit.collider.CompareTag("Destructibles"))
         {
