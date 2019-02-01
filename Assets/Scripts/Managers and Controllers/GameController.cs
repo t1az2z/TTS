@@ -131,7 +131,7 @@ public class GameController : MonoBehaviour {
         collectiblesCollected = 0;
     }
 
-    public void SwitchCamera(GameObject newCamera, bool stopTime)
+    public void SwitchCamera(GameObject newCamera, bool stopTime=true)
     {
 
         previousCamera = currentCamera;
@@ -147,6 +147,15 @@ public class GameController : MonoBehaviour {
                 timeStoped = true;
                 //MoveAtCameraTransition(previousCamera.transform.parent.position, currentCamera.transform.parent.position, player.transform, timeToStopForScreenTransition);
             }
+            if (currentCamera.GetComponent<ActivateVirtualCamera>().cyclers.Length != 0)
+            {
+                foreach (var cycler in currentCamera.GetComponent<ActivateVirtualCamera>().cyclers)
+                {
+                    cycler.isMoving = false;
+                    cycler.Reset();
+                }
+            }
+            
         }
         else if(previousCamera == currentCamera)
         {

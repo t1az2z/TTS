@@ -812,10 +812,19 @@ public class PlayerController : MonoBehaviour
     void onTriggerEnterEvent(Collider2D col)
     {
         //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
-        if (col.CompareTag("Spring") && velocity.y <= 0)
+        if (col.CompareTag("Spring"))
         {
-            var spring = col.GetComponent<SpringBehaviour>();
-            SpringJumpLogicProcessing(spring);
+            if (_currentState == PlayerState.Grounded)
+            {
+                var spring = col.GetComponent<SpringBehaviour>();
+                SpringJumpLogicProcessing(spring);
+            }
+            else if (velocity.y <= 0)
+            {
+                var spring = col.GetComponent<SpringBehaviour>();
+                SpringJumpLogicProcessing(spring);
+            }
+
         }
         if (col.CompareTag("CheckPoint"))
         {
@@ -827,11 +836,20 @@ public class PlayerController : MonoBehaviour
 
     void onTriggerStayEvent(Collider2D col)
     {
+        //print(col.name);
         //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
-        if (col.CompareTag("Spring") && velocity.y <= 0)
+        if (col.CompareTag("Spring"))
         {
-            var spring = col.GetComponent<SpringBehaviour>();
-            SpringJumpLogicProcessing(spring);
+            if (_currentState == PlayerState.Grounded)
+            {
+                var spring = col.GetComponent<SpringBehaviour>();
+                SpringJumpLogicProcessing(spring);
+            }
+            else if (velocity.y <= 0)
+            {
+                var spring = col.GetComponent<SpringBehaviour>();
+                SpringJumpLogicProcessing(spring);
+            }
         }
     }
 

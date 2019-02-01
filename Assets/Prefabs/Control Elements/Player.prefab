@@ -9782,7 +9782,7 @@ MonoBehaviour:
     m_Bits: 4352
   triggerMask:
     serializedVersion: 2
-    m_Bits: 828416
+    m_Bits: 1876992
   oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 10240
@@ -9826,8 +9826,8 @@ MonoBehaviour:
   landingTime: 0.21
   jumpParticles: {fileID: 3032269487966130885}
   superJumpUncontrolableTime: 0.3
-  superJumpSpeedBoost: 2.1
-  superJumpExtraBoost: 2.5
+  superJumpSpeedBoost: 2.5
+  superJumpExtraBoost: 3
   superJumpDashTimeWindow: 0.034
   superJumpHeightMultiplier: 0.8
   isDashing: 0
