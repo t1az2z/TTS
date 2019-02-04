@@ -11213,7 +11213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ddc55aa205ac2e4c92651e85fa91934, type: 3}
---- !u!43 &1505730656
+--- !u!43 &1576905846
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12065,6 +12065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 838d3b44223401745a8ba4603c18a922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cyclers: []
 --- !u!50 &2140373130880347886
 Rigidbody2D:
   serializedVersion: 4
@@ -12272,6 +12273,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 1505730656}
+      objectReference: {fileID: 1576905846}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b5519203feda8c4eafc8fe92da4bebc, type: 3}

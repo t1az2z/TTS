@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private float timeInState = 0f;
     private float timeInPrevState;
     public ParticleSystem deathParticles;
+    public Vector3 additionalMovement = Vector3.zero;
 
     //movement
     public int xInput;
@@ -391,7 +392,7 @@ public class PlayerController : MonoBehaviour
         if (gravityActive)
             velocity.y += currentGravity * Time.deltaTime;
         FlipSprite();
-        controller.move(velocity * Time.deltaTime);
+        controller.move((velocity + additionalMovement) * Time.deltaTime);
 
         velocity = controller.velocity;
 
