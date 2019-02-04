@@ -14,25 +14,27 @@ public class HideWallsOnTriggerEnter : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         isHiden = false;
-        StartCoroutine("HideWalls");
+        //StartCoroutine("HideWalls");
+        if (!isHiden)
+            animator.Play("Hide");
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (isHiden)
-            StartCoroutine("HideWalls");
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    if (isHiden)
+    //        StartCoroutine("HideWalls");
 
-    }
+    //}
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         isHiden = true;
         animator.Play("Show");
     }
-    private IEnumerator HideWalls()
-    {
-        yield return new WaitForSeconds(.2f);
-        if (!isHiden)
-            animator.Play("Hide");
-    }
+    //private void HideWalls()
+    //{
+    //    //yield return new WaitForSeconds(.2f);
+    //    if (!isHiden)
+    //        animator.Play("Hide");
+    //}
 }

@@ -25,7 +25,7 @@ public class CycledMovement : MonoBehaviour {
 
     private void Update()
     {
-        if (isMoving) //&& GameController.Instance.player._currentState != PlayerState.Dead)
+        if (isMoving && GameController.Instance.player._currentState != PlayerState.Dead)
             StartCoroutine(Move(cycleWaitTime));
         if (GameController.Instance.player._currentState == PlayerState.Dead)
         {
@@ -69,12 +69,14 @@ public class CycledMovement : MonoBehaviour {
 
     public IEnumerator Reset(WaitForSeconds waitForSeconds)
     {
+        StopCoroutine("Move");
         yield return waitForSeconds;
         movingObject.position = point1;
     }
 
     public void Reset()
     {
+        StopCoroutine("Move");
         movingObject.position = point1;
     }
 

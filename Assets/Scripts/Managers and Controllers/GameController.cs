@@ -141,18 +141,26 @@ public class GameController : MonoBehaviour {
         if (currentCamera != null && previousCamera != null && previousCamera != currentCamera)
         {
             currentCamera.SetActive(true);
+            if (previousCamera.transform.parent.GetComponent<ActivateVirtualCamera>().cyclers.Length != 0)
+            {
+                foreach (var cycler in previousCamera.transform.parent.GetComponent<ActivateVirtualCamera>().cyclers)
+                {
+                    cycler.isMoving = false;
+                    cycler.Reset();
+                }
+            }
             previousCamera.SetActive(false);
             if (!timeStoped && stopTime)
             {
                 timeStoped = true;
                 //MoveAtCameraTransition(previousCamera.transform.parent.position, currentCamera.transform.parent.position, player.transform, timeToStopForScreenTransition);
             }
-            if (currentCamera.GetComponent<ActivateVirtualCamera>().cyclers.Length != 0)
+            if (currentCamera.transform.parent.GetComponent<ActivateVirtualCamera>().cyclers.Length != 0)
             {
-                foreach (var cycler in currentCamera.GetComponent<ActivateVirtualCamera>().cyclers)
+                foreach (var cycler in currentCamera.transform.parent.GetComponent<ActivateVirtualCamera>().cyclers)
                 {
-                    cycler.isMoving = false;
                     cycler.Reset();
+                    cycler.isMoving = true;
                 }
             }
             

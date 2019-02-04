@@ -33,21 +33,21 @@ public class ActivateVirtualCamera : MonoBehaviour {
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            if (!vcam.activeSelf)
-            {
-                GameController.Instance.SwitchCamera(vcam, false);
-            }
-            foreach (var cycler in cyclers)
-            {
-                if (!cycler.isMoving && GameController.Instance.player._currentState != PlayerState.Dead)
-                    cycler.isMoving = true;
-            }
-        }
-    }
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("Player"))
+    //    {
+    //        if (!vcam.activeSelf)
+    //        {
+    //            GameController.Instance.SwitchCamera(vcam, false);
+    //        }
+    //        foreach (var cycler in cyclers)
+    //        {
+    //            if (!cycler.isMoving && GameController.Instance.player._currentState != PlayerState.Dead)
+    //                cycler.isMoving = true;
+    //        }
+    //    }
+    //}
 
 
 }

@@ -36,21 +36,7 @@ public class CharacterController2D : MonoBehaviour
         
 		public void reset()
 		{
-			left = right = above = below = becameGroundedThisFrame = false;
-
-                //if (wallDirLastFrame == 1)
-                //{
-                //    left = false;
-                //    right = true;
-                //}
-                //else if (wallDirLastFrame == -1)
-                //{
-                //    left = true;
-                //    right = false;
-                //}
-                //else
-                //    left = right = false;
-            
+			left = right = above = below = becameGroundedThisFrame = false;            
 		}
 
 
@@ -138,17 +124,6 @@ public class CharacterController2D : MonoBehaviour
 	public bool isGrounded { get { return collisionState.below; } }
     public int faceDir;
 
-    //public int wallDirX { get
-    //        {
-    //            //if (collisionState.right)
-    //            //    return 1;
-    //            //else if (collisionState.left)
-    //            //    return -1;
-    //            //else
-    //            //    return 0;
-    //            return collisionState.left ? -1 : 1;
-    //        }
-    //    }
     const float kSkinWidthFloatFudgeFactor = 0.001f;
 
 	#endregion
