@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float wallSlideTimeToReachMaxVelocity = 1f;
     private float wsTimeTRMV;
     public GameObject wallslideParticles;
-
+    private float springInactiveTime;
 
     private void Awake()
     {
@@ -341,7 +341,17 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case PlayerState.SpringJump:
-                HorizontalMovement(xInput);
+                if (timeInState <= springInactiveTime)
+                {
+                    if (springInactiveTime == 0)
+                        HorizontalMovement(xInput);
+                }
+                else
+                {
+                    springInactiveTime = 0;
+                    HorizontalMovement(xInput);
+                }
+
                 if (jumpRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Jump;
                 if (dashRequest && batterySpent < batteryCapacity)
@@ -589,9 +599,18 @@ public class PlayerController : MonoBehaviour
 
     private void SpringJumpLogicProcessing(SpringBehaviour spring)
     {
+        if (spring.springVector.x != 0)
+        {
+            if (springInactiveTime == 0)
+                springInactiveTime = spring.inactiveTime;
+        }
+        else
+        {
+            springInactiveTime = 0;
+            velocity.y = 0;
+        }
         gravityActive = true;
         dashRequest = false;
-        velocity.y = 0;
         _currentState = PlayerState.SpringJump;
         spring.activated = true;
         velocity = spring.springVector;
@@ -815,14 +834,17 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
         if (col.CompareTag("Spring"))
         {
+            var spring = col.GetComponent<SpringBehaviour>();
             if (_currentState == PlayerState.Grounded)
             {
-                var spring = col.GetComponent<SpringBehaviour>();
                 SpringJumpLogicProcessing(spring);
             }
-            else if (velocity.y <= 0)
+            else if (velocity.y <= 0 && spring.springVector.x == 0)
             {
-                var spring = col.GetComponent<SpringBehaviour>();
+                SpringJumpLogicProcessing(spring);
+            }
+            else if (spring.springVector.x != 0)
+            {
                 SpringJumpLogicProcessing(spring);
             }
 

@@ -9,6 +9,7 @@ public class SpringBehaviour : MonoBehaviour {
     public Animator anim;
     public int springJumpCost = 1;
     public bool activated = false;
+    public float inactiveTime = .4f;
 
     private void Awake()
     {
