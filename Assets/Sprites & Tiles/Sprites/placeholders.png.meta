@@ -25,6 +25,7 @@ TextureImporter:
     21300040: placeholders_19
     21300042: placeholders_20
     21300044: placeholders_21
+    21300046: placeholders_22
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -592,6 +593,26 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: a7725a49be35ee544b49ebb17cc84be7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: placeholders_22
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 42
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d8fb36e10bff284ea8fdd57b98a0afe
       vertices: []
       indices: 
       edges: []

@@ -24,7 +24,7 @@ public class CollectiblesBehaviour : MonoBehaviour {
         lightObject = transform.GetChild(0).gameObject;
 	}
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (player != null)
         {
