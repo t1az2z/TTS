@@ -12,6 +12,10 @@ public class ScarfPoint : MonoBehaviour
     Vector2 playerVelocity;
     public Vector3 offsetVector;
 
+    static float t = 0f;
+    [Range(.005f, .3f)]
+    public float tIncrement = .05f;
+
     void Update()
     {
         playerVelocity = GameController.Instance.player.velocity;
@@ -25,25 +29,18 @@ public class ScarfPoint : MonoBehaviour
         }
         else
         {
-            offsetVector.x = Mathf.Sign(playerVelocity.x) * Mathf.Abs(offset.x)*-1;
+            offsetVector.x = Mathf.Sign(playerVelocity.x) * -1 * Mathf.Abs(offset.x);
         }
-        if (playerVelocity.y <= .002f && playerVelocity.y >= -.002f)
-            offsetVector.y = Mathf.Abs(offset.y) * -1;
+
+        if (playerVelocity.y <= .002f && playerVelocity.y >= -.002f && playerVelocity.y != 0)
+        {
+            offsetVector.y = Mathf.Lerp(offsetVector.y, offset.y, t);
+            t += tIncrement * Time.deltaTime;
+            if (t > .5f)
+                t = 0;
+        }
         else
             offsetVector.y = 0;
-
-
-        //offsetVector = new Vector3(
-        //    Mathf.Sign(playerVelocity.x)*offset.x,
-        //Mathf.Sign(-playerVelocity.y)*offset.y,
-        //0
-        //);
-        //dotPosition = new Vector3(
-        //    targetToFollow.position.x + dotPosition.x * -Mathf.Clamp(playerVelocity.x, -1, 1),
-        //    targetToFollow.position.y + dotPosition.y * -Mathf.Clamp(playerVelocity.y, -1, 1),
-        //    0
-        //    );
-
 
         transform.position = Vector3.SmoothDamp(transform.position, targetToFollow.position + offsetVector, ref velocity, smthDampTime);
     }
