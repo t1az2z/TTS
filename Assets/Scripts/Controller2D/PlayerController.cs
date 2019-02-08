@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
                     _currentState = PlayerState.Dash;
                 //else if (velocity.y < 0f && batterySpent < batteryCapacity)
                 //    _currentState = PlayerState.Fall;
-                else if (velocity.y < -3f && batterySpent == batteryCapacity)
+                else if (velocity.y < 0 && batterySpent >= batteryCapacity)
                 {
                     _currentState = PlayerState.Fall;
                     dashExpireTime = 0;

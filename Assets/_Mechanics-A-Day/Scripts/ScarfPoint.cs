@@ -19,7 +19,7 @@ public class ScarfPoint : MonoBehaviour
     void Update()
     {
         playerVelocity = GameController.Instance.player.velocity;
-        if (playerVelocity.x == 0)
+        if (playerVelocity.x <= .002f && playerVelocity.x >= -.002f)
         {
             playerFacingLeft = GameController.Instance.player.isFacingLeft;
             if (playerFacingLeft)
@@ -32,7 +32,7 @@ public class ScarfPoint : MonoBehaviour
             offsetVector.x = Mathf.Sign(playerVelocity.x) * -1 * Mathf.Abs(offset.x);
         }
 
-        if (playerVelocity.y <= .002f && playerVelocity.y >= -.002f && playerVelocity.y != 0)
+        if ((playerVelocity.y < .02f && playerVelocity.y > -.02f) && playerVelocity.y != 0)
         {
             offsetVector.y = Mathf.Lerp(offsetVector.y, offset.y, t);
             t += tIncrement * Time.deltaTime;
@@ -40,7 +40,9 @@ public class ScarfPoint : MonoBehaviour
                 t = 0;
         }
         else
-            offsetVector.y = 0;
+        {
+            offsetVector.y = 0; //todo find way to change this logic
+        }
 
         transform.position = Vector3.SmoothDamp(transform.position, targetToFollow.position + offsetVector, ref velocity, smthDampTime);
     }
