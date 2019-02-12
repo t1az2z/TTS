@@ -70,7 +70,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashTime = .2f;
     [SerializeField] float dashFreezeTime = .06f;
     [SerializeField] float dashSpeed = 250;
-    //public bool dashAlow = true;
     public bool dashRequest = false;
     [SerializeField] Vector2 destroyWallsKnockback = new Vector2(2, 2);
     public float dashExpireTime;
@@ -92,7 +91,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float wallSlideTimeToReachMaxVelocity = 1f;
     private float wsTimeTRMV;
     public GameObject wallslideParticles;
-    private float springInactiveTime;
+
+    public float springInactiveTime = .4f;
+    bool deactivateControllsOnSpring = false;
 
     private void Awake()
     {
@@ -118,7 +119,6 @@ public class PlayerController : MonoBehaviour
     {
         wallDirX = controller.collisionState.left ? -1 : 1;
         wallHit = controller.collisionState.left || controller.collisionState.right;
-        //print(velocity.y);
         if (controllsEnabled)
             PcControlls();
         xInput = (int)SimpleInput.GetAxisRaw("Horizontal");
@@ -127,7 +127,6 @@ public class PlayerController : MonoBehaviour
         {
             dashRequest = false;
             jumpRequest = false;
-            //dashAlow = false;
         }
         if (_currentState == PlayerState.Fall || _currentState == PlayerState.Grounded || _currentState == PlayerState.WallSlide || _currentState == PlayerState.SpringJump || _currentState == PlayerState.SuperJump)
             GravityScaleChange();
@@ -191,7 +190,7 @@ public class PlayerController : MonoBehaviour
                 else if (dashExpireTime < superJumpDashTimeWindow * 2 && dashExpireTime > superJumpDashTimeWindow)
                 {
                     print("duperjump");
-                    //batterySpent = 0;
+
                     HorizontalMovement(dashDirection * superJumpExtraBoost);
                     SuperJumpLogicProcessing(jumpMaxSpeed);
                 }
@@ -217,8 +216,6 @@ public class PlayerController : MonoBehaviour
 
                 if (dashRequest && batterySpent < batteryCapacity)
                     _currentState = PlayerState.Dash;
-                //else if (velocity.y < 0f && batterySpent < batteryCapacity)
-                //    _currentState = PlayerState.Fall;
                 else if (velocity.y < 0 && batterySpent >= batteryCapacity)
                 {
                     _currentState = PlayerState.Fall;
@@ -341,26 +338,28 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case PlayerState.SpringJump:
-                if (timeInState <= springInactiveTime)
-                {
-                    if (springInactiveTime == 0)
-                        HorizontalMovement(xInput);
-                }
-                else
-                {
-                    springInactiveTime = 0;
+                if (!deactivateControllsOnSpring || timeInState >= springInactiveTime)
                     HorizontalMovement(xInput);
-                }
 
                 if (jumpRequest && batterySpent < batteryCapacity)
+                {
                     _currentState = PlayerState.Jump;
-                if (dashRequest && batterySpent < batteryCapacity)
+                    deactivateControllsOnSpring = false;
+                }
+                else if (dashRequest && batterySpent < batteryCapacity)
+                {
                     _currentState = PlayerState.Dash;
+                    deactivateControllsOnSpring = false;
+                }
                 else if (velocity.y < 0)
+                {
                     _currentState = PlayerState.Fall;
+                    deactivateControllsOnSpring = false;
+                }
                 else if (GroundCheck())
                 {
                     _currentState = PlayerState.Grounded;
+                    deactivateControllsOnSpring = false;
                 }
                 break;
 
@@ -374,7 +373,6 @@ public class PlayerController : MonoBehaviour
                     velocity = new Vector2(-dashDirection * destroyWallsKnockback.x, destroyWallsKnockback.y);
 
                     controllsDisabledTimer -= Time.fixedDeltaTime;
-                    //dashAlow = true;
                     batterySpent = 0;
                 }
                 else
@@ -413,7 +411,6 @@ public class PlayerController : MonoBehaviour
     private void WallSlideLogicProcessing(int wallDirX, ParticleSystem.EmissionModule wsEmission)
     {
         WallsInteractionLogic();
-        //print(controller.wallDirX);
 
         if (wallDirX == -1 )
             wallslideParticles.transform.localPosition = new Vector2(-.14f, wallslideParticles.transform.localPosition.y);
@@ -530,7 +527,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         else
-            timeInState += Time.unscaledDeltaTime;
+            timeInState += Time.deltaTime;
     }
 
     private void GroundInteractionLogic()
@@ -599,19 +596,11 @@ public class PlayerController : MonoBehaviour
 
     private void SpringJumpLogicProcessing(SpringBehaviour spring)
     {
-        if (spring.springVector.x != 0)
-        {
-            if (springInactiveTime == 0)
-                springInactiveTime = spring.inactiveTime;
-        }
-        else
-        {
-            springInactiveTime = 0;
-            velocity.y = 0;
-        }
+        _currentState = PlayerState.SpringJump;
+        velocity = spring.springVector;
+        deactivateControllsOnSpring = spring.deactivateControlls;
         gravityActive = true;
         dashRequest = false;
-        _currentState = PlayerState.SpringJump;
         spring.activated = true;
         velocity = spring.springVector;
         dustParticles.Play();
@@ -789,7 +778,7 @@ public class PlayerController : MonoBehaviour
     public void OnReleaseJump()
     {
         jumpRequest = false;
-        if (!controller.isGrounded) //&& !springJumping)
+        if (!controller.isGrounded)
             jumpCancel = true;
     }
 
@@ -834,6 +823,8 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
         if (col.CompareTag("Spring"))
         {
+            var wsParticlesEmissionModule = wallslideParticles.GetComponent<ParticleSystem>().emission;
+            wsParticlesEmissionModule.enabled = false;
             var spring = col.GetComponent<SpringBehaviour>();
             if (_currentState == PlayerState.Grounded)
             {
@@ -859,26 +850,12 @@ public class PlayerController : MonoBehaviour
 
     void onTriggerStayEvent(Collider2D col)
     {
-        //print(col.name);
-        //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
-        if (col.CompareTag("Spring"))
-        {
-            if (_currentState == PlayerState.Grounded)
-            {
-                var spring = col.GetComponent<SpringBehaviour>();
-                SpringJumpLogicProcessing(spring);
-            }
-            else if (velocity.y <= 0)
-            {
-                var spring = col.GetComponent<SpringBehaviour>();
-                SpringJumpLogicProcessing(spring);
-            }
-        }
+        
     }
 
     void onTriggerExitEvent(Collider2D col)
     {
-        //Debug.Log("onTriggerExitEvent: " + col.gameObject.name);
+
     }
     #endregion
 }

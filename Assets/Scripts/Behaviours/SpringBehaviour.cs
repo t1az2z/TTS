@@ -9,16 +9,23 @@ public class SpringBehaviour : MonoBehaviour {
     public Animator anim;
     public int springJumpCost = 1;
     public bool activated = false;
-    public float inactiveTime = .4f;
-
+    public bool deactivateControlls = false;
     private void Awake()
     {
         anim = GetComponent<Animator>();
         impulse = GetComponent<CinemachineImpulseSource>();
     }
 
+    private void Start()
+    {
+        if (springVector.x != 0)
+            deactivateControlls = true;
+        else if (springVector.x == 0)
+            deactivateControlls = false;
+    }
     private void Update()
     {
+        
         if (activated)
         {
             impulse.GenerateImpulse();
@@ -26,5 +33,11 @@ public class SpringBehaviour : MonoBehaviour {
 
             activated = false;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, springVector/3);
     }
 }
