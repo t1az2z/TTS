@@ -416,6 +416,7 @@ public class PlayerController : MonoBehaviour
             wallslideParticles.transform.localPosition = new Vector2(-.14f, wallslideParticles.transform.localPosition.y);
         else if (wallDirX == 1)
             wallslideParticles.transform.localPosition = new Vector2(.14f, wallslideParticles.transform.localPosition.y);
+        //Debug.Log(string.Format("wallhit {0}, Sign Xinput == walldirx {1}, xInput !=0 {2}", wallHit, Mathf.Sign(xInput) == wallDirX, xInput != 0));
         if (wallHit && Mathf.Sign(xInput) == wallDirX && xInput != 0)
         {
             wsEmission.enabled = true;

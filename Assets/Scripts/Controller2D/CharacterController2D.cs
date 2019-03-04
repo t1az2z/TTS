@@ -215,7 +215,7 @@ public class CharacterController2D : MonoBehaviour
 	/// <param name="deltaMovement">Delta movement.</param>
 	public void move( Vector3 deltaMovement )
 	{
-        if (Mathf.Abs(deltaMovement.x) >= .000001f)
+        if (Mathf.Abs(deltaMovement.x) >= .0001f)
             faceDir = (int)Mathf.Sign(deltaMovement.x);
 		// save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
 		collisionState.wasGroundedLastFrame = collisionState.below;
